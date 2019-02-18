@@ -6,12 +6,12 @@ import java.util.Map;
 
 import org.kobjects.nlp.api.Form;
 import org.kobjects.nlp.api.FormBuilder;
-import org.kobjects.nlp.api.Genus;
-import org.kobjects.nlp.api.GenusVerbi;
+import org.kobjects.nlp.api.Gender;
+import org.kobjects.nlp.api.Voice;
 import org.kobjects.nlp.api.Modus;
-import org.kobjects.nlp.api.Numerus;
+import org.kobjects.nlp.api.Number;
 import org.kobjects.nlp.api.Person;
-import org.kobjects.nlp.api.Tempus;
+import org.kobjects.nlp.api.Tense;
 
 public class Conjugator {
 
@@ -118,10 +118,13 @@ public class Conjugator {
 
 	Map<Form, String> conjugate() {
 		result = new LinkedHashMap<>();
+		form.modus = Modus.INDIKATIV;
 
-		form.setModus(Modus.INDIKATIV);
-		form.setTempus(Tempus.PRAESENS);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setModus = form;
+		form.tense = Tense.PRESENT;
+		FormBuilder setTempus = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi = form;
 		add15("o,as,at,amus,atis,ant", "eo,es,et,emus,etis,ent", "o,is,it,imus,itis,unt", "o,s,t,mus,tis,unt",
 				"io,is,it,imus,itis,iunt",
 
@@ -129,36 +132,48 @@ public class Conjugator {
 				"fero,fers,fert,ferimus,fertis,ferunt", "volo,vis,vult,volumus,vultis,volunt",
 				"nolo,non vis,non vult,nolumus,non vultis,nolunt", "malo,mavis,mavult,malumus,mavultis,malunt",
 				"eo,is,it,imus,itis,eunt");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi1 = form;
 		add15("or,aris,atur,amur,amini,antur", "eor,eris,etur, emur,emini,entur", "or,eris,itur,imur,imini,untur",
 				"or,ris,tur,mur,mini,untur", "ior,eris,itur,imur,imini,iuntur",
 
 				"#", "#", "feror,ferris,fertur,ferimur,ferimini,feruntur", "#", "#", "#", "#");
+		form.tense = Tense.IMPERFEKT;
 
-		form.setTempus(Tempus.IMPERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus1 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi2 = form;
 		add12("ab,eb,eb,eb,ieb,er,poter,fereb,voleb,noleb,maleb,ib", "am,as,at,amus,atis,ant");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi3 = form;
 		add12("a,e,e,e,ie,#,#,fere,#,#,#,#", "bar,baris,batur,bamur,bamini,bantur");
+		form.tense = Tense.PERFEKT;
 
-		form.setTempus(Tempus.PERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus2 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi4 = form;
 		if (conjugation == 12) {
 			add12("", "ii,isti,iit,iimus,istis,ierunt");
 		} else {
 			add2("i,isti,it,imus,istis,erunt");
 		}
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi5 = form;
 		add3("sum,es,est,sumus,estis,sunt");
+		form.tense = Tense.PAST_PERFECT;
 
-		form.setTempus(Tempus.PLUSQUAMPERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus3 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi6 = form;
 		add2("eram,eras,erat,eramus,eratis,erant");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi7 = form;
 		add3("eram,eras,erat,eramus,eratis,erant");
+		form.tense = Tense.FUTURE;
 
-		form.setTempus(Tempus.FUTUR_1);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus4 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi8 = form;
 		add15(	"abo,abis,abit,abimus,abitis,abunt", 
 				"ebo,ebis,ebit,ebimus,ebitis,ebunt",
 				"am,es,et,emus,etis,ent",
@@ -169,125 +184,153 @@ public class Conjugator {
 				"feram,feres,feret,feremus,feretis,ferent", "volam,voles,volet,volemus,voletis,volent",
 				"nolam,noles,nolet,nolemus,noletis,nolent", "malam,males,malet,malemus,maletis,malent",
 				"ibo,ibis,ibit,ibimus,ibitis,ibunt");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi9 = form;
 		add15("abor,aberis,abitur,abimur,abimini,abuntur", "ebor,eberis,ebitur,ebimur,ebimini,ebuntur",
 				"ar,eris,etur,emur,emini,euntur", "ar,eris,etur,emur,emini,euntur",
 				"iar,ieris,ietur,iemur,iemini,euntur", "#", "#", "ferar,fereris,feretur,feremur,feremini,fereuntur",
 				"#", "#", "#", "#");
+		form.tense = Tense.FUTURE_PERFECT;
 
-		form.setTempus(Tempus.FUTUR_2);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus5 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi10 = form;
 		add2("ero,eris,erit,erimus,eritis,erint");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi11 = form;
 		add3("ero,eris,erit,erimus,eritis,erunt");
+		form.modus = Modus.KONJUNKTIV;
 
-		form.setModus(Modus.KONJUNKTIV);
-		form.setTempus(Tempus.PRAESENS);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setModus1 = form;
+		form.tense = Tense.PRESENT;
+		FormBuilder setTempus6 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi12 = form;
 		add12("e,ea,a,a,ia,si,possi,fera,veli,noli,mali,ea", "m,s,t,mus,tis,nt");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi13 = form;
 		add12("e,ea,a,a,ia,#,#,fera,#,#,#,#", "r,ris,tur,mur,mini,ntur");
+		form.tense = Tense.IMPERFEKT;
 
-		form.setTempus(Tempus.IMPERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus7 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi14 = form;
 		add12("ar,er,er,r,er,ess,poss,ferr,vell,noll,mall,ir", "em,es,et,emus,etis,ent");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi15 = form;
 		add12("a,e,e,,e,#,#,fer,#,#,#,#", "rer,reris,retur,remur,remini,rentur");
+		form.tense = Tense.PERFEKT;
 
-		form.setTempus(Tempus.PERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus8 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi16 = form;
 		add2("erim,eris,erit,erimus,eritis,erint");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi17 = form;
 		add3("sim,sis,sit,simus,sitis,sint");
+		form.tense = Tense.PAST_PERFECT;
 
-		form.setTempus(Tempus.PLUSQUAMPERFEKT);
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		FormBuilder setTempus9 = form;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi18 = form;
 		add2("issem,isses,isset,issemus,issetis,issent");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi19 = form;
 		add3("essem,esses,esset,essemus,essetis,essent");
 
 		form.modus = Modus.IMPERATIV;
 
-		form.tempus = Tempus.PRAESENS;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.PRESENT;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi20 = form;
 		add15("#,a,#,#,ate,#", "#,e,#,#,ete,#", "#,e,#,#,ite,#", "#,,#,#,te,#", "#,e,#,#,ite,#", "#,es,#,#,este,#",
 				"#,potes,#,#,poteste,#", "#,fer,#,#,ferte,#", "#,noli,#,#,nolite,#", "#", "#", "#");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi21 = form;
 		add15("#,are,are,#,amini,amini", "#,ere,ere,#,emini,emini", "#,ere,ere,#,imini,imini", "#,re,re,#,mini,mini",
 				"#,ere,ere,#,imini,imini", "#", "#", "#", "#", "#", "#", "#");
 
-		form.tempus = Tempus.FUTUR_1;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.FUTURE;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi22 = form;
 		add15("#,ato,ato,#,atote,anto", "#,eto,eto,#,etote,ento", "#,ito,ito,#,itote,unto", "#,to,to,#,tote,unto",
 				"#,ito,ito,#,itote,iunto", "#,esto,esto,#,estote,sunto", "#", "#,ferto,ferto,#,fertote,ferunto", "#",
 				"#", "#", "#");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi23 = form;
 		add15("#,ator,ator,#,antor,antor", "#,etor,etor,#,entor,entor", "#,itor,itor,#,untor,untor",
 				"#,tor,tor,#,untor,untor", "#,itor,itor,#,iuntor,iuntor", "#", "#", "#", "#", "#", "#", "#");
 
 		form.modus = Modus.INFINITIV;
-		form.tempus = Tempus.PRAESENS;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.PRESENT;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi24 = form;
 		add15("are", "ere", "ere", "re", "ere", "esse", "posse", "ferre", "velle", "nolle", "malle", "ire");
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi25 = form;
 		add15("ari", "eri", "i", "ri", "i", "#", "#", "ferri", "#", "#", "#", "#");
-		form.tempus = Tempus.PERFEKT;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.PERFEKT;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi26 = form;
 
 		form.person = null;
-		form.numerus = null;
+		form.number = null;
 		insertForm(stem2 + "isse");
+		form.voice = Voice.PASSIVE;
 
-		form.setGenusVerbi(GenusVerbi.PASSIV);
-		form.genus = Genus.MASCULINUM;
+		FormBuilder setGenusVerbi27 = form;
+		form.gender = Gender.MASCULINE;
 		insertForm(stem3 + "um esse");
-		form.genus = Genus.FEMININUM;
+		form.gender = Gender.FEMININE;
 		insertForm(stem3 + "am esse");
-		form.genus = Genus.NEUTRUM;
+		form.gender = Gender.NEUTER;
 		insertForm(stem3 + "um esse");
 
 		form.modus = Modus.GERUNDIUM;
-		form.tempus = null;
-		form.genus = null;
-		form.genusVerbi = null;
+		form.tense = null;
+		form.gender = null;
+		form.voice = null;
 		add15("andi", "endi", "endi", "endi", "iendi", "#", "#", "#", "#", "#", "#", "eundi");
 
 		form.modus = Modus.GERUNDIVUM;
-		form.genus = Genus.MASCULINUM;
+		form.gender = Gender.MASCULINE;
 		add15("andus", "endus", "endus", "endus", "iendus", "#", "#", "#", "#", "#", "#", "#");
-		form.genus = Genus.FEMININUM;
+		form.gender = Gender.FEMININE;
 		add15("anda", "enda", "enda", "enda", "ienda", "#", "#", "#", "#", "#", "#", "#");
 
-		form.genus = Genus.NEUTRUM;
+		form.gender = Gender.NEUTER;
 		add15("andum", "endum", "endum", "endum", "iendum", "#", "#", "#", "#", "#", "#", "#");
 
 		form.modus = Modus.SUPINUM;
-		form.genus = null;
+		form.gender = null;
 		insertForm(stem3 + "um");
 
 		form.modus = Modus.PARTIZIP;
-		form.tempus = Tempus.PRAESENS;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.PRESENT;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi28 = form;
 		add12("a,e,e,e,ie,#,#,#,velens,nolens,#,ie", "ns");
 
-		form.tempus = Tempus.PERFEKT;
-		form.setGenusVerbi(GenusVerbi.PASSIV);
+		form.tense = Tense.PERFEKT;
+		form.voice = Voice.PASSIVE;
+		FormBuilder setGenusVerbi29 = form;
 
-		form.genus = Genus.MASCULINUM;
+		form.gender = Gender.MASCULINE;
 		insertForm(stem3 + "us");
-		form.genus = Genus.FEMININUM;
+		form.gender = Gender.FEMININE;
 		insertForm(stem3 + "a");
-		form.genus = Genus.NEUTRUM;
+		form.gender = Gender.NEUTER;
 		insertForm(stem3 + "um");
 
-		form.tempus = Tempus.FUTUR_1;
-		form.setGenusVerbi(GenusVerbi.AKTIV);
+		form.tense = Tense.FUTURE;
+		form.voice = Voice.ACTIVE;
+		FormBuilder setGenusVerbi30 = form;
 
-		form.genus = Genus.MASCULINUM;
+		form.gender = Gender.MASCULINE;
 		insertForm(stem3 + "urus");
-		form.genus = Genus.FEMININUM;
+		form.gender = Gender.FEMININE;
 		insertForm(stem3 + "ura");
-		form.genus = Genus.NEUTRUM;
+		form.gender = Gender.NEUTER;
 		insertForm(stem3 + "urum");
 
 		return result;
@@ -322,17 +365,20 @@ public class Conjugator {
 	
 	// numerus, person
 	void add2(String[] parts) {
-		form.setGenus(null);
+		form.gender = null;
+		FormBuilder setGenus = form;
 		int index = 0;
 		for (int n = 0; n < 2; n++) {
-			form.setNumerus(Latin.NUMERI[n]);
+			form.number = Latin.NUMERI[n];
+			FormBuilder setNumerus = form;
 			for (Person person : Person.values()) {
-				form.setPerson(person);
+				form.person = person;
+				FormBuilder setPerson = form;
 				insertForm(stem2 + parts[index++]);
 			}
 		}
 		form.person = null;
-		form.numerus = null;
+		form.number = null;
 	}
 
 	void add3(String s) {
@@ -344,35 +390,35 @@ public class Conjugator {
 		if (parts.length != 6) {
 			throw new RuntimeException("6 parts expected for add3 " + Arrays.toString(parts));
 		}
-		for (Genus genus : Latin.GENERA) {
+		for (Gender genus : Latin.GENERA) {
 			int index = 0;
-			form.genus = genus;
-			for (Numerus numerus : Latin.NUMERI) {
-				form.numerus = numerus;
+			form.gender = genus;
+			for (Number numerus : Latin.NUMERI) {
+				form.number = numerus;
 				String s1;
-				if (form.numerus == Numerus.SINGULAR) {
-					switch (form.genus) {
-					case MASCULINUM:
+				if (form.number == Number.SINGULAR) {
+					switch (form.gender) {
+					case MASCULINE:
 						s1 = "us";
 						break;
-					case FEMININUM:
+					case FEMININE:
 						s1 = "a";
 						break;
-					case NEUTRUM:
+					case NEUTER:
 						s1 = "um";
 						break;
 					default:
 						throw new RuntimeException();
 					}
 				} else {
-					switch (form.genus) {
-					case MASCULINUM:
+					switch (form.gender) {
+					case MASCULINE:
 						s1 = "i";
 						break;
-					case FEMININUM:
+					case FEMININE:
 						s1 = "ae";
 						break;
-					case NEUTRUM:
+					case NEUTER:
 						s1 = "a";
 						break;
 					default:
@@ -385,7 +431,7 @@ public class Conjugator {
 				}
 			}
 		}
-		form.genus = null;
+		form.gender = null;
 	}
 
 	
@@ -401,12 +447,12 @@ public class Conjugator {
 		int index = 0;
 
 		if (count == 1) {
-			form.numerus = null;
+			form.number = null;
 			form.person = null;
 			insertForm(stem1 + s1 + parts[0]);
 		} else {
 			for (int n = 0; n < 2; n++) {
-				form.numerus = n == 0 ? Numerus.SINGULAR : Numerus.PLURAL;
+				form.number = n == 0 ? Number.SINGULAR : Number.PLURAL;
 				if (count == 2) {
 					form.person = null;
 					insertForm(stem1 + s1 + parts[index++]);
@@ -418,7 +464,7 @@ public class Conjugator {
 				}
 			}
 			form.person = null;
-			form.numerus = null;
+			form.number = null;
 		}
 	}
 }

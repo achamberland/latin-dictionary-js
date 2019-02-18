@@ -1,11 +1,11 @@
 package org.kobjects.nlp.api;
 
-public enum Genus {
-	MASCULINUM("M."),
-	FEMININUM("F."),
-	NEUTRUM("N.");
+public enum Gender {
+	MASCULINE("M"),
+	FEMININE("F"),
+	NEUTER("N");
 	private final String name;
-	Genus(String name) {
+	Gender(String name) {
 		this.name = name;
 	}
 	@Override

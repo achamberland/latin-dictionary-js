@@ -6,48 +6,48 @@ public class Form {
 	public static final Form EMPTY = new FormBuilder().build();
 	
 	public final Person person;
-	public final Numerus numerus;
+	public final Number number;
 	public final Modus modus;
-	public final Tempus tempus;
-	public final GenusVerbi genusVerbi;
+	public final Tense tense;
+	public final Voice voice;
 	public final Case casus;
-	public final Genus genus;
+	public final Gender gender;
 
-	Form(Person person, Numerus numerus, Modus modus, Tempus tempus, GenusVerbi genusVerbi, Case casus, Genus genus) {
+	Form(Person person, Number numerus, Modus modus, Tense tempus, Voice genusVerbi, Case casus, Gender genus) {
 		this.person = person;
-		this.numerus = numerus;
+		this.number = numerus;
 		this.modus = modus;
-		this.tempus = tempus;
-		this.genusVerbi = genusVerbi;
+		this.tense = tempus;
+		this.voice = genusVerbi;
 		this.casus = casus;
-		this.genus = genus;		
+		this.gender = genus;		
 	}
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		if (person != null) {
 			sb.append(this.person).append(". ");
-			if (numerus != null) {
-				sb.append(this.numerus).append(' ');
+			if (number != null) {
+				sb.append(this.number).append(' ');
 			}
 		}
 		if (modus != null) {
 			sb.append(modus).append(' ');
 		}
-		if (tempus != null) {
-		    sb.append(tempus).append(' ');
+		if (tense != null) {
+		    sb.append(tense).append(' ');
 		}
-		if (genusVerbi != null) {
-		    sb.append(genusVerbi).append(' ');
+		if (voice != null) {
+		    sb.append(voice).append(' ');
 		}
 		if (casus != null) {
 		   sb.append(casus).append(' ');
 		}
-		if (person == null && numerus != null) {
-		  sb.append(numerus).append(' ');
+		if (person == null && number != null) {
+		  sb.append(number).append(' ');
 		}
-		if (genus != null) {
-		   sb.append(genus).append(' ');
+		if (gender != null) {
+		   sb.append(gender).append(' ');
 		}
 		sb.setLength(Math.max(0, sb.length() - 1));
 		return sb.toString();
@@ -55,7 +55,7 @@ public class Form {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(person, numerus, modus, tempus, genusVerbi, casus, genus);
+		return Objects.hash(person, number, modus, tense, voice, casus, gender);
 	}
 	
 	@Override 
@@ -65,12 +65,12 @@ public class Form {
 		}
 		Form other = (Form) o;
 		return Objects.equals(person, other.person) 
-				&& Objects.equals(numerus, other.numerus)
+				&& Objects.equals(number, other.number)
 				&& Objects.equals(modus, other.modus)
-				&& Objects.equals(tempus, other.tempus)
-				&& Objects.equals(genusVerbi, other.genusVerbi)
+				&& Objects.equals(tense, other.tense)
+				&& Objects.equals(voice, other.voice)
 				&& Objects.equals(casus, other.casus)
-				&& Objects.equals(genus,  other.genus);
+				&& Objects.equals(gender,  other.gender);
 	}	
 }
 

@@ -11,9 +11,9 @@ import java.util.TreeMap;
 import org.kobjects.nlp.api.Definition;
 import org.kobjects.nlp.api.Form;
 import org.kobjects.nlp.api.Case;
-import org.kobjects.nlp.api.Genus;
+import org.kobjects.nlp.api.Gender;
 import org.kobjects.nlp.api.Language;
-import org.kobjects.nlp.api.Numerus;
+import org.kobjects.nlp.api.Number;
 import org.kobjects.nlp.api.Word;
 import org.kobjects.nlp.api.WordType;
 
@@ -31,9 +31,9 @@ public class Latin implements Language {
 			Case.VOCATIVE
 	};
 
-	static final Numerus[] NUMERI = { Numerus.SINGULAR, Numerus.PLURAL };
+	static final Number[] NUMERI = { Number.SINGULAR, Number.PLURAL };
 
-	static final Genus[] GENERA = { Genus.MASCULINUM, Genus.FEMININUM, Genus.NEUTRUM };
+	static final Gender[] GENERA = { Gender.MASCULINE, Gender.FEMININE, Gender.NEUTER };
 
 	static boolean isConsonant(char c) {
 		return CONSONANTS.indexOf(c) != -1;
@@ -153,14 +153,14 @@ public class Latin implements Language {
 	private void processNoun(Definition definition, String[] word, String[] kind) {
 		switch (kind[kind.length - 1].toUpperCase().trim()) {
 		case "F":
-			definition.genus = Genus.FEMININUM;
+			definition.genus = Gender.FEMININE;
 			break;
 		case "C":
 		case "M":
-			definition.genus = Genus.MASCULINUM;
+			definition.genus = Gender.MASCULINE;
 			break;
 		case "N":
-			definition.genus = Genus.NEUTRUM;
+			definition.genus = Gender.NEUTER;
 			break;
 		default:
 			throw new RuntimeException("Unrecognized genus '" + kind[kind.length - 1] + "'");

@@ -2,44 +2,15 @@ package org.kobjects.nlp.api;
 
 public class FormBuilder {
 	public Person person;
-	public  Numerus numerus;
+	public Number number;
 	public Modus modus;
-	public Tempus tempus;
-	public GenusVerbi genusVerbi;
+	public Tense tense;
+	public Voice voice;
 	public Case casus;
-	public Genus genus;
+	public Gender gender;
 
-	public FormBuilder setPerson(Person person) {
-		this.person = person;
-		return this;
-	}
-	public FormBuilder setNumerus(Numerus numerus) {
-		this.numerus = numerus;
-		return this;
-	}
-	public FormBuilder setModus(Modus modus) {
-		this.modus = modus;
-		return this;
-	}
-	public FormBuilder setTempus(Tempus tempus) {
-		this.tempus = tempus;
-		return this;
-	}
-	public FormBuilder setGenusVerbi(GenusVerbi genusVerbi) {
-		this.genusVerbi = genusVerbi;
-		return this;
-	}
-	public FormBuilder setCasus(Case casus) {
-		this.casus = casus;
-		return this;
-	}
-	public FormBuilder setGenus(Genus genus) {
-		this.genus = genus;
-		return this;
-	}
-	
 	public Form build() {
-		return new Form(person, numerus, modus, tempus, genusVerbi, casus, genus);
+		return new Form(person, number, modus, tense, voice, casus, gender);
 	}
 
 
@@ -61,7 +32,7 @@ public class FormBuilder {
 		break;
 	case 'a':
 		if (string.startsWith("akt")) {
-			genusVerbi = GenusVerbi.AKTIV;
+			voice = Voice.ACTIVE;
 		} else if (string.startsWith("abl")) {
 			casus = Case.ABLATIVE;
 		} else if (string.startsWith("abl")) {
@@ -82,12 +53,12 @@ public class FormBuilder {
 	case 'f':
 		if (string.startsWith("fut")) {
 			if (string.endsWith("ii") || string.endsWith("2")) {
-				this.tempus = Tempus.FUTUR_2;
+				this.tense = Tense.FUTURE_PERFECT;
 			} else {
-				this.tempus = Tempus.FUTUR_1;
+				this.tense = Tense.FUTURE;
 			}
 		} else {
-			this.genus = Genus.FEMININUM;
+			this.gender = Gender.FEMININE;
 		}
 		break;
 	case 'g':
@@ -107,10 +78,10 @@ public class FormBuilder {
 		} else if (string.startsWith("inf")) {
 			this.modus = Modus.INFINITIV;
 		} else if (string.startsWith("impf") || string.startsWith("imperf")) {
-			this.tempus = Tempus.IMPERFEKT;
+			this.tense = Tense.IMPERFEKT;
 		} else if (string.startsWith("imp")) {
 			if (modus != null || person != null) {
-				this.tempus = Tempus.IMPERFEKT;
+				this.tense = Tense.IMPERFEKT;
 			} else {
 				this.modus = Modus.IMPERATIV;
 			}
@@ -124,36 +95,36 @@ public class FormBuilder {
 		}
 		break;
 	case 'm':
-		this.genus = Genus.MASCULINUM;
+		this.gender = Gender.MASCULINE;
 		break;
 	case 'n':
 		if (string.startsWith("no")) {
 			this.casus = Case.NOMINATIVE;
 		} else {
-			this.genus = Genus.NEUTRUM;
+			this.gender = Gender.NEUTER;
 		}
 		break;
 	case 'p':
 		if (string.startsWith("pas")) {
-			this.genusVerbi = GenusVerbi.PASSIV;
+			this.voice = Voice.PASSIVE;
 		} else if (string.startsWith("part")) {
 			this.modus = Modus.PARTIZIP;
 		} else if (string.startsWith("perf")) {
-			this.tempus = Tempus.PERFEKT;
+			this.tense = Tense.PERFEKT;
 		} else if (string.startsWith("plus")) {
-			this.tempus = Tempus.PLUSQUAMPERFEKT;
+			this.tense = Tense.PAST_PERFECT;
 		} else if (string.startsWith("pl")) {
-			this.numerus = Numerus.PLURAL;
+			this.number = Number.PLURAL;
 		} else if (string.startsWith("praes")) {
-			this.tempus = Tempus.PRAESENS;
+			this.tense = Tense.PRESENT;
 		} else if (string.startsWith("praet")) {
-			this.tempus = Tempus.IMPERFEKT;
+			this.tense = Tense.IMPERFEKT;
 		} else {
 			return false;
 		}
 		break;
 	case 's':
-		numerus = Numerus.SINGULAR;
+		number = Number.SINGULAR;
 		break;
 	case 'v':
 		if (string.startsWith("vok")) {
@@ -168,7 +139,7 @@ public class FormBuilder {
 	return true;
 }
 
-	public Genus getGenus() {
-		return genus;
+	public Gender getGenus() {
+		return gender;
 	}
 }

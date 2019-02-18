@@ -7,8 +7,8 @@ import java.util.Map;
 import org.kobjects.nlp.api.Case;
 import org.kobjects.nlp.api.Form;
 import org.kobjects.nlp.api.FormBuilder;
-import org.kobjects.nlp.api.Genus;
-import org.kobjects.nlp.api.Numerus;
+import org.kobjects.nlp.api.Gender;
+import org.kobjects.nlp.api.Number;
 
 /**
  * Class that is able to decline a Latin noun, given the genus, nominative and genitve case.
@@ -62,18 +62,18 @@ public class Declinator {
 		Map<Form, String> result = new LinkedHashMap<Form, String>();
 		String stem = getStem(word[0]);
 		if (word.length == 3) {
-			decline(result, Genus.MASCULINUM, word[0], stem, 2);
-			decline(result, Genus.FEMININUM, word[1], stem, 1);
-			decline(result, Genus.NEUTRUM, word[2], stem, 2);
+			decline(result, Gender.MASCULINE, word[0], stem, 2);
+			decline(result, Gender.FEMININE, word[1], stem, 1);
+			decline(result, Gender.NEUTER, word[2], stem, 2);
 		} else if (word.length == 2) {
 			if (word[1].endsWith("e")) {
-				decline(result, Genus.MASCULINUM, word[0], stem, 3);
-				decline(result, Genus.FEMININUM, word[0], stem, 3);
-				decline(result, Genus.NEUTRUM, word[1], stem, 3);
+				decline(result, Gender.MASCULINE, word[0], stem, 3);
+				decline(result, Gender.FEMININE, word[0], stem, 3);
+				decline(result, Gender.NEUTER, word[1], stem, 3);
 			} else if (word[1].endsWith("is")) {
-				decline(result, Genus.MASCULINUM, word[0], stem, 3);
-				decline(result, Genus.FEMININUM, word[0], stem, 3);
-				decline(result, Genus.NEUTRUM, word[0], stem, 3);
+				decline(result, Gender.MASCULINE, word[0], stem, 3);
+				decline(result, Gender.FEMININE, word[0], stem, 3);
+				decline(result, Gender.NEUTER, word[0], stem, 3);
 			} else {
 				throw new RuntimeException("Adjective 2-form not recognized: " + Arrays.toString(word));
 			}
@@ -92,7 +92,7 @@ public class Declinator {
 	/**
 	 * Returns the declinations of the given word as a map.
 	 */
-	public static Map<Form, String> declineNoun(Genus genus, String... word) {
+	public static Map<Form, String> declineNoun(Gender genus, String... word) {
 		String nominativ = word[0].trim();
 		String genitive = word.length < 2 ? nominativ : word[1].trim();
 
@@ -142,7 +142,7 @@ public class Declinator {
 		return result;
 	}
 	
-	static void decline(Map<Form, String> result, Genus genus, String nominativ, String stem, int declension) {
+	static void decline(Map<Form, String> result, Gender genus, String nominativ, String stem, int declension) {
 		String[][] suffixes;
 		switch (declension) {
 		case 0:
@@ -179,10 +179,11 @@ public class Declinator {
 		
   		FormBuilder builder = new FormBuilder();
   		for (int n = 0; n < Latin.NUMERI.length; n++) {
-  			builder.numerus = Latin.NUMERI[n];
+  			builder.number = Latin.NUMERI[n];
   			String[] suffixesN = suffixes[n]; 
   			for (int i = 0; i < Latin.CASES.length; i++) {
-  				builder.setCasus(Latin.CASES[i]);
+  				builder.casus = Latin.CASES[i];
+				FormBuilder setCasus = builder;
   				String s = suffixesN[i];
   				if (s.equals("1")) {
   					s = nominativ;
@@ -190,7 +191,7 @@ public class Declinator {
   					int cut = s.indexOf('/');
   					if (cut == -1) {
   						s = stem + s;
-  					} else if (builder.getGenus() == Genus.NEUTRUM) {
+  					} else if (builder.getGenus() == Gender.NEUTER) {
   						s = stem + s.substring(cut + 1);
   					} else {
   						s = stem + s.substring(0, cut);
@@ -201,9 +202,9 @@ public class Declinator {
   		}
 	}
 
-  	static void addIrregulatives(Map<Form, String> result, Genus genus, String stem, int startIndex, String[] word)	 {
+  	static void addIrregulatives(Map<Form, String> result, Gender genus, String stem, int startIndex, String[] word)	 {
   		FormBuilder builder = new FormBuilder();
-  		builder.genus = genus;
+  		builder.gender = genus;
   		// Irregularities
   		for (int i = startIndex; i < word.length; i++) {
   			String s = word[i].trim();
@@ -217,8 +218,8 @@ public class Declinator {
   			default: throw new RuntimeException("Casus indicator (1-6) expected at position 1 but got: '" + s + "'.");
   			}
   			switch(Character.toUpperCase(s.charAt(1))) {
-  			case 'S': builder.numerus = Numerus.SINGULAR; break;
-  			case 'P': builder.numerus = Numerus.PLURAL; break;
+  			case 'S': builder.number = Number.SINGULAR; break;
+  			case 'P': builder.number = Number.PLURAL; break;
   			default: throw new RuntimeException("Numerus indicator (S or P) expected at position 2 but got: '" + s + "'");
   			} 
   			if (s.charAt(2) != '=') {

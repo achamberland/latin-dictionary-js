@@ -1,12 +1,15 @@
 package org.kobjects.nlp.api;
 
-public enum GenusVerbi {
-	AKTIV("Akt."),
-	PASSIV("Pass.");
+public enum Number {
+	SINGULAR("SG"),
+	PLURAL("PL");
+	
 	private final String name;
-	GenusVerbi(String name) {
+	
+	Number(String name) {
 		this.name = name;
 	}
+	
 	@Override
 	public String toString() {
 		return name;

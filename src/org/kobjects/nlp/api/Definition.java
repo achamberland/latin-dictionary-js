@@ -9,7 +9,7 @@ import org.kobjects.nlp.latin.Conjugator;
 public class Definition {
 	public final WordType type;
 	public Map<Language, List<Definition>> translations = new LinkedHashMap<>();
-	public Genus genus;
+	public Gender genus;
 	public String description;
 	public Map<Form, Word> forms = new LinkedHashMap<>();
 	
