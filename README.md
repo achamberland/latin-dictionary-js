@@ -13,6 +13,8 @@
  
  - Inflections are part of the code, see Delcinator.java and Conjugator.java in org.kobjects.nlp.latin
  
+ - The program currently just generates all word forms in memory when loading the dictionary.
+ 
 ## Words Preservation 
 
 For a maintained version William Whitaker's original WORDS programm, 
