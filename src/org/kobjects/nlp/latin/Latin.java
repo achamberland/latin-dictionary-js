@@ -117,6 +117,14 @@ public class Latin implements Language {
    	 			return null;
    	 		}
    	 	}
+
+   	 	for (int i = 0; i < wordParts.length; i++) {
+   	 		String word = wordParts[i].trim();
+   	 		if (word.endsWith("(i)") || word.endsWith("(ii)")) {
+   	 			word = word.substring(0, word.indexOf('(')) + 'i';
+   	 		}
+   	 		wordParts[i] = word;
+   	 	}
    	 	
 		String wordTypeName = typeParts[0];
 		WordType type = null;

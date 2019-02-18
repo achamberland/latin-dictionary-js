@@ -12,8 +12,9 @@ public class Form {
 	public final Voice voice;
 	public final Case casus;
 	public final Gender gender;
+	public final Degree degree;
 
-	Form(Person person, Number numerus, Modus modus, Tense tempus, Voice genusVerbi, Case casus, Gender genus) {
+	Form(Person person, Number numerus, Modus modus, Tense tempus, Voice genusVerbi, Case casus, Gender genus, Degree degree) {
 		this.person = person;
 		this.number = numerus;
 		this.modus = modus;
@@ -21,6 +22,7 @@ public class Form {
 		this.voice = genusVerbi;
 		this.casus = casus;
 		this.gender = genus;		
+		this.degree = degree;
 	}
 	
 	public String toString() {

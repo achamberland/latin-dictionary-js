@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kobjects.nlp.api.Case;
+import org.kobjects.nlp.api.Degree;
 import org.kobjects.nlp.api.Form;
 import org.kobjects.nlp.api.FormBuilder;
 import org.kobjects.nlp.api.Gender;
@@ -58,55 +59,105 @@ public class Declinator {
 			{"1", "1", "1", "1", "1", "1"},
 			{"1", "1", "1", "1", "1", "1"}};
 	
-	public static Map<Form, String> declineAdjective(String... word) {
+	/**
+	 * Declines an adjective. The variable words contains the Latin words of defining the dictionary
+	 * entry. 
+	 */
+	public static Map<Form, String> declineAdjective(String... words) {
 		Map<Form, String> result = new LinkedHashMap<Form, String>();
-		String stem = getStem(word[0]);
-		if (word.length == 3) {
-			decline(result, Gender.MASCULINE, word[0], stem, 2);
-			decline(result, Gender.FEMININE, word[1], stem, 1);
-			decline(result, Gender.NEUTER, word[2], stem, 2);
-		} else if (word.length == 2) {
-			if (word[1].endsWith("e")) {
-				decline(result, Gender.MASCULINE, word[0], stem, 3);
-				decline(result, Gender.FEMININE, word[0], stem, 3);
-				decline(result, Gender.NEUTER, word[1], stem, 3);
-			} else if (word[1].endsWith("is")) {
-				decline(result, Gender.MASCULINE, word[0], stem, 3);
-				decline(result, Gender.FEMININE, word[0], stem, 3);
-				decline(result, Gender.NEUTER, word[0], stem, 3);
+		String stem = getStem(words[0]);
+		int comparativeIndex = -1;
+		if (words.length > 1 && words[1].trim().indexOf(' ') != -1) {
+			// Multiple words in the second entry, split it into its parts.
+			String[] parts1 = words[1].split(" ");
+			if (parts1[1].equals("(gen.)") || parts1[1].equals("(gen)")) {
+				// neclegens, neclegentis (gen.), neclegentior -or -us, neclegentissimus -a -um
+				decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+				decline(result, Gender.FEMININE, null, words[0], stem, 3);
+				decline(result, Gender.NEUTER, null, words[0], stem, 3);
+				comparativeIndex = 2;
 			} else {
-				throw new RuntimeException("Adjective 2-form not recognized: " + Arrays.toString(word));
+				// acutus, acuta -um, acutior -or -us, acutissimus -a -um
+				decline(result, Gender.MASCULINE, null, words[0], stem, 2);
+				decline(result, Gender.FEMININE, null, parts1[0], stem, 1);
+				decline(result, Gender.NEUTER, null, parts1[1], stem, 2);
+				comparativeIndex = 2;
 			}
-		} else if (word.length > 3) {
-			if (word[1].endsWith(" (gen.)")) {
-				return declineAdjective(word[0], word[1].substring(0, word[1].length() - 7));
+			// TODO: Comparative, superlative.
+		} else if (words.length > 2 && words[2].indexOf(' ') != -1) {
+			// Multiple words in the third entry:
+			// ocis, oce, ocior -or -us, ocissimus -a -um
+			decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+			decline(result, Gender.FEMININE, null, words[0], stem, 3);
+			decline(result, Gender.NEUTER, null, words[1], stem, 3);
+			comparativeIndex = 2;
+		} else if (words.length == 3) {
+			if (words[1].equals("(gen.)")) {
+				// militans, (gen.), militantis
+				decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+				decline(result, Gender.FEMININE, null, words[0], stem, 3);
+				decline(result, Gender.NEUTER, null, words[0], stem, 3);
+			} else if (words[1].endsWith("e")) {
+				// adfectualis, adfectualis, adfectuale
+				decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+				decline(result, Gender.FEMININE, null, words[1], stem, 3);
+				decline(result, Gender.NEUTER, null, words[2], stem, 3);
 			} else {
-				throw new RuntimeException("Unrecognized Ajective declination: " + Arrays.toString(word));
+				// acquisitus, acquisita, acquisitum
+				decline(result, Gender.MASCULINE, null, words[0], stem, 2);
+				decline(result, Gender.FEMININE, null, words[1], stem, 1);
+				decline(result, Gender.NEUTER, null, words[2], stem, 2);
+			}
+		} else if (words.length == 2) {
+			if (words[1].equals("undeclined")) {
+			    // adinstar, undeclined
+				decline(result, Gender.MASCULINE, null, words[0], stem, 0);
+				decline(result, Gender.FEMININE, null, words[0], stem, 0);
+				decline(result, Gender.NEUTER, null, words[0], stem, 0);
+			} else if (words[1].endsWith("e")) {
+				decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+				decline(result, Gender.FEMININE, null, words[0], stem, 3);
+				decline(result, Gender.NEUTER, null, words[1], stem, 3);
+			} else if (words[1].endsWith("is")) {
+				decline(result, Gender.MASCULINE, null, words[0], stem, 3);
+				decline(result, Gender.FEMININE, null, words[0], stem, 3);
+				decline(result, Gender.NEUTER, null, words[0], stem, 3);
+			} else {
+				throw new RuntimeException("Adjective 2-form not recognized: " + Arrays.toString(words));
 			}
 		} else {
-			throw new RuntimeException("Unrecognized Ajective declination: " + Arrays.toString(word));
+			throw new RuntimeException("Unrecognized Ajective declination: " + Arrays.toString(words));
+		}
+		
+		if (comparativeIndex != -1 && comparativeIndex < words.length) {
+			String[] parts = words[comparativeIndex].split(" ");
+			decline(result, Gender.MASCULINE, Degree.COPARATIVE, parts[0], stem, 2);
+			decline(result, Gender.FEMININE, Degree.COPARATIVE, parts[1], stem, 1);
+			decline(result, Gender.NEUTER, Degree.COPARATIVE, parts[2], stem, 2);
+			if (comparativeIndex + 1 < words.length) {
+				parts = words[comparativeIndex + 1].split(" ");
+				decline(result, Gender.MASCULINE, Degree.SUPERLATIVE, parts[0], stem, 2);
+				decline(result, Gender.FEMININE, Degree.SUPERLATIVE, parts[1], stem, 1);
+				decline(result, Gender.NEUTER, Degree.SUPERLATIVE, parts[2], stem, 2);
+			}
 		}
 		return result;
 	}
 	
 	/**
-	 * Returns the declinations of the given word as a map.
+	 * Returns the declinations of the given word as a map. Words is expected to contain the
+	 * nominative and the genitive. 
 	 */
-	public static Map<Form, String> declineNoun(Gender genus, String... word) {
-		String nominativ = word[0].trim();
-		String genitive = word.length < 2 ? nominativ : word[1].trim();
+	public static Map<Form, String> declineNoun(Gender genus, String... words) {
+		String nominativ = words[0].trim();
+		String genitive = words.length < 2 ? nominativ : words[1].trim();
 
 		String stem;
 		int declension;
 		if (genitive.equals("undeclined")) {
 			declension = 0;
-			stem = null;
+			stem = null;  // not needed -- nominative is inserted everywhere.
 		} else {
-			if (genitive.endsWith("(i)")) {
-				// TODO: We just normalize to ii here.
-				genitive = genitive.substring(0, genitive.length() -3) + "i";
-			}
-		
 			// Genitive case given as suffix only -- construct the full genitive.
 			if (genitive.charAt(0) == '-') {
 				genitive = constructGenitive(nominativ, genitive.substring(1));
@@ -135,15 +186,19 @@ public class Declinator {
 			}
 		}
 		Map<Form, String> result = new LinkedHashMap<Form, String>();
-		decline(result, genus, nominativ, stem, declension);
-		if (word.length > 2) {
-			addIrregulatives(result, genus, stem, 2, word);
+		decline(result, genus, null, nominativ, stem, declension);
+		if (words.length > 2) {
+			addIrregulatives(result, genus, stem, 2, words);
 		}
 		return result;
 	}
 	
-	static void decline(Map<Form, String> result, Gender genus, String nominativ, String stem, int declension) {
+	static void decline(Map<Form, String> result, Gender genus, Degree degree, String nominative, String stem, int declension) {
 		String[][] suffixes;
+		if (nominative.startsWith("-")) {
+			nominative = stem + nominative.substring(1);
+		}
+		
 		switch (declension) {
 		case 0:
 			suffixes = UNDECLINED;
@@ -152,16 +207,16 @@ public class Declinator {
 			suffixes = FIRST_DECLENSION;
 			break;
 		case 2:
-			suffixes = nominativ.endsWith("us") ? SECOND_DECLENSION_US : SECOND_DECLENSION;
+			suffixes = nominative.endsWith("us") ? SECOND_DECLENSION_US : SECOND_DECLENSION;
 			break;
 		case 3:
-  			String nomintativeEnding = nominativ.endsWith("e") 
-				? "e" : nominativ.substring(nominativ.length() - 2);
+  			String nomintativeEnding = nominative.endsWith("e") 
+				? "e" : nominative.substring(nominative.length() - 2);
 			if (stem.length() > 2 && Latin.consonantsOnly(stem.substring(stem.length() - 2)) 
-					|| ((nomintativeEnding.equals("is") || nomintativeEnding.equals("es")) && Latin.syllableCount(stem + "is") == Latin.syllableCount(nominativ))) {
+					|| ((nomintativeEnding.equals("is") || nomintativeEnding.equals("es")) && Latin.syllableCount(stem + "is") == Latin.syllableCount(nominative))) {
 				suffixes = THIRD_DECLENSION_MIXED;
 			} else if ((nomintativeEnding.equals("is") || nomintativeEnding.equals("e") || nomintativeEnding.equals("al") || nomintativeEnding.equals("ar")) &&  // i-stamm
-					nominativ.substring(0, nominativ.length() - nomintativeEnding.length()).equals(stem)) {
+					nominative.substring(0, nominative.length() - nomintativeEnding.length()).equals(stem)) {
 				suffixes = THIRD_DECLENSION_I;
 			} else { 
 				suffixes = THIRD_DECLENSION_CONSONANT;
@@ -178,15 +233,16 @@ public class Declinator {
 		}
 		
   		FormBuilder builder = new FormBuilder();
+  		builder.degree = degree;
+  		builder.gender = genus;
   		for (int n = 0; n < Latin.NUMERI.length; n++) {
   			builder.number = Latin.NUMERI[n];
   			String[] suffixesN = suffixes[n]; 
   			for (int i = 0; i < Latin.CASES.length; i++) {
   				builder.casus = Latin.CASES[i];
-				FormBuilder setCasus = builder;
   				String s = suffixesN[i];
   				if (s.equals("1")) {
-  					s = nominativ;
+  					s = nominative;
   				} else {
   					int cut = s.indexOf('/');
   					if (cut == -1) {

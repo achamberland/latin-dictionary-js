@@ -8,9 +8,10 @@ public class FormBuilder {
 	public Voice voice;
 	public Case casus;
 	public Gender gender;
+	public Degree degree;
 
 	public Form build() {
-		return new Form(person, number, modus, tense, voice, casus, gender);
+		return new Form(person, number, modus, tense, voice, casus, gender, degree);
 	}
 
 
