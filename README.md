@@ -6,8 +6,8 @@
    http://archives.nd.edu/whitaker/dictpage.htm. It has been processed further to reduce 
    redundancies and to improve human-readability while keeping the file easy to parse.  
 
-   - The processed file is named whitaker_converted.txt and is contained in the package 
-     org.kobjects.nlp.latin.  
+   - The processed file is named [whitaker_converted.txt](https://github.com/stefanhaustein/nlp/blob/master/src/org/kobjects/nlp/latin/whitaker_converted.txt) and is contained in the package 
+     [org.kobjects.nlp.latin](https://github.com/stefanhaustein/nlp/tree/master/src/org/kobjects/nlp/latin).  
    - The corresponding processing code and original input can be found in the package 
      org.kobjects.nlp.latin.whitaker.
  
