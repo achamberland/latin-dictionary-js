@@ -16,81 +16,81 @@ public class Converter {
 	public static String resolveCodes(String codes) {
 		StringBuilder sb = new StringBuilder();
 		switch (codes.charAt(0)) {
-			case 'A': sb.append("a:archaic, "); break;
-			case 'B': sb.append("a:early, "); break;
-			case 'C': sb.append("a:classical, "); break;
-			case 'D': sb.append("a:late, "); break;
-			case 'E': sb.append("a:later, "); break;
-			case 'F': sb.append("a:medieval, "); break;
-			case 'G': sb.append("a:scholar, "); break;
-			case 'H': sb.append("a:modern, "); break;
+			case 'A': sb.append("age=archaic, "); break;
+			case 'B': sb.append("age=early, "); break;
+			case 'C': sb.append("age=classical, "); break;
+			case 'D': sb.append("age=late, "); break;
+			case 'E': sb.append("age=later, "); break;
+			case 'F': sb.append("age=medieval, "); break;
+			case 'G': sb.append("age=scholar, "); break;
+			case 'H': sb.append("age=modern, "); break;
 		}
 		switch (codes.charAt(1)) {
-			case 'A': sb.append("c:agric.+, "); break;
-			case 'B': sb.append("c:biomed.+, "); break;
-			case 'D': sb.append("c:drama+, "); break;
-			case 'E': sb.append("c:eccl.+, "); break;
-			case 'G': sb.append("c:grammar+, "); break;
-			case 'L': sb.append("c:legal+, "); break;
-			case 'P': sb.append("c:poetic, "); break;
-			case 'S': sb.append("c:sci.+, "); break;
-			case 'T': sb.append("c:tech.+, "); break;
-			case 'W': sb.append("c:war+, "); break;
-			case 'Y': sb.append("c:mythology, "); break;
+			case 'A': sb.append("cat=agr, "); break;
+			case 'B': sb.append("cat=bio, "); break;
+			case 'D': sb.append("cat=drm, "); break;
+			case 'E': sb.append("cat=ecc, "); break;
+			case 'G': sb.append("cat=grm, "); break;
+			case 'L': sb.append("cat=leg, "); break;
+			case 'P': sb.append("cat=poe, "); break;
+			case 'S': sb.append("cat=sci, "); break;
+			case 'T': sb.append("cat=tec, "); break;
+			case 'W': sb.append("cat=war, "); break;
+			case 'Y': sb.append("cat=myt, "); break;
 		}
 		switch (codes.charAt(2)) {
-		case 'A': sb.append("r:Aftrica, "); break;
-		case 'B': sb.append("r:Britain, ");break;
-		case 'C': sb.append("r:China, ");break;
-		case 'D': sb.append("r:Scandinavia, ");break;
-		case 'E': sb.append("r:Egypt, ");break;
-		case 'F': sb.append("r:France/Gaul, ");break;
-		case 'G': sb.append("r:Germany, ");break;
-		case 'H': sb.append("r:Greece, ");break;
-		case 'I': sb.append("r:Italy/Rome, ");break;
-		case 'J': sb.append("r:India, ");break;
-		case 'K': sb.append("r:Balkans, ");break;
-		case 'N': sb.append("r:Netherlands, ");break;
-		case 'P': sb.append("r:Persia, ");break;
-		case 'Q': sb.append("r:Near East, ");break;
-		case 'R': sb.append("r:Russia, ");break;
-		case 'S': sb.append("r:Spain/Iberia, ");break;
-		case 'U': sb.append("r:Eastern Europe, ");break;
+		case 'A': sb.append("reg=Aftrica, "); break;
+		case 'B': sb.append("reg=Britain, ");break;
+		case 'C': sb.append("reg=China, ");break;
+		case 'D': sb.append("reg=Scandinavia, ");break;
+		case 'E': sb.append("reg=Egypt, ");break;
+		case 'F': sb.append("reg=France/Gaul, ");break;
+		case 'G': sb.append("reg=Germany, ");break;
+		case 'H': sb.append("reg=Greece, ");break;
+		case 'I': sb.append("reg=Italy/Rome, ");break;
+		case 'J': sb.append("reg=India, ");break;
+		case 'K': sb.append("reg=Balkans, ");break;
+		case 'N': sb.append("reg=Netherlands, ");break;
+		case 'P': sb.append("reg=Persia, ");break;
+		case 'Q': sb.append("reg=NearEast, ");break;
+		case 'R': sb.append("reg=Russia, ");break;
+		case 'S': sb.append("reg=Spain/Iberia, ");break;
+		case 'U': sb.append("reg=Eastern Europe, ");break;
 		}
 		
 		switch (codes.charAt(3)) {
-		case 'A': sb.append("f:very frequent, ");break;
-		case 'B': sb.append("f:frequent, ");break;
-		case 'C': sb.append("f:common, ");break;
-		case 'D': sb.append("f:lesser, ");break;
-		case 'E': sb.append("f:uncommon, ");break;
-		case 'F': sb.append("f:very rare, ");break;
-		case 'I': sb.append("f:inscription, ");break;
-		case 'M': sb.append("f:grafffiti, ");break;
-		case 'N': sb.append("f:Pliny, ");break;
+		case 'A': sb.append("frq=+++, ");break;
+		case 'B': sb.append("frq=++, ");break;
+		case 'C': sb.append("frq=+, ");break;
+		case 'D': sb.append("frq=-, ");break;
+		case 'E': sb.append("frq=--, ");break;
+		case 'F': sb.append("frq=---, ");break;
+		case 'I': sb.append("frq=inscription, ");break;
+		case 'M': sb.append("frq=grafffiti, ");break;
+		case 'N': sb.append("frq=Pliny, ");break;
 		}
 		switch (codes.charAt(4)) {
-		case 'B': sb.append("s:Bee, ");break;
-		case 'C': sb.append("s:CAS, ");break;
-		case 'D': sb.append("s:Sex, ");break;
-		case 'E': sb.append("s:Ecc, ");break;
-		case 'F': sb.append("s:Def, ");break;
-		case 'G': sb.append("s:G+L, ");break;
-		case 'H': sb.append("s:Ouvrard, ");break;
-		case 'I': sb.append("s:Leverett 1845, ");break;
-		case 'K': sb.append("s:Cal, ");break;
-		case 'L': sb.append("s:Levis 1891, ");break;
-		case 'M': sb.append("s:Latham 1980, ");break;
-		case 'N': sb.append("s:Nelson, ");break;
-		case 'O': sb.append("s:OLD, ");break;
-		case 'P': sb.append("s:Souter 1949, ");break;
-		case 'Q': sb.append("s:(other), ");break;
-		case 'S': sb.append("s:L+S, ");break;
-		case 'T': sb.append("s:translation, ");break;
-		case 'U': sb.append("s:DuCange, ");break;
-		case 'V': sb.append("s:Saxo, ");break;
-		case 'W': sb.append("s:guess, ");break;
-		case 'Z': sb.append("s:user, ");break;
+		case 'B': sb.append("src=Bee, ");break;
+		case 'C': sb.append("src=CAS, ");break;
+		case 'D': sb.append("src=Sex, ");break;
+		case 'E': sb.append("src=Ecc, ");break;
+		case 'F': sb.append("sec=Def, ");break;
+		case 'G': sb.append("src=G+L, ");break;
+		case 'H': sb.append("src=Ouvrard, ");break;
+		case 'I': sb.append("src=Leverett1845, ");break;
+		case 'K': sb.append("src=Cal, ");break;
+		case 'L': sb.append("src=Levis1891, ");break;
+		case 'M': sb.append("src=Latham1980, ");break;
+		case 'N': sb.append("src=Nelson, ");break;
+		case 'O': sb.append("src=OLD, ");break;
+		case 'P': sb.append("src=Souter1949, ");break;
+		case 'Q': sb.append("src=other, ");break;
+		case 'S': sb.append("src=L+S, ");break;
+		case 'T': sb.append("src=translation, ");break;
+		case 'U': sb.append("src=DuCange, ");break;
+		case 'V': sb.append("src=Saxo, ");break;
+		case 'W': sb.append("src=guess, ");break;
+		case 'Z': sb.append("src=user, ");break;
 		}
 		
 		if (sb.length() > 0) {

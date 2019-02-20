@@ -150,7 +150,7 @@ public class Declinator {
   }
 
   /**
-   * Returns the declinations of the given word as a map. Words is expected to
+   * Returns the declensions of the given word as a map. Words is expected to
    * contain the nominative and the genitive.
    */
   public static Map<Form, String> declineNoun(Gender genus, String... words) {
