@@ -3,11 +3,22 @@ package org.kobjects.nlp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.kobjects.nlp.api.Case;
+import org.kobjects.nlp.api.Definition;
+import org.kobjects.nlp.api.FormBuilder;
+import org.kobjects.nlp.api.Mood;
+import org.kobjects.nlp.api.Number;
+import org.kobjects.nlp.api.Person;
+import org.kobjects.nlp.api.Strings;
+import org.kobjects.nlp.api.Tense;
+import org.kobjects.nlp.api.Voice;
 import org.kobjects.nlp.api.Word;
+import org.kobjects.nlp.api.WordType;
 import org.kobjects.nlp.latin.Latin;
 
 public class Main {
@@ -37,6 +48,61 @@ public class Main {
 		return sb.toString();
 	}
 	
+	static void listAllForms(Set<Word> words) {
+	   Set<Definition> definitions = new HashSet<>();
+	   for (Word word : words) {
+	     System.out.println(word.word + ": " + word);
+	     Definition definition = word.definition;
+	     if (definitions.contains(definition)) {
+	       continue;
+	     }
+         FormBuilder formBuilder = new FormBuilder();
+	     if (definition.type == WordType.NOUN) {
+	       formBuilder.gender = definition.genus;
+	       for (Case casus : Latin.CASES) {
+	         System.out.print(Strings.fill(casus.toString(), 10));
+	         formBuilder.casus = casus;
+	         for (Number number : Number.values()) {
+	           formBuilder.number = number;
+	           Word wordForm = definition.forms.get(formBuilder.build());
+	           System.out.print(Strings.fill(wordForm.word, 20));
+	         }
+	           System.out.println();
+	       }
+	     } else if (definition.type == WordType.VERB) {
+	       for (Mood mood : Mood.values()) {
+	         formBuilder.mood = mood;
+	         for (Voice voice : Voice.values()) {
+	           formBuilder.voice = voice;
+	           System.out.println();
+	           System.out.println(mood.name() + " " + voice.name());
+               System.out.println();
+               
+               System.out.print("          ");
+               for (Tense tense : Tense.values()) {
+                 System.out.print(Strings.fill(tense.name(), 20));
+               }
+               System.out.println();
+               for (Number number : Number.values()) {
+                 formBuilder.number = number;
+                 for (Person person : Person.values()) {
+                   formBuilder.person = person;
+                   System.out.print(Strings.fill("" + person + " " +number, 10));
+                   for (Tense tense : Tense.values()) {
+                     formBuilder.tense = tense;
+                     Word wordForm = definition.forms.get(formBuilder.build());
+                     System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+                   }
+                   System.out.println();
+                 }
+               }
+	         }
+	       }
+	     }
+	     definitions.add(word.definition);
+	   }
+	}
+	
 	public static void main(String[] args) throws IOException {
 		
 		Latin latin = new Latin();
@@ -44,23 +110,26 @@ public class Main {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		
 		while (true) {
-			System.out.println("input> ");
+			System.out.print("input> ");
 
 			String input = reader.readLine();
 			if (input == null) {
 				break;
 			}
-
+			
+			boolean listAll = input.startsWith(".");
 			String[] words = input.split(" ");
 			
 			for (String s : words) {
 				s = lettersOnly(s.toLowerCase());
-					
-				
+				if (s.trim().isEmpty()) {
+				  continue;
+				}
 				Set<Word> options = latin.find(s);
-				
 				if (options == null) {
 					System.out.println(fill(s, 15) + ": (not found)");
+				} else if (words.length == 1) {
+				  listAllForms(options);
 				} else {
 					List<String> list = Word.toString(options);
 					Iterator<String> i = list.iterator();
@@ -68,12 +137,9 @@ public class Main {
 					while (i.hasNext()) {
 						System.out.println(fill("", 17) + i.next());
 					}
-					
 				}
 			}
-			
 		}
-		
 	}
 	
 }

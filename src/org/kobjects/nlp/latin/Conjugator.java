@@ -6,16 +6,13 @@ import org.kobjects.nlp.api.Form;
 
 public class Conjugator {
   
-  public static Map<Form, String> conjugate(int k, String... word) {
-    String word1 = word[0];
+  public static Map<Form, String> conjugate(String present, String infinitive, String perfect, String supine, int k) {
     // Determine stem1 and conjugation
     final Conjugation conjugation;
-    final String stem1;
-		
+    final String presentStem;
+    
     if (k >= 1 && k <= 4) {
-      if (word1.endsWith("r")) {
-        word1 = word1.substring(0, word1.length() - 1);
-      }
+      String tentativeStem = present.endsWith("r") ? present.substring(0, present.length() - 1) : present;
       int cut;
       switch (k) {
       case 1:
@@ -27,7 +24,7 @@ public class Conjugator {
         cut = 2;
         break;
       case 3:
-        if (word1.endsWith("io")) {
+        if (tentativeStem.endsWith("io")) {
           conjugation = Conjugation.THIRD_CONJUGATION_I_STEM;
           cut = 2;
         } else {
@@ -42,16 +39,16 @@ public class Conjugator {
         default:
           throw new RuntimeException("Impossible!");
       } 
-      stem1 = word1.substring(0, word.length - cut);
+      presentStem = tentativeStem.substring(0, tentativeStem.length() - cut);
     } else {
-      if (word1.equals("possum")) {
+      if (present.equals("possum")) {
         conjugation = Conjugation.POSSE;
-        stem1 = "";
-      } else if (word1.endsWith("sum")) {
+        presentStem = "";
+      } else if (present.endsWith("sum")) {
 		conjugation = Conjugation.ESSE;
-		stem1 = word1.substring(0, word1.length() - 3);
+		presentStem = present.substring(0, present.length() - 3);
       } else {
-		switch (word1) {
+		switch (present) {
 		case "ferro":
 		  conjugation = Conjugation.FERRE;    
 		  break;
@@ -67,56 +64,52 @@ public class Conjugator {
 		case "eo":
 		  conjugation = Conjugation.E;
 		  break;
-		case "fio":
-		  throw new RuntimeException("klasse = 13");
 		default:
-		  throw new RuntimeException("stamm1 nicht erkannt: " + word1);
+		  throw new RuntimeException("Conjugation not recgonized for " + present);
 		}
-		stem1 = "";
+		presentStem = "";
       }
     }
 
     // Determine stem2 and stem3
 	
-    String stem2;
-    String stem3;
+    String infinitveStem;
+    String perfectStem;
     
-    if (word.length == 1 && k >= 1 && k <= 4) {
+    if (infinitive == null && k >= 1 && k <= 4) {
       switch (k) {
       case 1:
-        stem2 = stem1 + "av";
-        stem3 = stem1 + "at";
+        infinitveStem = presentStem + "av";
+        perfectStem = presentStem + "at";
         break;
       case 3:
-        stem2 = stem1 + "iv";
-        stem3 = stem1 + "it";
+        infinitveStem = presentStem + "iv";
+        perfectStem = presentStem + "it";
         break;
       case 2:
-        stem2 = stem1 + "ev";
-        stem3 = stem1 + "et";
+        infinitveStem = presentStem + "ev";
+        perfectStem = presentStem + "et";
         break;
       case 4:
-        stem2 = stem1 + "v";
-        stem3 = stem1 + "t";
+        infinitveStem = presentStem + "v";
+        perfectStem = presentStem + "t";
         break;
       default:
         throw new RuntimeException("Klasse: " + k);
       }
     } else {
-      String tentative2 = word[1].trim();
-      if (tentative2.endsWith(" sum")) {
-        stem3 = tentative2.substring(0, tentative2.length() - 6);
-        stem2 = "#";
+      if (infinitive.endsWith(" sum")) {
+        perfectStem = infinitive.substring(0, infinitive.length() - 6);
+        infinitveStem = null;
       } else {
-        stem2 = tentative2.substring(0, tentative2.length() - 1);
-        if (word.length > 2 && !word[2].trim().equals("-")) {
-          String word3 = word[2].trim();
-          stem3 = word3.substring(0, word3.length() - 2);
+        infinitveStem = infinitive.substring(0, infinitive.length() - 1);
+        if (perfect != null && !perfect.equals("-")) {
+          perfectStem = perfect.substring(0, perfect.length() - 1);
         } else {
-          stem3 = "#";
+          perfectStem = "#";
         }
       } 
     }
-    return conjugation.apply(stem1, stem2, stem3);
+    return conjugation.apply(presentStem, infinitveStem, perfectStem);
   }
 }

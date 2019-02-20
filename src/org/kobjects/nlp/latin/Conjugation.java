@@ -8,6 +8,7 @@ import org.kobjects.nlp.api.FormBuilder;
 import org.kobjects.nlp.api.MapBuilder;
 import org.kobjects.nlp.api.Number;
 import org.kobjects.nlp.api.Person;
+import org.kobjects.nlp.api.Tense;
 
 class Conjugation {
   static final Map<Form, String[]> PERSONAL_SUFFIXES = new MapBuilder<Form, String[]>()
@@ -187,10 +188,26 @@ class Conjugation {
     }
   }
   
-  Map<Form,String> apply(String presentStem, String perfectActiveStem, String perfectPassiveStem) {
+  Map<Form,String> apply(String presentStem, String infinitveStem, String perfectStem) {
     LinkedHashMap<Form,String> result = new LinkedHashMap<Form,String>();
     for (Map.Entry<Form, String> entry : map.entrySet()) {
-      result.put(entry.getKey(), presentStem + entry.getValue());
+      Form form = entry.getKey();
+      String stem;
+      switch (form.tense) {
+      case PRESENT:
+      case IMPERFEKT:
+      case FUTURE:
+        stem = presentStem;
+        break;
+      case PERFEKT:
+      case FUTURE_PERFECT:
+      case PAST_PERFECT:
+        stem = perfectStem;
+        break;
+      default:
+        continue;
+      }
+      result.put(entry.getKey(), stem + entry.getValue());
     }
     return result;
   }

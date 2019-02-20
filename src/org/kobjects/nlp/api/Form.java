@@ -19,9 +19,9 @@ public class Form {
   public static final Form IND_FUTP_PASS = Form.of(Mood.INDICATIVE, Tense.FUTURE_PERFECT, Voice.PASSIVE);
   
   public static final Form SJV_PRES_ACT = Form.of(Mood.SUBJUNCTIVE, Tense.PRESENT, Voice.ACTIVE);
-  public static final Form SJV_PRES_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.PRESENT, Voice.ACTIVE);
+  public static final Form SJV_PRES_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.PRESENT, Voice.PASSIVE);
   public static final Form SJV_IMPERF_ACT = Form.of(Mood.SUBJUNCTIVE, Tense.IMPERFEKT, Voice.ACTIVE);
-  public static final Form SJV_IMPERF_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.IMPERFEKT, Voice.ACTIVE);
+  public static final Form SJV_IMPERF_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.IMPERFEKT, Voice.PASSIVE);
   
   public static Form of(Object... parts) {
     return new FormBuilder(parts).build();

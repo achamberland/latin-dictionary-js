@@ -10,4 +10,13 @@ public class Strings {
     return result;
   }
 
+  public static String fill(String s, int len) {
+     StringBuilder sb = new StringBuilder(len);
+     sb.append(s);
+     while (sb.length() < len) {
+       sb.append(' ');
+     }
+     return sb.toString();
+  }
+
 }

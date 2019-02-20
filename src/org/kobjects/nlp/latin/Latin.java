@@ -23,7 +23,7 @@ public class Latin implements Language {
 	static final String VOCALS = "aeiouAEIOU";
 	static final String CONSONANTS = "bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ";
 
-	static final Case[] CASES = { 
+	public static final Case[] CASES = { 
 			Case.NOMINATIVE, 
 			Case.DATIVE, 
 			Case.GENITIVE, 
@@ -191,9 +191,12 @@ public class Latin implements Language {
 		int conjugation = conjugationDescription.length() == 1 && conjugationDescription.charAt(0) >= '1'
 				&& conjugationDescription.charAt(0) <= '4' ? Integer.parseInt(conjugationDescription) : 0;
 
-		for (Map.Entry<Form, String> entry : Conjugator.conjugate(conjugation, word).entrySet()) {
-			definition.forms.put(entry.getKey(), new Word(entry.getValue(), entry.getKey(), definition));
+		if (word.length < 4) {
+		  String[] filled = new String[4];
+		  System.arraycopy(word, 0, filled, 0, word.length);
+		  word = filled;
 		}
+		definition.addForms(Conjugator.conjugate(word[0], word[1], word[2], word[3], conjugation));
 	};
 
 	public String getName() {
