@@ -3,6 +3,7 @@ package org.kobjects.nlp.latin;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -101,9 +102,9 @@ public class Latin implements Language {
 
 	public Definition parseDefinition(String def) {
 		def = def.toLowerCase();
-		int colon = def.indexOf("::");
+		int colon = def.indexOf(":");
 		if (colon == -1) {
-			throw new RuntimeException(":: expected.");
+			throw new RuntimeException(": expected.");
 		}
 		
 		String[] leftParts = def.substring(0, colon).split(";");
@@ -173,8 +174,10 @@ public class Latin implements Language {
 		default:
 			throw new RuntimeException("Unrecognized genus '" + kind[kind.length - 1] + "'");
 		}
-
-		definition.addForms(Declinator.declineNoun(definition.genus, word));
+		if (word.length != 2) {
+		  throw new RuntimeException("Nominative and genitive expected for noun entries. Got: " + Arrays.toString(word));
+		}
+		definition.addForms(Declinator.declineNoun(definition.genus, word[0], word[1]));
 	}
 
 	/**
@@ -201,5 +204,12 @@ public class Latin implements Language {
 	public Set<Word> find(String word) {
 		return dictionary.get(word);
 	}
+
+  public static String getStem(String nominative) {
+    if (isVocal(nominative.charAt(nominative.length() - 1))) {
+      return nominative.substring(0, nominative.length() - 1);
+    }
+    return nominative.substring(0, nominative.length() - 2);
+  }
 
 }

@@ -176,7 +176,7 @@ public class Converter {
 				out.write("; ");
 				out.write(decoded);
 			}
-			out.write(" ::\n");
+			out.write(":\n");
 			
 			String[] parts = translation.split(";");
 			for (int i = 0; i < parts.length; i++) {

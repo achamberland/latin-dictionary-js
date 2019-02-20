@@ -1,17 +1,8 @@
 package org.kobjects.nlp.latin;
 
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kobjects.nlp.api.Form;
-import org.kobjects.nlp.api.FormBuilder;
-import org.kobjects.nlp.api.Gender;
-import org.kobjects.nlp.api.Voice;
-import org.kobjects.nlp.api.Mood;
-import org.kobjects.nlp.api.Number;
-import org.kobjects.nlp.api.Person;
-import org.kobjects.nlp.api.Tense;
 
 public class Conjugator {
   
