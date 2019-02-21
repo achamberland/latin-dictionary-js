@@ -22,6 +22,10 @@ public class Form {
   public static final Form SJV_PRES_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.PRESENT, Voice.PASSIVE);
   public static final Form SJV_IMPERF_ACT = Form.of(Mood.SUBJUNCTIVE, Tense.IMPERFEKT, Voice.ACTIVE);
   public static final Form SJV_IMPERF_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.IMPERFEKT, Voice.PASSIVE);
+  public static final Form SJV_PERF_ACT = Form.of(Mood.SUBJUNCTIVE, Tense.PERFEKT, Voice.ACTIVE);
+  public static final Form SJV_PERF_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.PERFEKT, Voice.PASSIVE);
+  public static final Form SJV_PLUP_ACT = Form.of(Mood.SUBJUNCTIVE, Tense.PAST_PERFECT, Voice.ACTIVE);
+  public static final Form SJV_PLUP_PASS = Form.of(Mood.SUBJUNCTIVE, Tense.PAST_PERFECT, Voice.PASSIVE);
   
   public static Form of(Object... parts) {
     return new FormBuilder(parts).build();

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.kobjects.nlp.api.Case;
 import org.kobjects.nlp.api.Definition;
 import org.kobjects.nlp.api.FormBuilder;
+import org.kobjects.nlp.api.Gender;
 import org.kobjects.nlp.api.Mood;
 import org.kobjects.nlp.api.Number;
 import org.kobjects.nlp.api.Person;
@@ -70,7 +71,7 @@ public class Main {
 	           System.out.println();
 	       }
 	     } else if (definition.type == WordType.VERB) {
-	       for (Mood mood : Mood.values()) {
+	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE}) {
 	         formBuilder.mood = mood;
 	         for (Voice voice : Voice.values()) {
 	           formBuilder.voice = voice;
@@ -83,12 +84,20 @@ public class Main {
                  System.out.print(Strings.fill(tense.name(), 20));
                }
                System.out.println();
+               
                for (Number number : Number.values()) {
                  formBuilder.number = number;
                  for (Person person : Person.values()) {
                    formBuilder.person = person;
                    System.out.print(Strings.fill("" + person + " " +number, 10));
                    for (Tense tense : Tense.values()) {
+                     if (voice == Voice.PASSIVE 
+                         && (tense == Tense.FUTURE_PERFECT || tense == Tense.PAST_PERFECT || tense == Tense.PERFEKT)) {
+                       formBuilder.gender = Gender.MASCULINE;
+                     } else {
+                       formBuilder.gender = null;
+                     }
+                     
                      formBuilder.tense = tense;
                      Word wordForm = definition.forms.get(formBuilder.build());
                      System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
@@ -111,15 +120,11 @@ public class Main {
 		
 		while (true) {
 			System.out.print("input> ");
-
 			String input = reader.readLine();
 			if (input == null) {
 				break;
 			}
-			
-			boolean listAll = input.startsWith(".");
 			String[] words = input.split(" ");
-			
 			for (String s : words) {
 				s = lettersOnly(s.toLowerCase());
 				if (s.trim().isEmpty()) {

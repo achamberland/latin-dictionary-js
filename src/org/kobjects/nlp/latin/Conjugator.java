@@ -6,34 +6,34 @@ import org.kobjects.nlp.api.Form;
 
 public class Conjugator {
   
-  public static Map<Form, String> conjugate(String present, String infinitive, String perfect, String supine, int k) {
+  public static Map<Form, String> conjugate(String present, String infinitive, String perfect, String supine, int conjugationNumber) {
     // Determine stem1 and conjugation
     final Conjugation conjugation;
     final String presentStem;
     
-    if (k >= 1 && k <= 4) {
+    if (conjugationNumber >= 1 && conjugationNumber <= 4) {
       String tentativeStem = present.endsWith("r") ? present.substring(0, present.length() - 1) : present;
       int cut;
-      switch (k) {
+      switch (conjugationNumber) {
       case 1:
-        conjugation = Conjugation.FIRST_CONJUGATION;
+        conjugation = Conjugations.FIRST_CONJUGATION;
         cut = 1;
         break;
       case 2: 
-        conjugation = Conjugation.SECOND_CONJUGATION;
+        conjugation = Conjugations.SECOND_CONJUGATION;
         cut = 2;
         break;
       case 3:
         if (tentativeStem.endsWith("io")) {
-          conjugation = Conjugation.THIRD_CONJUGATION_I_STEM;
+          conjugation = Conjugations.THIRD_CONJUGATION_I_STEM;
           cut = 2;
         } else {
-          conjugation = Conjugation.THIRD_CONJUGATION;
+          conjugation = Conjugations.THIRD_CONJUGATION;
           cut = 1;
         }
         break;
       case 4:
-        conjugation = Conjugation.FOURTH_CONJUGATION;
+        conjugation = Conjugations.FOURTH_CONJUGATION;
         cut = 1;
         break;
         default:
@@ -42,27 +42,27 @@ public class Conjugator {
       presentStem = tentativeStem.substring(0, tentativeStem.length() - cut);
     } else {
       if (present.equals("possum")) {
-        conjugation = Conjugation.POSSE;
+        conjugation = Conjugations.POSSE;
         presentStem = "";
       } else if (present.endsWith("sum")) {
-		conjugation = Conjugation.ESSE;
+		conjugation = Conjugations.ESSE;
 		presentStem = present.substring(0, present.length() - 3);
       } else {
 		switch (present) {
 		case "ferro":
-		  conjugation = Conjugation.FERRE;    
+		  conjugation = Conjugations.FERRE;    
 		  break;
 		case "volo":
-		  conjugation = Conjugation.VOLE;
+		  conjugation = Conjugations.VOLE;
 		  break;
 		case "nolo":
-		  conjugation = Conjugation.NOLE;
+		  conjugation = Conjugations.NOLE;
 		  break;
 		case "malo":
-		  conjugation = Conjugation.MALE;
+		  conjugation = Conjugations.MALE;
 		  break;
 		case "eo":
-		  conjugation = Conjugation.E;
+		  conjugation = Conjugations.E;
 		  break;
 		default:
 		  throw new RuntimeException("Conjugation not recgonized for " + present);
@@ -73,43 +73,44 @@ public class Conjugator {
 
     // Determine stem2 and stem3
 	
-    String infinitveStem;
+//    String infinitveStem;
     String perfectStem;
+    String passiveStem;
     
-    if (infinitive == null && k >= 1 && k <= 4) {
-      switch (k) {
+    if (infinitive == null && conjugationNumber >= 1 && conjugationNumber <= 4) {
+      switch (conjugationNumber) {
       case 1:
-        infinitveStem = presentStem + "av";
-        perfectStem = presentStem + "at";
+        perfectStem = presentStem + "av";
+        passiveStem = presentStem + "at";
         break;
       case 3:
-        infinitveStem = presentStem + "iv";
-        perfectStem = presentStem + "it";
+        perfectStem = presentStem + "iv";
+        passiveStem = presentStem + "it";
         break;
       case 2:
-        infinitveStem = presentStem + "ev";
-        perfectStem = presentStem + "et";
+        perfectStem = presentStem + "ev";
+        passiveStem = presentStem + "et";
         break;
       case 4:
-        infinitveStem = presentStem + "v";
-        perfectStem = presentStem + "t";
+        perfectStem = presentStem + "v";
+        passiveStem = presentStem + "t";
         break;
       default:
-        throw new RuntimeException("Klasse: " + k);
+        throw new RuntimeException("Klasse: " + conjugationNumber);
       }
     } else {
-      if (infinitive.endsWith(" sum")) {
-        perfectStem = infinitive.substring(0, infinitive.length() - 6);
-        infinitveStem = null;
+      if (perfect.endsWith(" sum")) {
+        passiveStem = perfect.substring(0, perfect.length() - 6);
+        perfectStem = null;
       } else {
-        infinitveStem = infinitive.substring(0, infinitive.length() - 1);
-        if (perfect != null && !perfect.equals("-")) {
-          perfectStem = perfect.substring(0, perfect.length() - 1);
+        perfectStem = perfect.substring(0, perfect.length() - 1);
+        if (supine != null && !supine.equals("-")) {
+          passiveStem = supine.substring(0, supine.length() - 2);
         } else {
-          perfectStem = "#";
+          passiveStem = "#";
         }
       } 
     }
-    return conjugation.apply(presentStem, infinitveStem, perfectStem);
+    return conjugation.apply(presentStem, perfectStem, passiveStem);
   }
 }
