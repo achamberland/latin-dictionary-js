@@ -50,19 +50,24 @@ public class Conjugator {
       } else {
 		switch (present) {
 		case "ferro":
-		  conjugation = Conjugations.FERRE;    
+		  conjugation = Conjugations.FERRE;
+		  infinitive = "ferre";
 		  break;
 		case "volo":
-		  conjugation = Conjugations.VOLE;
+		  conjugation = Conjugations.VELLE;
+		  infinitive = "velle";
 		  break;
 		case "nolo":
-		  conjugation = Conjugations.NOLE;
+		  conjugation = Conjugations.NOLLE;
+		  infinitive = "nolle";
 		  break;
 		case "malo":
-		  conjugation = Conjugations.MALE;
+		  conjugation = Conjugations.MALLE;
+		  infinitive = "malle";
 		  break;
 		case "eo":
-		  conjugation = Conjugations.E;
+		  conjugation = Conjugations.IRE;
+		  infinitive = "ire";
 		  break;
 		default:
 		  throw new RuntimeException("Conjugation not recgonized for " + present);
@@ -111,6 +116,9 @@ public class Conjugator {
         }
       } 
     }
-    return conjugation.apply(presentStem, perfectStem, passiveStem);
+    
+    String supineStem = supine == null || supine.length() < 2 ? null : supine.substring(0, supine.length() - 2);
+    
+    return conjugation.apply(presentStem, infinitive, perfectStem, passiveStem, supineStem);
   }
 }

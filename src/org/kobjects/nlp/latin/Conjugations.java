@@ -7,7 +7,7 @@ import org.kobjects.nlp.api.MapBuilder;
 
 public class Conjugations {
   
-  static final Map<Form, String[]> PERSONAL_SUFFIXES = new MapBuilder<Form, String[]>()
+  static final Map<Form, String[]> INVARIANT_SUFFIXES = new MapBuilder<Form, String[]>()
 
       .put(Form.IND_IMPERF_ACT,  new String[] {"am",    "as",    "at",    "amus",    "atis",    "ant"})
       .put(Form.IND_IMPERF_PASS, new String[] {"bar",   "baris", "batur", "bamur",   "bamini",  "bantur"})
@@ -25,7 +25,9 @@ public class Conjugations {
       .put(Form.SJV_PERF_PASS,   new String[] {"sim",   "sis",   "sit",   "simus",   "sitis",   "sint"})
       .put(Form.SJV_PLUP_ACT,    new String[] {"issem", "isses", "isset", "issemus", "issetis", "issent"})
       .put(Form.SJV_PLUP_PASS,   new String[] {"essem", "esses", "esset", "essemus", "essetis", "essent"})
-      
+      .put(Form.INF_PERF_ACT,    new String[] {"isse"})
+      .put(Form.INF_PERF_PASS,   new String[] {"esse"})
+      .put(Form.INF_FUT_PASS,    new String[] {"iri"})
       .build();
   
   
@@ -41,6 +43,13 @@ public class Conjugations {
       Form.SJV_PRES_PASS,   "e",
       Form.SJV_IMPERF_ACT,  "ar",
       Form.SJV_IMPERF_PASS, "a",
+      
+      Form.INF_PRES_PASS,    "ari",
+      
+      Form.INF_PERF_ACT,    "isse",
+      Form.INF_PERF_PASS,   "esse",
+      Form.INF_FUT_ACT,     "esse",
+      
       null);
                        
           
@@ -56,6 +65,8 @@ public class Conjugations {
       Form.SJV_PRES_PASS,   "ea",
       Form.SJV_IMPERF_ACT,  "er",
       Form.SJV_IMPERF_PASS, "e",
+      
+      Form.INF_PRES_PASS,    "eri",
       null);
 
   static final Conjugation THIRD_CONJUGATION = new Conjugation(
@@ -69,6 +80,7 @@ public class Conjugations {
       Form.SJV_PRES_PASS,   "a",
       Form.SJV_IMPERF_ACT,  "er",
       Form.SJV_IMPERF_PASS, "e",
+      Form.INF_PRES_PASS,    "i",
       null);
 
   static final Conjugation FOURTH_CONJUGATION = new Conjugation(
@@ -82,6 +94,7 @@ public class Conjugations {
       Form.SJV_PRES_PASS,   "a",
       Form.SJV_IMPERF_ACT,  "r",
       Form.SJV_IMPERF_PASS, "",
+      Form.INF_PRES_PASS,    "ri",
       null);
 
   static final Conjugation THIRD_CONJUGATION_I_STEM = new Conjugation(
@@ -94,7 +107,8 @@ public class Conjugations {
       Form.SJV_PRES_ACT,    "ia",
       Form.SJV_PRES_PASS,   "ia",
       Form.SJV_IMPERF_ACT,  "er",
-      Form.SJV_IMPERF_PASS,  "e",
+      Form.SJV_IMPERF_PASS, "e",
+      Form.INF_PRES_PASS,    "i",
       null);
 
 
@@ -104,6 +118,7 @@ public class Conjugations {
       Form.IND_FUT_ACT,    "ero, eris, erit, erimus, eritis, erunt", 
       Form.SJV_PRES_ACT,   "si",
       Form.SJV_IMPERF_ACT, "ess",
+      Form.INF_PRES_ACT,    "esse",
       null);
   
   static final Conjugation POSSE = new Conjugation(
@@ -123,30 +138,31 @@ public class Conjugations {
       Form.SJV_PRES_PASS,   "fera",
       Form.SJV_IMPERF_ACT,  "ferr",
       Form.SJV_IMPERF_ACT,  "fer",
+      Form.INF_PRES_PASS,    "ferri",
       null);
      
-  static final Conjugation VOLE = new Conjugation(
+  static final Conjugation VELLE = new Conjugation(
       Form.IND_PRES_ACT,   "volo,  vis,   vult,  volumus, vultis,  volunt",
       Form.IND_FUT_ACT,    "volam, voles, volet, volemus, voletis, volent",
       Form.SJV_PRES_ACT,   "veli",
       Form.SJV_IMPERF_ACT, "vell",
       null);
   
-  static final Conjugation NOLE = new Conjugation(
+  static final Conjugation NOLLE = new Conjugation(
       Form.IND_PRES_ACT,   "nolo,  non vis, non vult, nolumus, non vultis, nolunt",
       Form.IND_FUT_ACT,    "nolam, noles,   nolet,    nolemus, noletis,    nolent", 
       Form.SJV_PRES_ACT,   "noli",
       Form.SJV_IMPERF_ACT, "noll",
       null);
   
-  static final Conjugation MALE = new Conjugation(
+  static final Conjugation MALLE = new Conjugation(
       Form.IND_PRES_ACT,   "malo,  mavis, mavult, malumus, mavultis, malunt",
       Form.IND_FUT_ACT,    "malam, males, malet,  malemus, maletis,  malent",
       Form.SJV_PRES_ACT,   "mali",
       Form.SJV_IMPERF_ACT, "mall",
       null);
   
-  static final Conjugation E = new Conjugation(
+  static final Conjugation IRE = new Conjugation(
       Form.IND_PRES_ACT,   "eo,  is,   it,   imus,   itis,   eunt",
       Form.IND_FUT_ACT,    "ibo, ibis, ibit, ibimus, ibitis, ibunt",
       Form.IND_PERF_ACT,   "ii,  isti, iit,  iimus,  istis,  ierunt",

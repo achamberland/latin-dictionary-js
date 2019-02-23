@@ -13,7 +13,7 @@ public class FormBuilder {
   public FormBuilder(Form form) {
     person = form.person;
     number = form.number;
-    mood = form.modus;
+    mood = form.mood;
     tense = form.tense;
     voice = form.voice;
     casus = form.casus;
@@ -112,10 +112,10 @@ public class FormBuilder {
       } else if (string.startsWith("INF")) {
         this.mood = Mood.INFINITIVE;
       } else if (string.startsWith("IMPF") || string.startsWith("IMPERF")) {
-        this.tense = Tense.IMPERFEKT;
+        this.tense = Tense.IMPERFECT;
       } else if (string.startsWith("IMP")) {
         if (mood != null || person != null) {
-          this.tense = Tense.IMPERFEKT;
+          this.tense = Tense.IMPERFECT;
         } else {
           this.mood = Mood.IMPERATIVE;
         }
@@ -137,7 +137,7 @@ public class FormBuilder {
       } else if (string.startsWith("PART")) {
         this.mood = Mood.PARTICIPLE;
       } else if (string.startsWith("PERF")) {
-        this.tense = Tense.PERFEKT;
+        this.tense = Tense.PERFECT;
       } else if (string.startsWith("PLUS")) {
         this.tense = Tense.PAST_PERFECT;
       } else if (string.startsWith("PL")) {
@@ -145,7 +145,7 @@ public class FormBuilder {
       } else if (string.startsWith("PRES")) {
         this.tense = Tense.PRESENT;
       } else if (string.startsWith("PRET")) {
-        this.tense = Tense.IMPERFEKT;
+        this.tense = Tense.IMPERFECT;
       } else {
         return false;
       }

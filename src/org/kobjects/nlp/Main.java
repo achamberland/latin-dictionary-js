@@ -57,9 +57,8 @@ public class Main {
 	     if (definitions.contains(definition)) {
 	       continue;
 	     }
-         FormBuilder formBuilder = new FormBuilder();
 	     if (definition.type == WordType.NOUN) {
-	       formBuilder.gender = definition.genus;
+	       FormBuilder formBuilder = new FormBuilder(definition.genus);
 	       for (Case casus : Latin.CASES) {
 	         System.out.print(Strings.fill(casus.toString(), 10));
 	         formBuilder.casus = casus;
@@ -68,42 +67,58 @@ public class Main {
 	           Word wordForm = definition.forms.get(formBuilder.build());
 	           System.out.print(Strings.fill(wordForm.word, 20));
 	         }
-	           System.out.println();
+	         System.out.println();
 	       }
 	     } else if (definition.type == WordType.VERB) {
-	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE}) {
-	         formBuilder.mood = mood;
-	         for (Voice voice : Voice.values()) {
-	           formBuilder.voice = voice;
-	           System.out.println();
-	           System.out.println(mood.name() + " " + voice.name());
-               System.out.println();
+	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.INFINITIVE}) {
+             FormBuilder formBuilder = new FormBuilder(mood);
+             System.out.println();
+             System.out.println(mood.name() );
+             System.out.println();
                
-               System.out.print("          ");
+             System.out.print("            ");
                for (Tense tense : Tense.values()) {
                  System.out.print(Strings.fill(tense.name(), 20));
                }
                System.out.println();
                
-               for (Number number : Number.values()) {
-                 formBuilder.number = number;
-                 for (Person person : Person.values()) {
-                   formBuilder.person = person;
-                   System.out.print(Strings.fill("" + person + " " +number, 10));
-                   for (Tense tense : Tense.values()) {
-                     if (voice == Voice.PASSIVE 
-                         && (tense == Tense.FUTURE_PERFECT || tense == Tense.PAST_PERFECT || tense == Tense.PERFEKT)) {
-                       formBuilder.gender = Gender.MASCULINE;
-                     } else {
-                       formBuilder.gender = null;
+               for (Voice voice : Voice.values()) {
+                 formBuilder.voice = voice;
+
+               if (mood == Mood.INDICATIVE || mood == Mood.SUBJUNCTIVE) {
+            	 for (Number number : Number.values()) {
+            	   formBuilder.number = number;
+            	   for (Person person : Person.values()) {
+            	     formBuilder.person = person;
+                     System.out.print(Strings.fill("" + person + " " +number + " " + voice, 12));
+                     for (Tense tense : Tense.values()) {
+                       formBuilder.tense = tense;
+                       Word wordForm = definition.forms.get(formBuilder.build());
+                       if (wordForm == null) {
+                         formBuilder.gender = Gender.MASCULINE;
+                         wordForm = definition.forms.get(formBuilder.build());
+                         formBuilder.gender = null;
+                       }
+                       System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
                      }
-                     
-                     formBuilder.tense = tense;
-                     Word wordForm = definition.forms.get(formBuilder.build());
-                     System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+                     System.out.println();
                    }
-                   System.out.println();
                  }
+               } else {
+                 System.out.print(Strings.fill(voice.toString(), 12));
+                 for (Tense tense : Tense.values()) {
+                   formBuilder.tense = tense;
+                   Word wordForm = definition.forms.get(formBuilder.build());
+                   if (wordForm == null) {
+                     formBuilder.gender = Gender.MASCULINE;
+                     formBuilder.number = Number.SINGULAR;
+                     wordForm = definition.forms.get(formBuilder.build());
+                     formBuilder.gender = null;
+                     formBuilder.number = null;
+                   }
+                   System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+                 }
+                 System.out.println();
                }
 	         }
 	       }
@@ -146,5 +161,4 @@ public class Main {
 			}
 		}
 	}
-	
 }

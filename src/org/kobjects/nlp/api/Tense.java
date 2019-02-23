@@ -2,8 +2,8 @@ package org.kobjects.nlp.api;
 
 public enum Tense {
 	PRESENT("PRES"),
-	IMPERFEKT("IMPERF"),
-	PERFEKT("PERF"),
+	IMPERFECT("IMPERF"),
+	PERFECT("PERF"),
 	PAST_PERFECT("PPFV"),
 	FUTURE("FUT"),
 	FUTURE_PERFECT("FUTP");
