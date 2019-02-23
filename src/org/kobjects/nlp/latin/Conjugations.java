@@ -45,11 +45,12 @@ public class Conjugations {
       Form.SJV_IMPERF_PASS, "a",
       
       Form.INF_PRES_PASS,    "ari",
-      
       Form.INF_PERF_ACT,    "isse",
       Form.INF_PERF_PASS,   "esse",
       Form.INF_FUT_ACT,     "esse",
       
+      Form.PTCP_PRES_ACT, "ans",
+      Form.PTCP_FUT_PASS, "and",
       null);
                        
           
@@ -67,6 +68,10 @@ public class Conjugations {
       Form.SJV_IMPERF_PASS, "e",
       
       Form.INF_PRES_PASS,    "eri",
+
+      Form.PTCP_PRES_ACT, "ens",
+      Form.PTCP_FUT_PASS, "end",
+
       null);
 
   static final Conjugation THIRD_CONJUGATION = new Conjugation(
@@ -81,6 +86,10 @@ public class Conjugations {
       Form.SJV_IMPERF_ACT,  "er",
       Form.SJV_IMPERF_PASS, "e",
       Form.INF_PRES_PASS,    "i",
+
+      Form.PTCP_PRES_ACT, "ens",
+      Form.PTCP_FUT_PASS, "end",
+
       null);
 
   static final Conjugation FOURTH_CONJUGATION = new Conjugation(
@@ -95,6 +104,10 @@ public class Conjugations {
       Form.SJV_IMPERF_ACT,  "r",
       Form.SJV_IMPERF_PASS, "",
       Form.INF_PRES_PASS,    "ri",
+
+      Form.PTCP_PRES_ACT, "ens",
+      Form.PTCP_FUT_PASS, "end",
+
       null);
 
   static final Conjugation THIRD_CONJUGATION_I_STEM = new Conjugation(
@@ -109,6 +122,10 @@ public class Conjugations {
       Form.SJV_IMPERF_ACT,  "er",
       Form.SJV_IMPERF_PASS, "e",
       Form.INF_PRES_PASS,    "i",
+      
+      Form.PTCP_PRES_ACT, "iens",
+      Form.PTCP_FUT_PASS, "iend",
+
       null);
 
 
@@ -146,6 +163,10 @@ public class Conjugations {
       Form.IND_FUT_ACT,    "volam, voles, volet, volemus, voletis, volent",
       Form.SJV_PRES_ACT,   "veli",
       Form.SJV_IMPERF_ACT, "vell",
+      
+      Form.PTCP_PRES_ACT, "velens",
+      Form.PTCP_FUT_PASS, "velend",
+
       null);
   
   static final Conjugation NOLLE = new Conjugation(
@@ -153,6 +174,10 @@ public class Conjugations {
       Form.IND_FUT_ACT,    "nolam, noles,   nolet,    nolemus, noletis,    nolent", 
       Form.SJV_PRES_ACT,   "noli",
       Form.SJV_IMPERF_ACT, "noll",
+      
+      Form.PTCP_PRES_ACT, "nolens",
+      Form.PTCP_FUT_PASS, "nolend",
+
       null);
   
   static final Conjugation MALLE = new Conjugation(
@@ -160,6 +185,10 @@ public class Conjugations {
       Form.IND_FUT_ACT,    "malam, males, malet,  malemus, maletis,  malent",
       Form.SJV_PRES_ACT,   "mali",
       Form.SJV_IMPERF_ACT, "mall",
+      Form.PTCP_PRES_ACT, "malens",
+      Form.PTCP_FUT_PASS, "malend",
+
+
       null);
   
   static final Conjugation IRE = new Conjugation(
@@ -168,6 +197,10 @@ public class Conjugations {
       Form.IND_PERF_ACT,   "ii,  isti, iit,  iimus,  istis,  ierunt",
       Form.SJV_PRES_ACT,   "ea",
       Form.SJV_IMPERF_ACT, "ir",
+      Form.PTCP_PRES_ACT, "iens",
+      Form.PTCP_FUT_PASS, "iend",
+
+
       null);
 
   

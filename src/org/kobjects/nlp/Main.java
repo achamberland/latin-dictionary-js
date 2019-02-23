@@ -70,7 +70,7 @@ public class Main {
 	         System.out.println();
 	       }
 	     } else if (definition.type == WordType.VERB) {
-	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.INFINITIVE}) {
+	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.PARTICIPLE, Mood.INFINITIVE}) {
              FormBuilder formBuilder = new FormBuilder(mood);
              System.out.println();
              System.out.println(mood.name() );
@@ -113,10 +113,15 @@ public class Main {
                      formBuilder.gender = Gender.MASCULINE;
                      formBuilder.number = Number.SINGULAR;
                      wordForm = definition.forms.get(formBuilder.build());
-                     formBuilder.gender = null;
-                     formBuilder.number = null;
+                   }
+                   if (wordForm == null) {
+                     formBuilder.casus = Case.NOMINATIVE;
+                     wordForm = definition.forms.get(formBuilder.build());
                    }
                    System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+                   formBuilder.gender = null;
+                   formBuilder.number = null;
+                   formBuilder.casus = null;
                  }
                  System.out.println();
                }

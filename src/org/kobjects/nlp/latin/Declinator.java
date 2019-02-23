@@ -93,7 +93,7 @@ public class Declinator {
       }
     }
     Map<Form, String> result = new LinkedHashMap<Form, String>();
-    decline(result, genus, null /* degree */, nominative, stem, declension);
+    decline(result, null, genus, nominative, stem, declension);
     return result;
   }
   
@@ -117,17 +117,17 @@ public class Declinator {
         // neclegens, neclegentis (gen.), neclegentior -or -us, neclegentissimus -a -um
         String genitive = parts[0];
         String stem = genitive.substring(genitive.length() - 2);
-        decline(result, Gender.MASCULINE, null, nominativeMasculine, stem, 3);
-        decline(result, Gender.FEMININE, null, nominativeMasculine, stem, 3);
-        decline(result, Gender.NEUTER, null, nominativeMasculine, stem, 3);
+        decline(result, null, Gender.MASCULINE, nominativeMasculine, stem, 3);
+        decline(result, null, Gender.FEMININE, nominativeMasculine, stem, 3);
+        decline(result, null, Gender.NEUTER, nominativeMasculine, stem, 3);
         comparativeIndex = 2;
       } 
       else {
         // acutus, acuta -um, acutior -or -us, acutissimus -a -um
         String stem = Latin.getStem(nominativeMasculine);
-        decline(result, Gender.MASCULINE, null, words[0], stem, 2);
-        decline(result, Gender.FEMININE, null, parts[0], stem, 1);
-        decline(result, Gender.NEUTER, null, parts[1], stem, 2);
+        decline(result, null, Gender.MASCULINE, words[0], stem, 2);
+        decline(result, null, Gender.FEMININE, parts[0], stem, 1);
+        decline(result, null, Gender.NEUTER, parts[1], stem, 2);
         comparativeIndex = 2;
       }
     } 
@@ -135,9 +135,9 @@ public class Declinator {
       // Multiple words in the third entry:
       // ocis, oce, ocior -or -us, ocissimus -a -um
       String stem = Latin.getStem(nominativeMasculine);
-      decline(result, Gender.MASCULINE, null, words[0], stem, 3);
-      decline(result, Gender.FEMININE, null, words[0], stem, 3);
-      decline(result, Gender.NEUTER, null, words[1], stem, 3);
+      decline(result, null, Gender.MASCULINE, words[0], stem, 3);
+      decline(result, null, Gender.FEMININE, words[0], stem, 3);
+      decline(result, null, Gender.NEUTER, words[1], stem, 3);
       comparativeIndex = 2;
     } else if (words.length == 3) {
       if (words[1].equals("(gen.)")) {
@@ -147,41 +147,41 @@ public class Declinator {
           throw new RuntimeException("Genitive expected to end with 'is'");
         }
         String stem = genitive.substring(genitive.length() - 2);        
-        decline(result, Gender.MASCULINE, null, nominativeMasculine, stem, 3);
-        decline(result, Gender.FEMININE, null, nominativeMasculine, stem, 3);
-        decline(result, Gender.NEUTER, null, nominativeMasculine, stem, 3);
+        decline(result, null, Gender.MASCULINE, nominativeMasculine, stem, 3);
+        decline(result, null, Gender.FEMININE,  nominativeMasculine, stem, 3);
+        decline(result, null, Gender.NEUTER,  nominativeMasculine, stem, 3);
       } else {
         String nominativeFeminine = words[1];
         String nominativeNeuter = words[2];
         String stem = Latin.getStem(nominativeMasculine);
         if (words[2].endsWith("e")) {
           // adfectualis, adfectualis, adfectuale
-          decline(result, Gender.MASCULINE, null, nominativeMasculine, stem, 3);
-          decline(result, Gender.FEMININE, null, nominativeFeminine, stem, 3);
-          decline(result, Gender.NEUTER, null, nominativeNeuter, stem, 3);
+          decline(result, null, Gender.MASCULINE, nominativeMasculine, stem, 3);
+          decline(result, null, Gender.FEMININE, nominativeFeminine, stem, 3);
+          decline(result, null, Gender.NEUTER, nominativeNeuter, stem, 3);
         } else {
           // acquisitus, acquisita, acquisitum
-          decline(result, Gender.MASCULINE, null, nominativeMasculine, stem, 2);
-          decline(result, Gender.FEMININE, null, nominativeFeminine, stem, 1);
-          decline(result, Gender.NEUTER, null, nominativeNeuter, stem, 2);
+          decline(result, null, Gender.MASCULINE, nominativeMasculine, stem, 2);
+          decline(result, null, Gender.FEMININE, nominativeFeminine, stem, 1);
+          decline(result, null, Gender.NEUTER, nominativeNeuter, stem, 2);
         }
       }
     } else if (words.length == 2) {
       if (words[1].equals("undeclined")) {
         // adinstar, undeclined
-        decline(result, Gender.MASCULINE, null, words[0], null, 0);
-        decline(result, Gender.FEMININE, null, words[0], null, 0);
-        decline(result, Gender.NEUTER, null, words[0], null, 0);
+        decline(result, null, Gender.MASCULINE, words[0], null, 0);
+        decline(result, null, Gender.FEMININE, words[0], null, 0);
+        decline(result, null, Gender.NEUTER, words[0], null, 0);
       } else if (words[1].endsWith("e")) {
         String stem = Latin.getStem(nominativeMasculine);
-        decline(result, Gender.MASCULINE, null, words[0], stem, 3);
-        decline(result, Gender.FEMININE, null, words[0], stem, 3);
-        decline(result, Gender.NEUTER, null, words[1], stem, 3);
+        decline(result, null, Gender.MASCULINE, words[0], stem, 3);
+        decline(result, null, Gender.FEMININE, words[0], stem, 3);
+        decline(result, null, Gender.NEUTER, words[1], stem, 3);
       } else if (words[1].endsWith("is")) {
         String stem = Latin.getStem(nominativeMasculine);
-        decline(result, Gender.MASCULINE, null, words[0], stem, 3);
-        decline(result, Gender.FEMININE, null, words[0], stem, 3);
-        decline(result, Gender.NEUTER, null, words[0], stem, 3);
+        decline(result, null, Gender.MASCULINE, words[0], stem, 3);
+        decline(result, null, Gender.FEMININE, words[0], stem, 3);
+        decline(result, null, Gender.NEUTER, words[0], stem, 3);
       } else {
         throw new RuntimeException("Adjective 2-form not recognized: " + Arrays.toString(words));
       }
@@ -194,15 +194,17 @@ public class Declinator {
     if (comparativeIndex != -1 && comparativeIndex < words.length) {
       String[] parts = words[comparativeIndex].split(" ");
       String stem = Latin.getStem(parts[0]);
-      decline(result, Gender.MASCULINE, Degree.COPARATIVE, parts[0], stem, 2);
-      decline(result, Gender.FEMININE, Degree.COPARATIVE, parts[1], stem, 1);
-      decline(result, Gender.NEUTER, Degree.COPARATIVE, parts[2], stem, 2);
+      Form comparative = Form.of(Degree.COPARATIVE);
+      decline(result, comparative, Gender.MASCULINE, parts[0], stem, 2);
+      decline(result, comparative, Gender.FEMININE, parts[1], stem, 1);
+      decline(result, comparative, Gender.NEUTER, parts[2], stem, 2);
       if (comparativeIndex + 1 < words.length) {
         stem = Latin.getStem(parts[0]);
         parts = words[comparativeIndex + 1].split(" ");
-        decline(result, Gender.MASCULINE, Degree.SUPERLATIVE, parts[0], stem, 2);
-        decline(result, Gender.FEMININE, Degree.SUPERLATIVE, parts[1], stem, 1);
-        decline(result, Gender.NEUTER, Degree.SUPERLATIVE, parts[2], stem, 2);
+        Form superlative = Form.of(Degree.SUPERLATIVE);
+        decline(result, superlative, Gender.MASCULINE, parts[0], stem, 2);
+        decline(result, superlative, Gender.FEMININE, parts[1], stem, 1);
+        decline(result, superlative, Gender.NEUTER, parts[2], stem, 2);
       }
     }
     return result;
@@ -218,7 +220,7 @@ public class Declinator {
    * @param stem the stem of the word.
    * @param declension the declension to use (0 for undeclensed or 1..5). 
    */
-  private static void decline(Map<Form, String> result, Gender genus, Degree degree, String nominative, String stem,
+  public static void decline(Map<Form, String> result, Form form, Gender genus, String nominative, String stem,
       int declension) {
     
     // For adjectives, only the (gender specific) nominative suffix may be handed in.
@@ -261,8 +263,7 @@ public class Declinator {
       throw new RuntimeException("Invalid declension: " + declension);
     }
 
-    FormBuilder builder = new FormBuilder();
-    builder.degree = degree;
+    FormBuilder builder = form == null ? new FormBuilder() : form.toBuilder();
     builder.gender = genus;
     for (int n = 0; n < Latin.NUMERI.length; n++) {
       builder.number = Latin.NUMERI[n];

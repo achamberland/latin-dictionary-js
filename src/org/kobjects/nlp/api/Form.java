@@ -33,6 +33,12 @@ public class Form {
   public static final Form INF_PERF_PASS = Form.of(Mood.INFINITIVE, Tense.PERFECT, Voice.PASSIVE);
   public static final Form INF_FUT_ACT = Form.of(Mood.INFINITIVE, Tense.FUTURE, Voice.ACTIVE);
   public static final Form INF_FUT_PASS = Form.of(Mood.INFINITIVE, Tense.FUTURE, Voice.PASSIVE);
+
+  public static final Form PTCP_PRES_ACT = Form.of(Mood.PARTICIPLE, Tense.PRESENT, Voice.ACTIVE);
+  public static final Form PTCP_PERF_PASS = Form.of(Mood.PARTICIPLE, Tense.PERFECT, Voice.PASSIVE);
+  public static final Form PTCP_FUT_ACT = Form.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.ACTIVE);
+  public static final Form PTCP_FUT_PASS = Form.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.PASSIVE);
+  
   public static final Form IMP_ACT = Form.of(Mood.IMPERATIVE, Voice.ACTIVE);
   public static final Form IMP_PASS = Form.of(Mood.IMPERATIVE, Voice.PASSIVE);
 
@@ -60,6 +66,10 @@ public class Form {
     this.casus = casus;
     this.gender = genus;
     this.degree = degree;
+  }
+  
+  public FormBuilder toBuilder() {
+    return new FormBuilder(this);
   }
 
   public String toString() {

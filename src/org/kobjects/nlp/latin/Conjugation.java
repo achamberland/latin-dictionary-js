@@ -55,6 +55,7 @@ class Conjugation {
         builder.person = null;
         break;
       case INFINITIVE:
+      case PARTICIPLE:
         if (s.length != 1) {
           throw new RuntimeException("One entry expexted for "+ base.mood + "; got: "+ Arrays.toString(s));
         }
@@ -86,6 +87,18 @@ class Conjugation {
       }
       result.put(builder.build(), stem + genderSuffix + ' ' + suffix);   
     }
+  }
+  
+  String getUnpersonalizedSuffix(Form form) {
+    String suffix = map.get(form);
+    if (suffix != null) {
+      return suffix;
+    } 
+    String[] suffixes = Conjugations.INVARIANT_SUFFIXES.get(form);
+    if (suffixes != null) {
+      return suffixes[0];
+    }
+    return suffix;
   }
   
   Map<Form, String> apply(String presentStem, String infinitive, String perfectStem, String passiveStem, String supineStem) {
@@ -140,53 +153,73 @@ class Conjugation {
       }
     }
     result.put(Form.INF_PRES_ACT, infinitive);
-    for (Mood mood : new Mood[] {Mood.INFINITIVE}) {        
-      for (Voice voice : Voice.values()) {
-        for (Tense tense : Tense.values()) {
-          Form form = new FormBuilder(mood, voice, tense).build();
-          String suffix = map.get(form);
-          if (suffix == null) {
-            String[] suffixes = Conjugations.INVARIANT_SUFFIXES.get(form);
-            if (suffixes != null) {
-              suffix = suffixes[0];
+    for (Voice voice : Voice.values()) {
+      for (Tense tense : Tense.values()) {
+        Form form = new FormBuilder(Mood.INFINITIVE, voice, tense).build();
+        String suffix = getUnpersonalizedSuffix(form);
+        if (suffix == null) {
+          continue;
+        }
+        switch (tense) {
+        case PRESENT:
+        case IMPERFECT:
+          result.put(form, presentStem + suffix);
+          break;
+        case FUTURE:
+          if (voice == Voice.ACTIVE) {
+            for (Number number : Number.values()) {
+              FormBuilder specific = new FormBuilder(form);
+              specific.number = number;
+              buildGenderVariants(result, specific.build(), supineStem + "ur", suffix);
+            }
+          } else {
+            result.put(form, supineStem + "um " + suffix);
+          }
+          break;
+        case PERFECT:
+        case PAST_PERFECT:
+        case FUTURE_PERFECT:
+          if (voice == Voice.ACTIVE) {
+            result.put(form, perfectStem + suffix);
+          } else {
+            for (Number number : Number.values()) {
+              FormBuilder specific = new FormBuilder(form);
+              specific.number = number;
+              buildGenderVariants(result, specific.build(), passiveStem, suffix);
             }
           }
-          if (suffix == null) {
-            continue;
-          }
-          switch (tense) {
-          case PRESENT:
-          case IMPERFECT:
-            result.put(form, presentStem + suffix);
-            break;
-          case FUTURE:
-            if (voice == Voice.ACTIVE) {
-              for (Number number : Number.values()) {
-                FormBuilder specific = new FormBuilder(form);
-                specific.number = number;
-                buildGenderVariants(result, specific.build(), supineStem + "ur", suffix);
-              }
-            } else {
-              result.put(form, supineStem + "um " + suffix);
-            }
-            break;
-          case PERFECT:
-          case PAST_PERFECT:
-          case FUTURE_PERFECT:
-            if (voice == Voice.ACTIVE) {
-              result.put(form, perfectStem + suffix);
-            } else {
-              for (Number number : Number.values()) {
-                FormBuilder specific = new FormBuilder(form);
-                specific.number = number;
-                buildGenderVariants(result, specific.build(), passiveStem, suffix);
-              }
-            }
-            break;
-          }
+          break;
         }
       }
     }
+    
+    String suffix = getUnpersonalizedSuffix(Form.PTCP_PRES_ACT);
+    if (suffix != null) {
+      String nominative = presentStem + suffix;
+      String stem = nominative.substring(0, nominative.length() - 2);
+      Declinator.decline(result, Form.PTCP_PRES_ACT, Gender.MASCULINE, nominative, stem, 3);
+      Declinator.decline(result, Form.PTCP_PRES_ACT, Gender.FEMININE, nominative + suffix, stem, 3);
+      Declinator.decline(result, Form.PTCP_PRES_ACT, Gender.NEUTER, nominative, stem, 3);
+    }
+    if (supineStem != null) {
+      Declinator.decline(result, Form.PTCP_PERF_PASS, Gender.MASCULINE, supineStem + "us", supineStem, 2);
+      Declinator.decline(result, Form.PTCP_PERF_PASS, Gender.FEMININE, supineStem + "a", supineStem, 1);
+      Declinator.decline(result, Form.PTCP_PERF_PASS, Gender.NEUTER, supineStem + "um", supineStem, 2);
+
+      Declinator.decline(result, Form.PTCP_FUT_ACT, Gender.MASCULINE, supineStem + "urus", supineStem + "ur", 2);
+      Declinator.decline(result, Form.PTCP_FUT_ACT, Gender.FEMININE, supineStem + "ura", supineStem + "ur", 1);
+      Declinator.decline(result, Form.PTCP_FUT_ACT, Gender.NEUTER, supineStem + "urum", supineStem + "ur", 2);
+
+      suffix = getUnpersonalizedSuffix(Form.PTCP_FUT_PASS);
+      if (suffix != null) {
+        String stem = presentStem + suffix;
+        Declinator.decline(result, Form.PTCP_FUT_PASS, Gender.MASCULINE, stem + "us", stem, 2);
+        Declinator.decline(result, Form.PTCP_FUT_PASS, Gender.FEMININE, stem + "a", stem, 1);
+        Declinator.decline(result, Form.PTCP_FUT_PASS, Gender.NEUTER, stem + "um", stem, 2);
+      }
+    }
+    
+    
     return result;
   }
 
