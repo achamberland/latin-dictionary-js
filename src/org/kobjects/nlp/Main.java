@@ -70,7 +70,7 @@ public class Main {
 	         System.out.println();
 	       }
 	     } else if (definition.type == WordType.VERB) {
-	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.PARTICIPLE, Mood.INFINITIVE}) {
+	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.IMPERATIVE, Mood.PARTICIPLE, Mood.INFINITIVE}) {
              FormBuilder formBuilder = new FormBuilder(mood);
              System.out.println();
              System.out.println(mood.name() );
@@ -85,10 +85,10 @@ public class Main {
                for (Voice voice : Voice.values()) {
                  formBuilder.voice = voice;
 
-               if (mood == Mood.INDICATIVE || mood == Mood.SUBJUNCTIVE) {
+               if (mood == Mood.INDICATIVE || mood == Mood.SUBJUNCTIVE || mood == Mood.IMPERATIVE) {
             	 for (Number number : Number.values()) {
             	   formBuilder.number = number;
-            	   for (Person person : Person.values()) {
+            	   for (Person person : mood == Mood.IMPERATIVE ? new Person[] {Person.SECOND, Person.THIRD} : Person.values()) {
             	     formBuilder.person = person;
                      System.out.print(Strings.fill("" + person + " " +number + " " + voice, 12));
                      for (Tense tense : Tense.values()) {

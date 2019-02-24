@@ -7,7 +7,6 @@ import java.util.Map;
 import org.kobjects.nlp.api.Form;
 import org.kobjects.nlp.api.FormBuilder;
 import org.kobjects.nlp.api.Gender;
-import org.kobjects.nlp.api.MapBuilder;
 import org.kobjects.nlp.api.Mood;
 import org.kobjects.nlp.api.Number;
 import org.kobjects.nlp.api.Person;
@@ -28,13 +27,17 @@ class Conjugation {
       if (base == null) {
         continue;
       }
-      String[] s = ((String) data[pos + 1]).split(",");
+      String[] s = ((String) data[pos + 1]).split(",", -1);
       for (int i = 0; i < s.length; i++) {
         s[i] = s[i].trim();
+        if (s[i].equals("-")) {
+          s[i] = null;
+        }
       }
       switch (base.mood) {
       case INDICATIVE:
       case SUBJUNCTIVE:
+      case IMPERATIVE:
         if (s.length == 1) {
           String[] forms = new String[6];
           for (int i = 0; i < forms.length; i++) {
@@ -103,7 +106,7 @@ class Conjugation {
   
   Map<Form, String> apply(String presentStem, String infinitive, String perfectStem, String passiveStem, String supineStem) {
     LinkedHashMap<Form, String> result = new LinkedHashMap<Form, String>();
-    for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE}) {
+    for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.IMPERATIVE}) {
       for (Voice voice : Voice.values()) {
         for (Tense tense : Tense.values()) {
           FormBuilder builder = new FormBuilder(mood, voice, tense);
@@ -129,6 +132,9 @@ class Conjugation {
             break;
           default:
             throw new IllegalStateException();
+          }
+          if (stem == null) {
+            continue;
           }
           for (Number number : Number.values()) {
             builder.number = number;

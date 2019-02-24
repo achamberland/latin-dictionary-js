@@ -39,9 +39,10 @@ public class Form {
   public static final Form PTCP_FUT_ACT = Form.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.ACTIVE);
   public static final Form PTCP_FUT_PASS = Form.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.PASSIVE);
   
-  public static final Form IMP_ACT = Form.of(Mood.IMPERATIVE, Voice.ACTIVE);
-  public static final Form IMP_PASS = Form.of(Mood.IMPERATIVE, Voice.PASSIVE);
-
+  public static final Form IMP_PRES_ACT = Form.of(Mood.IMPERATIVE, Tense.PRESENT, Voice.ACTIVE);
+  public static final Form IMP_PRES_PASS = Form.of(Mood.IMPERATIVE, Tense.PRESENT, Voice.PASSIVE);
+  public static final Form IMP_FUT_ACT = Form.of(Mood.IMPERATIVE, Tense.FUTURE, Voice.ACTIVE);
+  public static final Form IMP_FUT_PASS = Form.of(Mood.IMPERATIVE, Tense.FUTURE, Voice.PASSIVE);
 
   public static Form of(Object... parts) {
     return new FormBuilder(parts).build();
