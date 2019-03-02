@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import org.kobjects.nlp.api.Strings;
@@ -16,183 +17,225 @@ import org.kobjects.nlp.api.Strings;
  */
 public class Converter {
 
-	public static String resolveCodes(String codes) {
-		StringBuilder sb = new StringBuilder();
-		switch (codes.charAt(0)) {
-			case 'A': sb.append("age=archaic, "); break;
-			case 'B': sb.append("age=early, "); break;
-			case 'C': sb.append("age=classical, "); break;
-			case 'D': sb.append("age=late, "); break;
-			case 'E': sb.append("age=later, "); break;
-			case 'F': sb.append("age=medieval, "); break;
-			case 'G': sb.append("age=scholar, "); break;
-			case 'H': sb.append("age=modern, "); break;
-		}
-		switch (codes.charAt(1)) {
-			case 'A': sb.append("cat=agr, "); break;
-			case 'B': sb.append("cat=bio, "); break;
-			case 'D': sb.append("cat=drm, "); break;
-			case 'E': sb.append("cat=ecc, "); break;
-			case 'G': sb.append("cat=grm, "); break;
-			case 'L': sb.append("cat=leg, "); break;
-			case 'P': sb.append("cat=poe, "); break;
-			case 'S': sb.append("cat=sci, "); break;
-			case 'T': sb.append("cat=tec, "); break;
-			case 'W': sb.append("cat=war, "); break;
-			case 'Y': sb.append("cat=myt, "); break;
-		}
-		switch (codes.charAt(2)) {
-		case 'A': sb.append("reg=Aftrica, "); break;
-		case 'B': sb.append("reg=Britain, ");break;
-		case 'C': sb.append("reg=China, ");break;
-		case 'D': sb.append("reg=Scandinavia, ");break;
-		case 'E': sb.append("reg=Egypt, ");break;
-		case 'F': sb.append("reg=France/Gaul, ");break;
-		case 'G': sb.append("reg=Germany, ");break;
-		case 'H': sb.append("reg=Greece, ");break;
-		case 'I': sb.append("reg=Italy/Rome, ");break;
-		case 'J': sb.append("reg=India, ");break;
-		case 'K': sb.append("reg=Balkans, ");break;
-		case 'N': sb.append("reg=Netherlands, ");break;
-		case 'P': sb.append("reg=Persia, ");break;
-		case 'Q': sb.append("reg=NearEast, ");break;
-		case 'R': sb.append("reg=Russia, ");break;
-		case 'S': sb.append("reg=Spain/Iberia, ");break;
-		case 'U': sb.append("reg=Eastern Europe, ");break;
-		}
+  public static String resolveCodes(String codes) {
+    StringBuilder sb = new StringBuilder();
+    switch (codes.charAt(0)) {
+    case 'A': sb.append("age=archaic, "); break;
+    case 'B': sb.append("age=early, "); break;
+    case 'C': sb.append("age=classical, "); break;
+    case 'D': sb.append("age=late, "); break;
+    case 'E': sb.append("age=later, "); break;
+    case 'F': sb.append("age=medieval, "); break;
+    case 'G': sb.append("age=scholar, "); break;
+    case 'H': sb.append("age=modern, "); break;
+    }
+    switch (codes.charAt(1)) {
+    case 'A': sb.append("cat=agr, "); break;
+    case 'B': sb.append("cat=bio, "); break;
+    case 'D': sb.append("cat=drm, "); break;
+    case 'E': sb.append("cat=ecc, "); break;
+    case 'G': sb.append("cat=grm, "); break;
+    case 'L': sb.append("cat=leg, "); break;
+    case 'P': sb.append("cat=poe, "); break;
+    case 'S': sb.append("cat=sci, "); break;
+    case 'T': sb.append("cat=tec, "); break;
+    case 'W': sb.append("cat=war, "); break;
+    case 'Y': sb.append("cat=myt, "); break;
+    }
+    
+    switch (codes.charAt(2)) {
+    case 'A': sb.append("reg=Aftrica, "); break;
+    case 'B': sb.append("reg=Britain, ");break;
+    case 'C': sb.append("reg=China, ");break;
+    case 'D': sb.append("reg=Scandinavia, ");break;
+    case 'E': sb.append("reg=Egypt, ");break;
+    case 'F': sb.append("reg=France/Gaul, ");break;
+    case 'G': sb.append("reg=Germany, ");break;
+    case 'H': sb.append("reg=Greece, ");break;
+    case 'I': sb.append("reg=Italy/Rome, ");break;
+    case 'J': sb.append("reg=India, ");break;
+    case 'K': sb.append("reg=Balkans, ");break;
+    case 'N': sb.append("reg=Netherlands, ");break;
+    case 'P': sb.append("reg=Persia, ");break;
+    case 'Q': sb.append("reg=NearEast, ");break;
+    case 'R': sb.append("reg=Russia, ");break;
+    case 'S': sb.append("reg=Spain/Iberia, ");break;
+    case 'U': sb.append("reg=Eastern Europe, ");break;
+    }
+    
+    switch (codes.charAt(3)) {
+    case 'A': sb.append("frq=+++, ");break;
+    case 'B': sb.append("frq=++, ");break;
+    case 'C': sb.append("frq=+, ");break;
+    case 'D': sb.append("frq=-, ");break;
+    case 'E': sb.append("frq=--, ");break;
+    case 'F': sb.append("frq=---, ");break;
+    case 'I': sb.append("frq=inscription, ");break;
+    case 'M': sb.append("frq=grafffiti, ");break;
+    case 'N': sb.append("frq=Pliny, ");break;
+    }
+    
+    switch (codes.charAt(4)) {
+    case 'B': sb.append("src=Bee, ");break;
+    case 'C': sb.append("src=CAS, ");break;
+    case 'D': sb.append("src=Sex, ");break;
+    case 'E': sb.append("src=Ecc, ");break;
+    case 'F': sb.append("sec=Def, ");break;
+    case 'G': sb.append("src=G+L, ");break;
+    case 'H': sb.append("src=Ouvrard, ");break;
+    case 'I': sb.append("src=Leverett1845, ");break;
+    case 'K': sb.append("src=Cal, ");break;
+    case 'L': sb.append("src=Levis1891, ");break;
+    case 'M': sb.append("src=Latham1980, ");break;
+    case 'N': sb.append("src=Nelson, ");break;
+    case 'O': sb.append("src=OLD, ");break;
+    case 'P': sb.append("src=Souter1949, ");break;
+    case 'Q': sb.append("src=other, ");break;
+    case 'S': sb.append("src=L+S, ");break;
+    case 'T': sb.append("src=translation, ");break;
+    case 'U': sb.append("src=DuCange, ");break;
+    case 'V': sb.append("src=Saxo, ");break;
+    case 'W': sb.append("src=guess, ");break;
+    case 'Z': sb.append("src=user, ");break;
+    }
 		
-		switch (codes.charAt(3)) {
-		case 'A': sb.append("frq=+++, ");break;
-		case 'B': sb.append("frq=++, ");break;
-		case 'C': sb.append("frq=+, ");break;
-		case 'D': sb.append("frq=-, ");break;
-		case 'E': sb.append("frq=--, ");break;
-		case 'F': sb.append("frq=---, ");break;
-		case 'I': sb.append("frq=inscription, ");break;
-		case 'M': sb.append("frq=grafffiti, ");break;
-		case 'N': sb.append("frq=Pliny, ");break;
-		}
-		switch (codes.charAt(4)) {
-		case 'B': sb.append("src=Bee, ");break;
-		case 'C': sb.append("src=CAS, ");break;
-		case 'D': sb.append("src=Sex, ");break;
-		case 'E': sb.append("src=Ecc, ");break;
-		case 'F': sb.append("sec=Def, ");break;
-		case 'G': sb.append("src=G+L, ");break;
-		case 'H': sb.append("src=Ouvrard, ");break;
-		case 'I': sb.append("src=Leverett1845, ");break;
-		case 'K': sb.append("src=Cal, ");break;
-		case 'L': sb.append("src=Levis1891, ");break;
-		case 'M': sb.append("src=Latham1980, ");break;
-		case 'N': sb.append("src=Nelson, ");break;
-		case 'O': sb.append("src=OLD, ");break;
-		case 'P': sb.append("src=Souter1949, ");break;
-		case 'Q': sb.append("src=other, ");break;
-		case 'S': sb.append("src=L+S, ");break;
-		case 'T': sb.append("src=translation, ");break;
-		case 'U': sb.append("src=DuCange, ");break;
-		case 'V': sb.append("src=Saxo, ");break;
-		case 'W': sb.append("src=guess, ");break;
-		case 'Z': sb.append("src=user, ");break;
-		}
-		
-		if (sb.length() > 0) {
-			sb.setLength(sb.length() - 2);
-		}
+    if (sb.length() > 0) {
+      sb.setLength(sb.length() - 2);
+    }
+    
+    return sb.toString();   
+  }
+	
+  public static String cleanKind(String kind) {
+    kind = Strings.supertrim(kind);
+    int cut0 = kind.indexOf('(');
+    int cut1 = kind.indexOf(')', cut0 + 1);
+    if (cut0 != -1 && cut1 > cut0 + 1) {
+      char d = kind.charAt(cut0+1);
+      if (d >= '0' && d <= '9') {
+        kind = kind.substring(0,  cut0) + d + kind.substring(cut1 + 1);
+      }
+    }
+    return kind;
+  }
 
-		return sb.toString();
-	}
-	
-	public static String cleanKind(String kind) {
-		kind = Strings.supertrim(kind);
-		int cut0 = kind.indexOf('(');
-		int cut1 = kind.indexOf(')', cut0 + 1);
-		if (cut0 != -1 && cut1 > cut0 + 1) {
-			char d = kind.charAt(cut0+1);
-			if (d >= '0' && d <= '9') {
-				kind = kind.substring(0,  cut0) + d + kind.substring(cut1 + 1);
-			}
-		}
-		return kind;
-	}
-	
-	
-	public static void main(String args[]) throws Exception {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("dictpage.txt"), "iso-8859-1"));
+
+  public static String cleanExceptionKind(String kind) {
+     return kind.substring(6);
+  }
+  
+  
+  
+  public static void main(String args[]) throws Exception {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("dictpage.txt"), "iso-8859-1"));
+    
+    
+    TreeMap<String, Entry> latEng = new TreeMap<>();
+    TreeMap<String, Entry> engLat = new TreeMap<>();
+    ArrayList<Entry> exceptions = new ArrayList<>();
 		
-		Writer out = new OutputStreamWriter(new FileOutputStream(new File("src/org/kobjects/nlp/latin/whitaker_converted.txt")), "utf-8");
+    String nextLine = reader.readLine();
+    do {
+      String line = nextLine;
+      nextLine = reader.readLine();
+      
+      while (nextLine != null && nextLine.indexOf('|') != -1) {
+        int cut = nextLine.lastIndexOf('|');
+        line += " " + nextLine.substring(cut + 1);
+        nextLine = reader.readLine();
+      }
+      
+      if (!line.startsWith("#")) {
+        continue;
+      }
+			
+      int cut0 = line.indexOf("  ");
+      int cut1 = line.indexOf("[", cut0);
+      int cut2 = line.indexOf(" :: ");
+						
+      String latin = Strings.supertrim(line.substring(1, cut0));
+      String kind = Strings.supertrim(line.substring(cut0 + 2, cut1));
+      String codes = Strings.supertrim(line.substring(cut1 + 1, cut1 + 7));
+      String english = Strings.supertrim(line.substring(cut2 + 4));
+			
+      // See http://archives.nd.edu/whitaker/wordsdoc.htm#Dictionary%20Codes
+
+      Entry entry = new Entry();
+      entry.latin = latin;
+      entry.english = english;
+			
+      if (kind.indexOf("ACTIVE") != -1 || kind.indexOf("PASSIVE") != -1) {
+        entry.kind = cleanExceptionKind(kind);
+        exceptions.add(entry);
+        
+        //System.out.println("Exception: " + entry);
+        
+      } else {
+        entry.kind = cleanKind(kind);
+        entry.codes = resolveCodes(codes);
+        
+        latEng.put(latin, entry);
+        engLat.put(english, entry);
+      }
+    } while (nextLine != null);
+
+    
+    for (Entry ex: exceptions) {
+      String english = ex.english;
+      switch(english) {
+      case "be willing; wish;": 
+        english = "wish, want, prefer; be willing, will;";
+        break;
+      case "remember; be mindful of;":
+        english = "remember; be mindful of (w/GEN/ACC); mention/recount/relate, remind/speak of;";
+        break;
+      }
+      Entry original = engLat.get(english);
+      if (original == null) {
+        System.out.println("Original entry for exception not found: " + ex);
+      } else {
+        original.kind += ", " + ex.kind + " = " + ex.latin;
+      }
+    }
+    
+    
+    Writer out = new OutputStreamWriter(new FileOutputStream(new File("src/org/kobjects/nlp/latin/whitaker_converted.txt")), "utf-8");
+
+    for (Entry entry : latEng.values()) {
+      out.write(entry.toString());
+      out.write('\n');
+     
+    } 
+		
+    out.close();
+  }
 	
-		TreeMap<String, String> latEng = new TreeMap<>();
-		TreeMap<String, String> engLat = new TreeMap<>();
-		
-		String nextLine = reader.readLine();
-		do {
-			String line = nextLine;
-			nextLine = reader.readLine();
-			
-			while (nextLine != null && nextLine.indexOf('|') != -1) {
-				int cut = nextLine.lastIndexOf('|');
-				line += " " + nextLine.substring(cut + 1);
-				nextLine = reader.readLine();
-			}
-			
-			if (!line.startsWith("#")) {
-				continue;
-			}
-			
-			int cut0 = line.indexOf("  ");
-			int cut1 = line.indexOf("[", cut0);
-			int cut2 = line.indexOf(" :: ");
-			
-			String words = line.substring(1, cut0).trim();
-			String kind = line.substring(cut0 + 2, cut1).trim();
-			String codes = line.substring(cut1 + 1, cut1 + 7);
-			String translation = line.substring(cut2 + 4).trim();
-			
-			// See http://archives.nd.edu/whitaker/wordsdoc.htm#Dictionary%20Codes
-			
-			kind = cleanKind(kind);
-			String decoded = resolveCodes(codes);
-			
-			/*
-			if (latEng.get(words) != null) {
-			  System.out.println("Duplicate entry for " + words + ": ");
-			  System.out.println("  " + latEng.get(words));
-			  System.out.println("  " + translation);
-			} else {
-			  latEng.put(words, translation);
-			}*/
-			
-			if (engLat.get(translation) != null) {
-			  System.out.println("Duplicate entry for " + translation + ": ");
-              System.out.println("  " + engLat.get(translation));
-              System.out.println("  " + kind + "; " + words);
-			} else {
-			  engLat.put(translation, kind + "; " + words);
-			}
-			
-			
-			
-			out.write(words);
-			out.write("; ");
-			out.write(kind);
-			if (decoded.length() > 0) {
-				out.write("; ");
-				out.write(decoded);
-			}
-			out.write(":\n");
-			
-			String[] parts = translation.split(";");
-			for (int i = 0; i < parts.length; i++) {
-				out.write("  ");
-				out.write(parts[i].trim());
-				out.write(i < parts.length - 1 ? ";\n" : "\n");
-			}
-			
-		} while (nextLine != null);
-		
-		out.close();
-		
-	}
 	
+  static class Entry {
+    String latin;
+    String kind;
+    String codes; 
+    String english;
+    
+    public String toString() {
+      StringBuilder sb = new StringBuilder();
+      sb.append(latin);
+      sb.append("; ");
+      sb.append(kind);
+      if (codes != null && codes.length() > 0) {
+        sb.append("; ");
+        sb.append(codes);
+      }
+      sb.append(":\n");
+            
+      String[] parts = english.split(";");
+      for (int i = 0; i < parts.length; i++) {
+        sb.append("  ");
+        sb.append(parts[i].trim());
+        sb.append(i < parts.length - 1 ? ";\n" : "\n");
+      }
+      return sb.toString();
+    }
+    
+  }
 }
