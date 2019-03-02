@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.TreeMap;
+
+import org.kobjects.nlp.api.Strings;
 
 /**
  * Tool to convert the plain text dictionary output from whitaker's words to a simplified
@@ -100,29 +103,8 @@ public class Converter {
 		return sb.toString();
 	}
 	
-	public static String supertrim(String s) {
-		StringBuilder sb = new StringBuilder(s.length());
-		boolean wasSpace = true;
-		for (int i = 0; i < s.length(); i++) {
-			char c = s.charAt(i);
-			if (c <= ' ') {
-				if (!wasSpace) {
-					sb.append(' ');
-					wasSpace = true;
-				} 
-			} else {
-				sb.append(c);
-				wasSpace = false;
-			}
-		}
-		if (wasSpace && sb.length() > 0) {
-			sb.setLength(sb.length() - 1);
-		}		
-		return sb.toString();
-	}
-	
 	public static String cleanKind(String kind) {
-		kind = supertrim(kind);
+		kind = Strings.supertrim(kind);
 		int cut0 = kind.indexOf('(');
 		int cut1 = kind.indexOf(')', cut0 + 1);
 		if (cut0 != -1 && cut1 > cut0 + 1) {
@@ -139,6 +121,9 @@ public class Converter {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("dictpage.txt"), "iso-8859-1"));
 		
 		Writer out = new OutputStreamWriter(new FileOutputStream(new File("src/org/kobjects/nlp/latin/whitaker_converted.txt")), "utf-8");
+	
+		TreeMap<String, String> latEng = new TreeMap<>();
+		TreeMap<String, String> engLat = new TreeMap<>();
 		
 		String nextLine = reader.readLine();
 		do {
@@ -168,6 +153,25 @@ public class Converter {
 			
 			kind = cleanKind(kind);
 			String decoded = resolveCodes(codes);
+			
+			/*
+			if (latEng.get(words) != null) {
+			  System.out.println("Duplicate entry for " + words + ": ");
+			  System.out.println("  " + latEng.get(words));
+			  System.out.println("  " + translation);
+			} else {
+			  latEng.put(words, translation);
+			}*/
+			
+			if (engLat.get(translation) != null) {
+			  System.out.println("Duplicate entry for " + translation + ": ");
+              System.out.println("  " + engLat.get(translation));
+              System.out.println("  " + kind + "; " + words);
+			} else {
+			  engLat.put(translation, kind + "; " + words);
+			}
+			
+			
 			
 			out.write(words);
 			out.write("; ");

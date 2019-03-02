@@ -71,28 +71,23 @@ public class Main {
 	       }
 	     } else if (definition.type == WordType.VERB) {
 	       for (Mood mood : new Mood[] {Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.IMPERATIVE, Mood.PARTICIPLE, Mood.INFINITIVE}) {
-             FormBuilder formBuilder = new FormBuilder(mood);
              System.out.println();
              System.out.println(mood.name() );
              System.out.println();
                
              System.out.print("            ");
-               for (Tense tense : Tense.values()) {
-                 System.out.print(Strings.fill(tense.name(), 20));
-               }
-               System.out.println();
+             for (Tense tense : Tense.values()) {
+               System.out.print(Strings.fill(tense.name(), 20));
+             }
+             System.out.println();
                
-               for (Voice voice : Voice.values()) {
-                 formBuilder.voice = voice;
-
+             for (Voice voice : Voice.values()) {
                if (mood == Mood.INDICATIVE || mood == Mood.SUBJUNCTIVE || mood == Mood.IMPERATIVE) {
             	 for (Number number : Number.values()) {
-            	   formBuilder.number = number;
             	   for (Person person : mood == Mood.IMPERATIVE ? new Person[] {Person.SECOND, Person.THIRD} : Person.values()) {
-            	     formBuilder.person = person;
                      System.out.print(Strings.fill("" + person + " " +number + " " + voice, 12));
                      for (Tense tense : Tense.values()) {
-                       formBuilder.tense = tense;
+                       FormBuilder formBuilder = new FormBuilder(mood, voice, number, person, tense);
                        Word wordForm = definition.forms.get(formBuilder.build());
                        if (wordForm == null) {
                          formBuilder.gender = Gender.MASCULINE;
@@ -107,7 +102,7 @@ public class Main {
                } else {
                  System.out.print(Strings.fill(voice.toString(), 12));
                  for (Tense tense : Tense.values()) {
-                   formBuilder.tense = tense;
+                   FormBuilder formBuilder = new FormBuilder(mood, voice, tense);
                    Word wordForm = definition.forms.get(formBuilder.build());
                    if (wordForm == null) {
                      formBuilder.gender = Gender.MASCULINE;
@@ -119,9 +114,6 @@ public class Main {
                      wordForm = definition.forms.get(formBuilder.build());
                    }
                    System.out.print(Strings.fill("" + (wordForm == null ? "-" : wordForm.word), 20));
-                   formBuilder.gender = null;
-                   formBuilder.number = null;
-                   formBuilder.casus = null;
                  }
                  System.out.println();
                }
