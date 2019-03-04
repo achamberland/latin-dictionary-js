@@ -142,7 +142,7 @@ public class Declinator {
     } else if (words.length == 3) {
       if (words[1].equals("(gen.)")) {
         // militans, (gen.), militantis
-        String genitive = words[1];
+        String genitive = words[2];
         if (!genitive.endsWith("is")) {
           throw new RuntimeException("Genitive expected to end with 'is'");
         }
@@ -198,7 +198,7 @@ public class Declinator {
       decline(result, comparative, Gender.MASCULINE, parts[0], stem, 2);
       decline(result, comparative, Gender.FEMININE, parts[1], stem, 1);
       decline(result, comparative, Gender.NEUTER, parts[2], stem, 2);
-      if (comparativeIndex + 1 < words.length) {
+      if (comparativeIndex + 1 < words.length && !words[comparativeIndex + 1].equals("-")) {
         stem = Latin.getStem(parts[0]);
         parts = words[comparativeIndex + 1].split(" ");
         Form superlative = Form.of(Degree.SUPERLATIVE);

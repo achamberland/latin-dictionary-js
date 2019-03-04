@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.TreeMap;
 
 import org.kobjects.nlp.api.Strings;
 
@@ -17,6 +15,7 @@ import org.kobjects.nlp.api.Strings;
  */
 public class Converter {
 
+  // See http://archives.nd.edu/whitaker/wordsdoc.htm#Dictionary%20Codes
   public static String resolveCodes(String codes) {
     StringBuilder sb = new StringBuilder();
     switch (codes.charAt(0)) {
@@ -125,15 +124,10 @@ public class Converter {
   }
   
   
-  
   public static void main(String args[]) throws Exception {
     BufferedReader reader = new BufferedReader(new InputStreamReader(Converter.class.getResourceAsStream("dictpage.txt"), "iso-8859-1"));
     
-    
-    TreeMap<String, Entry> latEng = new TreeMap<>();
-    TreeMap<String, Entry> engLat = new TreeMap<>();
-    ArrayList<Entry> exceptions = new ArrayList<>();
-		
+    Writer out = new OutputStreamWriter(new FileOutputStream(new File("src/org/kobjects/nlp/latin/whitaker_converted.txt")), "utf-8");
     String nextLine = reader.readLine();
     do {
       String line = nextLine;
@@ -158,84 +152,33 @@ public class Converter {
       String codes = Strings.supertrim(line.substring(cut1 + 1, cut1 + 7));
       String english = Strings.supertrim(line.substring(cut2 + 4));
 			
-      // See http://archives.nd.edu/whitaker/wordsdoc.htm#Dictionary%20Codes
+      if (kind.startsWith("V ") && (kind.indexOf("ACTIVE") != -1 || kind.indexOf("PASSIVE") != -1) 
+          || kind.startsWith("N")  && kind.length() > 3 
+          || kind.startsWith("ADJ") && kind.length() > 3) {
+         continue;
+      }
 
-      Entry entry = new Entry();
-      entry.latin = latin;
-      entry.english = english;
-			
-      if (kind.indexOf("ACTIVE") != -1 || kind.indexOf("PASSIVE") != -1) {
-        entry.kind = cleanExceptionKind(kind);
-        exceptions.add(entry);
-        
-        //System.out.println("Exception: " + entry);
-        
-      } else {
-        entry.kind = cleanKind(kind);
-        entry.codes = resolveCodes(codes);
-        
-        latEng.put(latin, entry);
-        engLat.put(english, entry);
+      kind = cleanKind(kind);
+      codes = resolveCodes(codes);
+
+      out.write(latin);
+      out.write("; ");
+      out.write(cleanKind(kind));
+      if (codes != null && !codes.isEmpty()) {
+        out.write("; ");
+        out.write(codes);
+      }
+      out.write(":\n");
+
+      String[] parts = english.split(";");
+      for (int i = 0; i < parts.length; i++) {
+        out.write("  ");
+        out.write(parts[i].trim());
+        out.write(i < parts.length - 1 ? ";\n" : "\n");
       }
     } while (nextLine != null);
 
-    
-    for (Entry ex: exceptions) {
-      String english = ex.english;
-      switch(english) {
-      case "be willing; wish;": 
-        english = "wish, want, prefer; be willing, will;";
-        break;
-      case "remember; be mindful of;":
-        english = "remember; be mindful of (w/GEN/ACC); mention/recount/relate, remind/speak of;";
-        break;
-      }
-      Entry original = engLat.get(english);
-      if (original == null) {
-        System.out.println("Original entry for exception not found: " + ex);
-      } else {
-        original.kind += ", " + ex.kind + " = " + ex.latin;
-      }
-    }
-    
-    
-    Writer out = new OutputStreamWriter(new FileOutputStream(new File("src/org/kobjects/nlp/latin/whitaker_converted.txt")), "utf-8");
-
-    for (Entry entry : latEng.values()) {
-      out.write(entry.toString());
-      out.write('\n');
-     
-    } 
-		
     out.close();
   }
 	
-	
-  static class Entry {
-    String latin;
-    String kind;
-    String codes; 
-    String english;
-    
-    public String toString() {
-      StringBuilder sb = new StringBuilder();
-      sb.append(latin);
-      sb.append("; ");
-      sb.append(kind);
-      if (codes != null && codes.length() > 0) {
-        sb.append("; ");
-        sb.append(codes);
-      }
-      sb.append(":\n");
-            
-      String[] parts = english.split(";");
-      for (int i = 0; i < parts.length; i++) {
-        sb.append("  ");
-        sb.append(parts[i].trim());
-        sb.append(i < parts.length - 1 ? ";\n" : "\n");
-      }
-      return sb.toString();
-    }
-    
-  }
 }
