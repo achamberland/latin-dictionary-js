@@ -1,6 +1,10 @@
+This code is based on:
+
+"nlp", a project to process Whitaker's words as raw text, by Stefan Haustein
+
 Copyright 2022 Stefan Haustein, Zurich, Switzerland
 
-This code is based on and includes the dictionary from
+This code is based on and includes the dictionary from:
 
 WORDS, a Latin dictionary, by Colonel William Whitaker (USAF, Retired)
 

@@ -1,6 +1,27 @@
-# Processing Whitaker's Words with Java
+# Processing Whitaker's Words with JavaScript
 
-## Deviations from the original
+From a raw text Latin dictionary, this parses each definition and its conjugations, declinations, etc. from it. With this, Latin words in any form can be searched and converted from one form to another.
+
+This is a work-in-progress, and for now only searches for latin words passed on the npm start command, logging information for each to the console.
+
+# Getting Started
+
+## Running with node 
+```
+nvm use
+npm i
+```
+Example run:
+```
+npm start sum amabo
+```
+
+# Derived work
+This is a JavaScript port of Stefan Haustein's original "nlp" Java project, found [here](https://github.com/stefanhaustein/nlp).
+
+## Notes from his project
+
+### Deviations from the original
 
  - The dictionary used is based on the generated human-readable word list found on 
    http://archives.nd.edu/whitaker/dictpage.htm. It has been processed further to reduce 
@@ -15,8 +36,7 @@
  
  - The program currently just generates all word forms in memory when loading the dictionary.
  
-## Words Preservation 
+### Words Preservation 
+The raw text dictionary is taken from William Whitaker's original WORDS project.
 
-For a maintained version William Whitaker's original WORDS programm, 
-please refer to https://github.com/mk270/whitakers-words
- 
+For a maintained version of the full program, please refer to https://github.com/mk270/whitakers-words.
