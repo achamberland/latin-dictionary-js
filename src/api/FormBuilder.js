@@ -31,24 +31,27 @@ export default class FormBuilder {
       this.gender = builder.gender;
       this.degree = builder.degree;
     } else {
+      // Todo: These were all Java enums...
+      //   All values just happen to be unique.
+      //   Find a way of typing the imported objects to check for instance not inclusion
       for (let part of args) {
-        if (part === Person) {
+        if (Object.values(Person).includes(part)) {
           this.person = part;
         } else if (part instanceof Number) {
           person = Person[part - 1];
-        } else if (part instanceof Plurality) {
+        } else if (Object.values(Plurality).includes(part)) {
           this.plurality = part;
-        } else if (part instanceof Mood) {
+        } else if (Object.values(Mood).includes(part)) {
           this.mood = part;
-        } else if (part instanceof Tense) {
+        } else if (Object.values(Tense).includes(part)) {
           this.tense = part;
-        } else if (part instanceof Voice) {
+        } else if (Object.values(Voice).includes(part)) {
           this.voice = part;
-        } else if (part instanceof Case) {
+        } else if (Object.values(Case).includes(part)) {
           this.casus = part;
-        } else if (part instanceof Gender) {
+        } else if (Object.values(Gender).includes(part)) {
           this.gender = part;
-        } else if (part instanceof Degree) {
+        } else if (Object.values(Degree).includes(part)) {
           this.degree = part;
         } else {
           throw new Error(part)
