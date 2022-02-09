@@ -1,0 +1,26 @@
+{
+  "name": "latin-dictionary-js",
+  "version": "1.0.0",
+  "description": "Parses Latin conjugation, inflection, etc. from raw text of Whitaker's WORDS dictionary file",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/achamberland/latin-dictionary-js.git"
+  },
+  "keywords": [
+    "Whitaker's",
+    "WORDS",
+    "translation",
+    "language"
+  ],
+  "author": "Adam Chamberland",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/achamberland/latin-dictionary-js/issues"
+  },
+  "homepage": "https://github.com/achamberland/latin-dictionary-js#readme"
+}

@@ -1,0 +1,12 @@
+const Mood = {
+	INDICATIVE: "IND",
+	IMPERATIVE: "IMP",
+	SUBJUNCTIVE: "SJV",
+	INFINITIVE: "INF",
+	GERUND: "GER",
+	GERUNDIVE: "GRV",
+	PARTICIPLE: "PTCP",
+	SUPINE: "SUP",
+}
+
+export default Mood;

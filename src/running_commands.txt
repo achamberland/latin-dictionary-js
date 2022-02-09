@@ -1,0 +1,3 @@
+javac org/kobjects/nlp/Main.java
+java -cp ./ org.kobjects.nlp.Main
+
