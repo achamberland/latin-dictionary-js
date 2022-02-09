@@ -1,4 +1,4 @@
-import Form from "./Form.js";
+import FormBuilder from "./FormBuilder.js";
 import Word from "./Word.js";
 
 export default class Definition {
@@ -15,7 +15,7 @@ export default class Definition {
 	}
 	
 	addFormless(word) {
-		forms.set(Form.EMPTY, new Word(word, Form.EMPTY, this));
+		forms.set(FormBuilder.EMPTY, new Word(word, FormBuilder.EMPTY, this));
 		return this;
 	}
 	

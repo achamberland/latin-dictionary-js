@@ -1,8 +1,7 @@
 // package org.kobjects.nlp.latin;
 
 import Degree from "../api/Degree.js";
-import Form from "../api/Form.js";
-import FormBuilder from "../api/FormBuilder.js";
+import { FormBuilder } from "../api/Forms.js";
 import Gender from "../api/Gender.js";
 import Latin from "./Latin.js";
 
@@ -204,14 +203,14 @@ export default class Declinator {
     if (comparativeIndex !== -1 && comparativeIndex < words.length) {
       let comparativeParts = words[comparativeIndex].split(" ");
       let stem = Latin.findStem(comparativeParts[0]);
-      const comparative = Form.of(Degree.COPARATIVE);
+      const comparative = FormBuilder.of(Degree.COPARATIVE);
       result = this.decline(result, comparative, Gender.MASCULINE, comparativeParts[0], stem, 2);
       result = this.decline(result, comparative, Gender.FEMININE, comparativeParts[1], stem, 1);
       result = this.decline(result, comparative, Gender.NEUTER, comparativeParts[2], stem, 2);
       if (comparativeIndex + 1 < words.length && !words[comparativeIndex + 1] === "-") {
         stem = Latin.findStem(comparativeParts[0]);
         comparativeParts = words[comparativeIndex + 1].split(" ");
-        const superlative = Form.of(Degree.SUPERLATIVE);
+        const superlative = FormBuilder.of(Degree.SUPERLATIVE);
         result = this.decline(result, superlative, Gender.MASCULINE, comparativeParts[0], stem, 2);
         result = this.decline(result, superlative, Gender.FEMININE, comparativeParts[1], stem, 1);
         result = this.decline(result, superlative, Gender.NEUTER, comparativeParts[2], stem, 2);
@@ -278,7 +277,7 @@ export default class Declinator {
         throw new Error("Invalid declension: " + declension);
     }
 
-    const builder = form == null ? new FormBuilder() : form.toBuilder();
+    const builder = new FormBuilder(form);
     builder.gender = genus;
     for (let n = 0; n < Latin.PLURALITY.length; n++) {
       builder.plurality = Latin.PLURALITY[n];

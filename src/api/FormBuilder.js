@@ -9,20 +9,30 @@ import Tense from "./Tense.js";
 import Voice from "./Voice.js";
 
 export default class FormBuilder {
+  static of = (...parts) => {
+    return new FormBuilder(...parts).build();
+  }
+  
+  static EMPTY = new FormBuilder().build();
+
   constructor(...args) {
-    if (args[0] instanceof Form) {
-      const form = args[0];
-      this.person = form.person;
-      this.plurality = form.plurality;
-      this.mood = form.mood;
-      this.tense = form.tense;
-      this.voice = form.voice;
-      this.casus = form.casus;
-      this.gender = form.gender;
-      this.degree = form.degree;
+    if (!args || args.length === 0) {
+      return;
+    }
+    console.log(args)
+    if (args[0] instanceof FormBuilder || args[0] instanceof Form) {
+      const builder = args[0];
+      this.person = builder.person;
+      this.plurality = builder.plurality;
+      this.mood = builder.mood;
+      this.tense = builder.tense;
+      this.voice = builder.voice;
+      this.casus = builder.casus;
+      this.gender = builder.gender;
+      this.degree = builder.degree;
     } else {
       for (let part of args) {
-        if (part instanceof Person) {
+        if (part === Person) {
           this.person = part;
         } else if (part instanceof Number) {
           person = Person[part - 1];
@@ -40,6 +50,8 @@ export default class FormBuilder {
           this.gender = part;
         } else if (part instanceof Degree) {
           this.degree = part;
+        } else {
+          throw new Error(part)
         }
       }
     }
@@ -52,7 +64,7 @@ export default class FormBuilder {
   }
 
   /**
-   * Set a single aspect of the form determined by the given string.
+   * Set a single aspect of the Form determined by the given string.
    * 
    * @param {string} s
    */

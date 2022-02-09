@@ -1,4 +1,4 @@
-import Form from "./Form.js";
+import FormBuilder from "./FormBuilder.js";
 
 export default class Word {
 	constructor(word, form, definition) {
@@ -8,7 +8,7 @@ export default class Word {
 	}
 	
 	toString() {
-		return (Form.EMPTY.equals(this.form) ? "" : (this.form + " of ")) + this.definition;
+		return (FormBuilder.EMPTY.equals(this.form) ? "" : (this.form + " of ")) + this.definition;
 	}
 
 	static toString(words) {
@@ -26,7 +26,7 @@ export default class Word {
 			let sb = "";
 			if (forms.length === 1) {
 				const form = forms[0];
-				if (!form.equals(Form.EMPTY)) {
+				if (!form.equals(FormBuilder.EMPTY)) {
 					sb += form + " of ";
 				}
 			} else {

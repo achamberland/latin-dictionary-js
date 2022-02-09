@@ -1,26 +1,7 @@
-// package org.kobjects.nlp.latin;
-
 import Case from "../api/Case.js";
 import WordType from "../api/WordType.js";
 import Conjugation from "./Conjugation.js";
 import Declinator from "./Declinator.js";
-
-// import java.io.BufferedReader;
-// import java.io.IOException;
-// import java.io.InputStreamReader;
-// import java.util.Arrays;
-// import java.util.LinkedHashSet;
-// import java.util.Map;
-// import java.util.Set;
-// import java.util.TreeMap;
-
-// import org.kobjects.nlp.api.Definition;
-// import org.kobjects.nlp.api.Form;
-// import org.kobjects.nlp.api.Case;
-// import org.kobjects.nlp.api.Gender;
-// import org.kobjects.nlp.api.Plurality;
-// import org.kobjects.nlp.api.Word;
-// import org.kobjects.nlp.api.WordType;
 
 export default class Latin {
   static VOCALS = "aeiouAEIOU";
