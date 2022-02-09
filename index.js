@@ -1,4 +1,5 @@
 import Main from "./src/main.js";
+console.log("TRANSLATING")
 import fs from 'fs';
 import path from 'path';
 

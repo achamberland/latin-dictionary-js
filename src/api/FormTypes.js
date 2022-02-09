@@ -37,6 +37,8 @@ export const PTCP_PERF_PASS = FormBuilder.of(Mood.PARTICIPLE, Tense.PERFECT, Voi
 export const PTCP_FUT_ACT = FormBuilder.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.ACTIVE);
 export const PTCP_FUT_PASS = FormBuilder.of(Mood.PARTICIPLE, Tense.FUTURE, Voice.PASSIVE);
 
+debugger;
+
 export const IMP_PRES_ACT = FormBuilder.of(Mood.IMPERATIVE, Tense.PRESENT, Voice.ACTIVE);
 export const IMP_PRES_PASS = FormBuilder.of(Mood.IMPERATIVE, Tense.PRESENT, Voice.PASSIVE);
 export const IMP_FUT_ACT = FormBuilder.of(Mood.IMPERATIVE, Tense.FUTURE, Voice.ACTIVE);

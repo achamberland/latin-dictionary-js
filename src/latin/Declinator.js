@@ -1,18 +1,9 @@
 // package org.kobjects.nlp.latin;
 
 import Degree from "../api/Degree.js";
-import { FormBuilder } from "../api/Forms.js";
+import FormBuilder from "../api/FormBuilder.js";
 import Gender from "../api/Gender.js";
 import Latin from "./Latin.js";
-
-// import java.util.Arrays;
-// import java.util.LinkedHashMap;
-// import java.util.Map;
-
-// import org.kobjects.nlp.api.Degree;
-// import org.kobjects.nlp.api.Form;
-// import org.kobjects.nlp.api.FormBuilder;
-// import org.kobjects.nlp.api.Gender;
 
 /**
  * Class that is able to decline a Latin noun, given the genus, nominative and

@@ -1,6 +1,8 @@
 
 export default class Form {
 
+  static attributeNames = ["person", "plurality", "mood", "tense", "voice", "casus", "gender"];
+
   constructor(person, plurality, modus, tempus, genusVerbi, casus, genus, degree) {
     this.person = person;
     this.plurality = plurality;
@@ -10,7 +12,6 @@ export default class Form {
     this.casus = casus;
     this.gender = genus;
     this.degree = degree;
-    this.attributeNames = ["person", "plurality", "mood", "tense", "voice", "casus", "gender"];
   }
 
   toString() {

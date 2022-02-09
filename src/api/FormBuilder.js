@@ -19,7 +19,7 @@ export default class FormBuilder {
     if (!args || args.length === 0) {
       return;
     }
-    console.log(args)
+    // console.log(args)
     if (args[0] instanceof FormBuilder || args[0] instanceof Form) {
       const builder = args[0];
       this.person = builder.person;
