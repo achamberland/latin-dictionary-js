@@ -72,6 +72,7 @@ export default class Declinator {
    * contain the nominative and the genitive.
    */
   static declineNoun(genus, nominative, genitive) {
+    const result = new Map();
     let stem = null;
     let declension = null;
     if (genitive === "undeclined") {
@@ -229,13 +230,13 @@ export default class Declinator {
     let suffixes;
     switch (declension) {
       case 0:
-        suffixes = UNDECLINED;
+        suffixes = this.UNDECLINED;
         break;
       case 1:
-        suffixes = FIRST_DECLENSION;
+        suffixes = this.FIRST_DECLENSION;
         break;
       case 2:
-        suffixes = nominative.endsWith("us") ? SECOND_DECLENSION_US : SECOND_DECLENSION;
+        suffixes = nominative.endsWith("us") ? this.SECOND_DECLENSION_US : this.SECOND_DECLENSION;
         break;
       case 3:
         const nomintativeEnding = nominative.endsWith("e") ? "e" : nominative.substring(nominative.length - 2);
@@ -248,21 +249,21 @@ export default class Declinator {
           Latin.syllableCount(stem + "is") === Latin.syllableCount(nominative)
         );
         if (isLongConsonantEnding || isOtherMixedEnding) {
-          suffixes = THIRD_DECLENSION_MIXED;
+          suffixes = this.THIRD_DECLENSION_MIXED;
         } else if (
           ["is", "e", "al", "ar"].includes(nomintativeEnding) &&
           nominative.substring(0, nominative.length - nomintativeEnding.length) === stem
         ) {
-          suffixes = THIRD_DECLENSION_I;
+          suffixes = this.THIRD_DECLENSION_I;
         } else {
-          suffixes = THIRD_DECLENSION_CONSONANT;
+          suffixes = this.THIRD_DECLENSION_CONSONANT;
         }
         break;
       case 4:
-        suffixes = FOURTH_DECLENSION;
+        suffixes = this.FOURTH_DECLENSION;
         break;
       case 5:
-        suffixes = FIFTH_DECLENSION;
+        suffixes = this.FIFTH_DECLENSION;
         break;
       default:
         throw new Error("Invalid declension: " + declension);

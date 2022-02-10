@@ -47,7 +47,7 @@ export default class Form {
   // Not a direct port.
   // Original Java used Object.hashCode
   hashCode() {
-    return this.attributeNames.reduce((accumulator, currentName) => (
+    return Form.attributeNames.reduce((accumulator, currentName) => (
       `${accumulator}__${this[currentName]}`
     ), "");
   }
@@ -57,7 +57,7 @@ export default class Form {
     if (compareTo instanceof Form === false) {
       return false;
     }
-    return this.attributeNames.every(attribute => (
+    return Form.attributeNames.every(attribute => (
       this[attribute]?.toString() === compareTo[attribute]?.toString()
     ));
   }

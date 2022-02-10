@@ -1,4 +1,4 @@
-import Conjugations from "./Conjugations.js";
+import { Conjugations } from "./Conjugation.js";
 
 export default function conjugate(present, infinitive, perfect, supine, conjugationNumber) {
   // Determine stem1 and conjugation

@@ -228,7 +228,7 @@ export default class Conjugation {
 
 }
 
-// console.log(FormTypes)
+// Todo: Obviously a better  fix for circular dependencies that's better than combining classes into one file
 
 const INVARIANT_SUFFIXES = new Map()
 .set(FormTypes.IND_IMPERF_ACT,  ["am",    "as",    "at",    "amus",    "atis",    "ant"])

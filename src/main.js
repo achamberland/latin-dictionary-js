@@ -25,7 +25,7 @@ export default class Main {
 				}
 			}
 		}
-		return output.length === 0 ? s : output;
+		return output.length === 0 ? str : output;
 	}
 	
 	static listAllForms(wordSet) {
@@ -109,7 +109,7 @@ export default class Main {
 		const words = input.split(" ");
 		for (let s of words) {
 			s = this.lettersOnly(s.toLowerCase());
-			if (s.trim().isEmpty()) {
+			if (!s.trim()) {
 				continue;
 			}
 			const options = latin.find(s);

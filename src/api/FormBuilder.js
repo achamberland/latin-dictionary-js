@@ -53,8 +53,6 @@ export default class FormBuilder {
           this.gender = part;
         } else if (Object.values(Degree).includes(part)) {
           this.degree = part;
-        } else {
-          throw new Error(part)
         }
       }
     }

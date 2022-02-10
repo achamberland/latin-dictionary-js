@@ -15,13 +15,13 @@ export default class Definition {
 	}
 	
 	addFormless(word) {
-		forms.set(FormBuilder.EMPTY, new Word(word, FormBuilder.EMPTY, this));
+		this.forms.set(FormBuilder.EMPTY, new Word(word, FormBuilder.EMPTY, this));
 		return this;
 	}
 	
 	addForms(map) {
-		Object.entries(map).forEach(([key, value]) => {
-			forms.set(key, new Word(value, key, this));
+		map.forEach((wordString, form) => {
+			this.forms.set(form, new Word(wordString, form, this));
 		});
 		return this;
 	}

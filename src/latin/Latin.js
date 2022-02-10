@@ -1,6 +1,10 @@
 import Case from "../api/Case.js";
+import Definition from "../api/Definition.js";
+import Gender from "../api/Gender.js";
+import Plurality from "../api/Plurality.js";
 import WordType from "../api/WordType.js";
 import Conjugation from "./Conjugation.js";
+import conjugate from "./Conjugator.js";
 import Declinator from "./Declinator.js";
 
 export default class Latin {
@@ -59,28 +63,27 @@ export default class Latin {
     const rawDefinitions = lines.reduce((accumulator, current, index) => {
       // A definition
       if (current.startsWith(" ")) {
-        accumulator[index] += ` ${current.trim()}`
+        accumulator[accumulator.length - 1] += ` ${current.trim()}`
       // The main line
       } else {
         accumulator.push(current);
       }
       return accumulator;
-    })
+    }, [])
 
     let errors = 0;
 		
     rawDefinitions.forEach(rawLine => {
       let line = rawLine.trim();
       try {
-        count++;
         const definition = this.parseDefinition(line);
         if (definition == null) {
           return;
         }
-
-        for (let word of Object.values(definition.forms)) {
+        for (let entry of definition.forms) {
+          const word = entry[1];
           const string = word.word;
-          words = this.dictionary.get(string);
+          let words = this.dictionary.get(string);
           if (words == null) {
             words = new Set();
             this.dictionary.set(string, words);
@@ -93,18 +96,18 @@ export default class Latin {
         console.error(err.stack);
       }  
     });
-    console.error("\nCount: " + rawDefinitions.length + " errors: " + errors + "(" + errors.length + "%)\n");
+    console.error("\nCount: " + rawDefinitions.length + "\nErrors: " + errors + "\nSuccessful: " + (rawDefinitions.length - errors));
   }
 
   parseDefinition(def) {
     def = def.toLowerCase();
     const colon = def.indexOf(":");
     if (colon === -1) {
-      throw new Error(": expected.");
+      throw new Error(": expected.\nDef: " + def);
     }
     
     const leftParts = def.substring(0, colon).split(";");
-    const wordParts = leftParts[0].trim().split(",");
+    const wordParts = leftParts[0].trim().split(", ");
     const typeParts = leftParts[1].trim().split(" ");
     /*    
       TODO: (Looks like something unfinished from Java project)
@@ -130,7 +133,7 @@ export default class Latin {
     
     const wordTypeName = typeParts[0];
     let type = null;
-    for (let t of WordType) {
+    for (let t of Object.values(WordType)) {
       if (t.toString() === wordTypeName.toUpperCase()) {
         type = t;
         break;
@@ -191,8 +194,8 @@ export default class Latin {
       conjugationDescription.charAt(0) >= '1' &&
       conjugationDescription.charAt(0) <= '4'
     ) 
-    const conjugation = hasConjugation ? Integer.parseInt(conjugationDescription) : 0;
-    return definition.addForms(Conjugation.conjugate(words[0], words[1], words[2], words[3], conjugation));
+    const conjugation = hasConjugation ? parseInt(conjugationDescription) : 0;
+    return definition.addForms(conjugate(words[0], words[1], words[2], words[3], conjugation));
   }
 
   find(word) {
