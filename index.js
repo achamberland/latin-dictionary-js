@@ -1,46 +1,33 @@
-import Main from "./src/main.js";
-console.log("TRANSLATING")
 import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-
-const words = process.argv.slice(2).join(" ");
+import readline from "readline";
+import Translator from "./src/translator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rawText = fs.readFileSync(path.join(__dirname, "/bin", "dictpage_converted.txt"), 'utf8')
 
-Main.translate(words, rawText);
+const translator = new Translator(rawText)
 
+const cli = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  prompt: 'Enter a word or sentence: '
+});
 
-// TODO: Use for later CLI Interface
-// import readline from "readline";
-// 
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-//   prompt: 'Enter a sentence: '
-// });
+cli.prompt();
 
-// rl.prompt();
-
-// rl.on('line', (line) => {
-//   switch (line.trim()) {
-//       case 'exit':
-//           rl.close();
-//           break;
-//       default:
-//           sentence = line + '\n'
-//           writableStream.write(sentence);
-//           rl.prompt();
-//           break;
-//   }
-// }).on('close', () => {
-//   writableStream.end();
-//   writableStream.on('finish', () => {
-//       console.log(`All your sentences have been written to ${filePath}`);
-//   })
-//   setTimeout(() => {
-//       process.exit(0);
-//   }, 100);
-// });
+cli.on('line', line => {
+  switch (line.trim()) {
+    case 'exit':
+      cli.close();
+      break;
+    default:
+      translator.translate(line);
+      cli.prompt();
+      break;
+  }
+}).on('close', () => {
+  process.exit(0);
+});

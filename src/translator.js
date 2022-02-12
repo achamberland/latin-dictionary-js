@@ -11,7 +11,7 @@ import Word from "./api/Word.js";
 import WordType from "./api/WordType.js";
 import Latin from "./latin/Latin.js";
 
-export default class Main {
+export default class Translator {
 	static lettersOnly(str) {
 		let output = "";
 		for (let i = 0; i < str.length; i++) {
@@ -42,9 +42,9 @@ export default class Main {
 	       for (let casus of Latin.CASES) {
 	         console.log(fill(casus.toString(), 10));
 	         formBuilder.casus = casus;
-	         for (let plurality of Plurality) {
+	         for (let plurality of Object.values(Plurality)) {
 	           formBuilder.plurality = plurality;
-	           const wordForm = definition.forms.get(formBuilder.build());
+	           const wordForm = definition.getWord(formBuilder.build());
 	           console.log(fill(wordForm.word, 20));
 	         }
 	         console.log("\n");
@@ -53,51 +53,56 @@ export default class Main {
 				 const verbMoods = [Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.IMPERATIVE, Mood.PARTICIPLE, Mood.INFINITIVE];
 	       for (let mood of verbMoods) {
              console.log("\n");
-             console.log(mood.name());
+             console.log(mood);
              console.log("\n");
                
              console.log("            ");
-             for (let tense of Tense) {
-               console.log(fill(tense.name(), 20));
+             for (let tense of Object.values(Tense)) {
+               console.log(fill(tense, 20));
              }
              console.log("\n");
                
-             for (let voice of Voice) {
+             for (let voice of Object.values(Voice)) {
                if (mood === Mood.INDICATIVE || mood === Mood.SUBJUNCTIVE || mood === Mood.IMPERATIVE) {
-            	 for (let plurality of Plurality) {
-            	   for (let person of mood === Mood.IMPERATIVE ? [Person.SECOND, Person.THIRD] : Person) {
-                     console.log(fill("" + person + " " + plurality + " " + voice, 12));
-                     for (let tense of Tense) {
-                       const formBuilder = new FormBuilder(mood, voice, plurality, person, tense);
-                       let wordForm = definition.forms.get(formBuilder.build());
-                       if (wordForm == null) {
-                         formBuilder.gender = Gender.MASCULINE;
-                         wordForm = definition.forms.get(formBuilder.build());
-                         formBuilder.gender = null;
-                       }
-                       console.log(fill("" + (wordForm == null ? "-" : wordForm.word), 20));
-                     }
-                     console.log("\n");
-                   }
-                 }
-               } else {
-                 console.log(fill(voice.toString(), 12));
-                 for (let tense of Tense) {
-                   const formBuilder = new FormBuilder(mood, voice, tense);
-                   let wordForm = definition.forms.get(formBuilder.build());
-                   if (wordForm == null) {
-                     formBuilder.gender = Gender.MASCULINE;
-                     formBuilder.plurality = Plurality.SINGULAR;
-                     wordForm = definition.forms.get(formBuilder.build());
-                   }
-                   if (wordForm == null) {
-                     formBuilder.casus = Case.NOMINATIVE;
-                     wordForm = definition.forms.get(formBuilder.build());
-                   }
-                   console.log(fill("" + (wordForm == null ? "-" : wordForm.word), 20));
-                 }
-                 console.log("\n");
-               }
+								for (let plurality of Object.values(Plurality)) {
+									const avaliablePersons = mood === Mood.IMPERATIVE ? [Person.SECOND, Person.THIRD] : Object.values(Person);
+									for (let person of avaliablePersons) {
+										console.log(fill("" + person + " " + plurality + " " + voice, 12));
+										for (let tense of Object.values(Tense)) {
+											const formBuilder = new FormBuilder(mood, voice, plurality, person, tense);
+											let wordForm = definition.getWord(formBuilder.build());
+											if (wordForm == null) {
+												formBuilder.gender = Gender.MASCULINE;
+												wordForm = definition.getWord(formBuilder.build());
+												formBuilder.gender = null;
+											}
+											console.log(fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+										}
+										console.log("\n");
+									}
+								}
+							} else {
+								console.log(fill(voice, 12));
+								for (let tense of Object.values(Tense)) {
+									const formBuilder = new FormBuilder(mood, voice, tense);
+									let wordForm = definition.getWord(formBuilder.build());
+									if (wordForm == null) {
+										for (let gender of Object.values(Gender)) {
+											console.log(fill(gender + " " + voice, 12));
+											formBuilder.gender = gender;
+											formBuilder.plurality = Plurality.SINGULAR;
+											wordForm = definition.getWord(formBuilder.build());
+										
+											if (wordForm == null) {
+												formBuilder.casus = Case.NOMINATIVE;
+												wordForm = definition.getWord(formBuilder.build());
+											}
+											console.log(fill("" + (wordForm == null ? "-" : wordForm.word), 20));
+										}
+									}
+								}
+								console.log("\n");
+							}
 	         }
 	       }
 	     }
@@ -105,19 +110,22 @@ export default class Main {
 	   });
 	}
 
-	static translate(input, rawText) {
-		const latin = new Latin(rawText);
+	constructor(rawText) {
+		this.latin = new Latin(rawText);
+	}
+
+	translate(input) {
 		const words = input.split(" ");
 		for (let s of words) {
-			s = this.lettersOnly(s.toLowerCase());
+			s = Translator.lettersOnly(s.toLowerCase());
 			if (!s.trim()) {
 				continue;
 			}
-			const options = latin.find(s);
+			const options = this.latin.find(s);
 			if (options == null) {
 				console.log("\n" + fill(s, 15) + ": (not found)\n");
 			} else if (words.length === 1) {
-				this.listAllForms(options);
+				Translator.listAllForms(options);
 			} else {
 				const list = Word.toString(options);
 				console.log("\n" + fill(s, 15) + ": " + list.shift() + "\n");
@@ -125,7 +133,6 @@ export default class Main {
 					console.log("\n" + fill("", 17) + line + "\n");
 				});
 			}
-		
 		}
 	}
 }
