@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/achamberland/latin-dictionary-js/issues"
   },
-  "homepage": "https://github.com/achamberland/latin-dictionary-js#readme"
+  "homepage": "https://github.com/achamberland/latin-dictionary-js#readme",
+  "dependencies": {
+    "split": "^1.0.1"
+  }
 }

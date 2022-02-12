@@ -13,22 +13,24 @@ export function fill(str, length) {
 	return str;
 }
 
+// Todo: This could be improved
 export function supertrim(str) {
 	let wasSpace = true;
-	for (let i = 0; i < str.length; i++) {
-		const c = str.charAt(i);
-		if (c <= ' ') {
-			if (!wasSpace) {
-				str += ' ';
-				wasSpace = true;
-			} 
-		} else {
-			str += c;
+	let output = str.split("").reduce((accumulator, currentValue) => {
+		const isLetter = currentValue > " ";
+		if (isLetter) {
 			wasSpace = false;
+			return accumulator + currentValue;
+		} else if (wasSpace) {
+			return accumulator;
+		} else {
+			wasSpace = true;
+			return `${accumulator} `;
 		}
-	}
-	if (wasSpace && str.length > 0) {
-		str = str.slice(0, str.length - 1);
+	}, "");
+
+	if (wasSpace && output.length > 0) {
+		output = output.slice(0, output.length - 1);
 	}		
-	return str;
+	return output;
 }

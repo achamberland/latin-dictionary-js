@@ -6,6 +6,7 @@ import Person from "./api/Person.js";
 import Plurality from "./api/Plurality.js";
 import { fill } from "./api/Strings.js";
 import Tense from "./api/Tense.js";
+import Voice from "./api/Voice.js";
 import Word from "./api/Word.js";
 import WordType from "./api/WordType.js";
 import Latin from "./latin/Latin.js";
