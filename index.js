@@ -6,7 +6,7 @@ import Translator from "./src/translator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rawText = fs.readFileSync(path.join(__dirname, "/bin", "/dest", "dictionary.txt"), 'utf8')
+const rawText = fs.readFileSync(path.join(__dirname, "/bin", "/dest", "dictionary_with_extended_types.txt"), 'utf8')
 
 const translator = new Translator(rawText)
 
@@ -24,7 +24,11 @@ cli.on('line', line => {
       cli.close();
       break;
     default:
-      translator.translate(line);
+      if (line.match(/\w\[\w+\]/)) {
+        translator.translatePreferred(line);
+      } else {
+        translator.translate(line);
+      }
       cli.prompt();
       break;
   }

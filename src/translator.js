@@ -121,17 +121,18 @@ export default class Translator {
 	translate(input) {
 		const words = input.split(" ");
 		for (let s of words) {
+			debugger;
 			s = Translator.lettersOnly(s.toLowerCase());
 			if (!s.trim()) {
 				continue;
 			}
-			const options = this.latin.find(s);
-			if (options == null) {
+			const wordOptions = this.latin.find(s);
+			if (wordOptions == null) {
 				console.log("\n" + fill(s, 15) + ": (not found)\n");
 			} else if (words.length === 1) {
-				Translator.listAllForms(options);
+				Translator.listAllForms(wordOptions);
 			} else {
-				const list = Word.toString(options);
+				const list = Word.toString(wordOptions);
 				console.log("\n" + fill(s, 15) + ": " + list.shift() + "\n");
 				list.forEach((line, i) => {
 					console.log("\n" + fill("", 17) + line + "\n");
@@ -139,4 +140,24 @@ export default class Translator {
 			}
 		}
 	}
+
+	translatePreferred(input) {
+		const words = input.split(" ");
+		for (let wordText of words) {
+			const [text, wordType] = wordText.split(/\[|\]/, 2);
+			wordText = Translator.lettersOnly(text.toLowerCase());
+
+			const wordOptions = this.latin.find(wordText);
+			if (wordOptions == null) {
+				console.log("\n" + fill(wordText, 15) + ": (not found)\n");
+			} else {
+		  	const result = Word.toPreferredString(wordOptions, wordType);
+				console.log(`\n${fill(wordText, 15)}: ${result}\n`);
+			}
+		}
+
+		// Filter by age!=A,G,H
+
+	}
+
 }
