@@ -38,18 +38,20 @@ export default class Conjugation {
           if (strings.length === 1) {
             let forms = [];
             for (let i = 0; i < INVARIANT_SUFFIX_MAX_AMOUNT; i++) {
-              forms.push(strings[0] + INVARIANT_SUFFIXES.get(base)[i]);
+              forms.push(strings[0] + this.getSuffixes(base, INVARIANT_SUFFIXES)[i]);
             }
             strings = forms;
           }
+          let i = 0;
           const builder = new FormBuilder(base);
-          Object.values(Plurality).forEach((plurality, numberIndex) => {
+          for (let plurality of Object.values(Plurality)) {
             builder.plurality = plurality;
-            Object.values(Person).forEach(person => {
+            for (let person of Object.values(Person)) {
               builder.person = person;
-              this.map.set(builder.build(), strings[numberIndex + 1]);
-            });
-          });
+              this.map.set(builder.build(), strings[i]);
+              i++;
+            }
+          }
           builder.plurality = null;
           builder.person = null;
           break;
@@ -88,13 +90,22 @@ export default class Conjugation {
     }
     return result;
   }
+
+	// Acts like how this.map.get(identicalOtherFormInstance) would've worked
+	getSuffixes(form, suffixMap) {
+    const map = suffixMap || this.map;
+		const match = Array.from(map).find(([formSuffixKey]) => (
+			formSuffixKey.equals(form)
+		));
+		return match && match[1];
+	}
   
   getUnpersonalizedSuffix(form) {
-    const suffix = this.map.get(form);
+    const suffix = this.getSuffixes(form);
     if (suffix != null) {
       return suffix;
     } 
-    const suffixes = INVARIANT_SUFFIXES.get(form);
+    const suffixes = this.getSuffixes(form, INVARIANT_SUFFIXES);
     if (suffixes != null) {
       return suffixes[0];
     }
@@ -102,12 +113,12 @@ export default class Conjugation {
   }
   
   apply(presentStem, infinitive, perfectStem, passiveStem, supineStem) {
-    const result = new Map();
+    let result = new Map();
     for (let mood of [Mood.INDICATIVE, Mood.SUBJUNCTIVE, Mood.IMPERATIVE]) {
       for (let voice of Object.values(Voice)) {
         for (let tense of Object.values(Tense)) {
           const builder = new FormBuilder(mood, voice, tense);
-          const suffixes = INVARIANT_SUFFIXES.get(builder.build());
+          const suffixes = this.getSuffixes(builder.build(), INVARIANT_SUFFIXES);
           let index = 0;
           let genderVariants = false;
           let stem = null;
@@ -138,7 +149,7 @@ export default class Conjugation {
             for (let person of Object.values(Person)) {
               builder.person = person;
               const form = builder.build();
-              let suffix = this.map.get(form);
+              let suffix = this.getSuffixes(form);
               if (suffix == null && suffixes != null) {
                 suffix = suffixes[index];
               }
@@ -166,7 +177,7 @@ export default class Conjugation {
         switch (tense) {
           case Tense.PRESENT:
           case Tense.IMPERFECT:
-            result.put(form, presentStem + suffix);
+            result.set(form, presentStem + suffix);
             break;
           case Tense.FUTURE:
             if (voice === Voice.ACTIVE) {
@@ -176,14 +187,14 @@ export default class Conjugation {
                 result = this.buildGenderVariants(result, specific.build(), supineStem + "ur", suffix);
               }
             } else {
-              result.put(form, supineStem + "um " + suffix);
+              result.set(form, supineStem + "um " + suffix);
             }
             break;
           case Tense.PERFECT:
           case Tense.PAST_PERFECT:
           case Tense.FUTURE_PERFECT:
             if (voice === Voice.ACTIVE) {
-              result.put(form, perfectStem + suffix);
+              result.set(form, perfectStem + suffix);
             } else {
               for (let plurality of Object.values(Plurality)) {
                 const specific = new FormBuilder(form);
@@ -370,6 +381,7 @@ export class Conjugations {
     FormTypes.PTCP_FUT_PASS,   "iend",
   null);
 
+  // Todo:
   static ESSE = new Conjugation(
     FormTypes.IND_PRES_ACT,   "sum, es,   est,  sumus,  estis,  sunt",
     FormTypes.IND_IMPERF_ACT, "er",

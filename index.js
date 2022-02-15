@@ -6,7 +6,7 @@ import Translator from "./src/translator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rawText = fs.readFileSync(path.join(__dirname, "/bin", "dictpage_converted.txt"), 'utf8')
+const rawText = fs.readFileSync(path.join(__dirname, "/bin", "/dest", "dictionary.txt"), 'utf8')
 
 const translator = new Translator(rawText)
 

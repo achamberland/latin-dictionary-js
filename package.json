@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/achamberland/latin-dictionary-js#readme",
   "dependencies": {
+    "combined-stream": "^1.0.8",
     "split": "^1.0.1"
   }
 }

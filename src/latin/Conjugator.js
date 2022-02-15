@@ -36,9 +36,17 @@ export default function conjugate(present, infinitive, perfect, supine, conjugat
   } else if (present === "possum") {
     conjugation = Conjugations.POSSE;
     presentStem = "";
+    // Stem is entire word
+    // if (presentStem === "") {
+      // presentStem = "^";
+    // }
   } else if (present.endsWith("sum")) {
     conjugation = Conjugations.ESSE;
     presentStem = present.substring(0, present.length - 3);
+    // Stem is entire word
+    // if (presentStem === "") {
+      // presentStem = "^";
+    // }
   } else {
     switch (present) {
       case "ferro":

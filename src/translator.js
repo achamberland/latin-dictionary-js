@@ -11,6 +11,10 @@ import Word from "./api/Word.js";
 import WordType from "./api/WordType.js";
 import Latin from "./latin/Latin.js";
 
+/*
+ * TODO:
+ * - Accept preferred forms array to prioritize which forms make it to the top
+ */
 export default class Translator {
 	static lettersOnly(str) {
 		let output = "";
