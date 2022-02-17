@@ -57,10 +57,8 @@ export default class Latin {
 
   constructor(rawText) {
     this.dictionary = new Map();
-
-    // TODO: Use Stream if .txt file is still used
-    const lines = rawText.split("\n");
-    const rawDefinitions = lines.reduce((accumulator, current, index) => {
+const lines = rawText.split("\n");
+const rawDefinitions = lines.reduce((accumulator, current, index) => {
       // A definition
       if (current.startsWith(" ")) {
         accumulator[accumulator.length - 1] += ` ${current.trim()}`

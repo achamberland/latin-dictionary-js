@@ -381,11 +381,12 @@ export class Conjugations {
     FormTypes.PTCP_FUT_PASS,   "iend",
   null);
 
-  // Todo:
+  // Todo: Block Passive 
   static ESSE = new Conjugation(
     FormTypes.IND_PRES_ACT,   "sum, es,   est,  sumus,  estis,  sunt",
     FormTypes.IND_IMPERF_ACT, "er",
-    FormTypes.IND_FUT_ACT,    "ero, eris, erit, erimus, eritis, erunt", 
+    FormTypes.IND_FUT_ACT,   "ero, eris, erit, erimus, eritis, erunt",
+    FormTypes.IND_FUTP_ACT,   "ero, eris, erit, erimus, eritis, erunt",
     FormTypes.SJV_PRES_ACT,   "si",
     FormTypes.SJV_IMPERF_ACT, "ess",
     FormTypes.INF_PRES_ACT,   "esse",
