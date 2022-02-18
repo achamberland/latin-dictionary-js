@@ -57,8 +57,8 @@ export default class Latin {
 
   constructor(rawText) {
     this.dictionary = new Map();
-const lines = rawText.split("\n");
-const rawDefinitions = lines.reduce((accumulator, current, index) => {
+    const lines = rawText.split("\n");
+    const rawDefinitions = lines.reduce((accumulator, current) => {
       // A definition
       if (current.startsWith(" ")) {
         accumulator[accumulator.length - 1] += ` ${current.trim()}`

@@ -5,7 +5,7 @@ import Latin from "./latin/Latin.js";
 
 // Debug functions to use directly by node execution files
 export function compileWord(word, rawText) {
-  const matches = rawText.split("\n").filter(textLine =>
+  const matches = rawText.split("\n").reverse().filter(textLine =>
     textLine.startsWith(word) || textLine.includes(`, ${word}`)
   );
   let match;

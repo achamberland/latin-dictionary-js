@@ -28,14 +28,19 @@ export default class Declinator {
   // O stems
   static SECOND_DECLENSION = [
     ["1",   "i",    "o",  "um",   "o",  "1"],
-    ["a/i", "orum", "is", "a/os", "is", "a/i"]
+    ["i/a", "orum", "is", "os/a", "is", "i/a"]
   ];
 
-  // O stem with nomitnative ending in -us
-  // TODO: Wikipedia says to -ius or -ium [From original Java project]
+  // O stem with nominative ending in -us, but not -ius
   static SECOND_DECLENSION_US = [
-    ["1",   "i",    "o",  "um",   "o",  "e"],
-    ["a/i", "orum", "is", "a/os", "is", "a/i"]
+    ["1",   "i",    "o",  "um",   "o",  "e/um"],
+    ["i/a", "orum", "is", "os/a", "is", "i/a"]
+  ];
+
+  // O stem with nominative ending in -ius
+  static SECOND_DECLENSION_IUS = [
+    ["1",   "i",    "o",  "um",   "o",  "/um"],
+    ["i/a", "orum", "is", "os/a", "is", "i/a"]
   ];
 
   // I/consonant stem
@@ -236,7 +241,13 @@ export default class Declinator {
         suffixes = this.FIRST_DECLENSION;
         break;
       case 2:
-        suffixes = nominative.endsWith("us") ? this.SECOND_DECLENSION_US : this.SECOND_DECLENSION;
+        if (nominative.endsWith("ius")) {
+          suffixes = this.SECOND_DECLENSION_IUS;
+        } else if (nominative.endsWith("us")) {
+          suffixes = this.SECOND_DECLENSION_US;
+        } else {
+          suffixes = this.SECOND_DECLENSION
+        }
         break;
       case 3:
         const nomintativeEnding = nominative.endsWith("e") ? "e" : nominative.substring(nominative.length - 2);
@@ -277,17 +288,20 @@ export default class Declinator {
       for (let i = 0; i < Latin.CASES.length; i++) {
         builder.casus = Latin.CASES[i];
         let suffix = suffixesN[i];
-        if (suffix == "1") {
-          suffix = nominative;
+
+        // Different masculine and neuter endings
+        const cut = suffix.indexOf('/');
+        if (cut === -1) {
+          suffix = stem + suffix;
+        } else if (builder.gender === Gender.NEUTER) {
+          suffix = stem + suffix.substring(cut + 1);
         } else {
-          const cut = suffix.indexOf('/');
-          if (cut === -1) {
-            suffix = stem + suffix;
-          } else if (builder.gender === Gender.NEUTER) {
-            suffix = stem + suffix.substring(cut + 1);
-          } else {
-            suffix = stem + suffix.substring(0, cut);
-          }
+          suffix = stem + suffix.substring(0, cut);
+        }
+
+        // Use Nominative if '1' at this point
+        if (suffix.endsWith("1")) {
+          suffix = nominative;
         }
         result.set(builder.build(), suffix);
       }
