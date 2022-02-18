@@ -73,6 +73,15 @@ export default class Conjugation {
         }
     };
   }
+
+  buildSupineStem(stem, suffix) {
+    for (let suffixStart of ["ur", "a", "um"]) {
+      if (stem.endsWith(suffixStart) && suffix.startsWith(suffixStart)) {
+        return stem.replace(new RegExp(`${suffixStart}$`), suffix);
+      }
+    };
+    return stem + suffix;
+  }
   
   buildGenderVariants(result, form, stem, suffix) {
     const builder = new FormBuilder(form);
@@ -191,7 +200,7 @@ export default class Conjugation {
               for (let plurality of Object.values(Plurality)) {
                 const specific = new FormBuilder(form);
                 specific.plurality = plurality;
-                result = this.buildGenderVariants(result, specific.build(), supineStem + "ur", suffix);
+                result = this.buildGenderVariants(result, specific.build(), this.buildSupineStem(supineStem,"ur"), suffix);
               }
             } else {
               result.set(form, supineStem + "um " + suffix);
@@ -226,23 +235,27 @@ export default class Conjugation {
         Declinator.decline(result, FormTypes.PTCP_PRES_ACT, Gender.NEUTER, nominative, stem, 3);
       }
       if (supineStem != null) {
-          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.MASCULINE, supineStem + "urus", supineStem + "ur", 2);
-          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.FEMININE, supineStem + "ura", supineStem + "ur", 1);
-          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.NEUTER, supineStem + "urum", supineStem + "ur", 2);
+          const futureActiveStem = this.buildSupineStem(supineStem, "ur");
+          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.MASCULINE, this.buildSupineStem(supineStem, "urus"), futureActiveStem, 2);
+          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.FEMININE, this.buildSupineStem(supineStem, "ura"), futureActiveStem, 1);
+          Declinator.decline(result, FormTypes.PTCP_FUT_ACT, Gender.NEUTER, this.buildSupineStem(supineStem, "urum"), futureActiveStem, 2);
       }
     }
     if (supineStem != null) {
+      const masculineStem = this.buildSupineStem(supineStem, "us");
+      const feminineStem = this.buildSupineStem(supineStem, "a");
+      const neuterStem = this.buildSupineStem(supineStem, "um");
       if (this.voices.includes(Voice.PASSIVE)) {
-        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.MASCULINE, supineStem + "us", supineStem, 2);
-        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.FEMININE, supineStem + "a", supineStem, 1);
-        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.NEUTER, supineStem + "um", supineStem, 2);
+        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.MASCULINE, masculineStem, supineStem, 2);
+        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.FEMININE, feminineStem, supineStem, 1);
+        Declinator.decline(result, FormTypes.PTCP_PERF_PASS, Gender.NEUTER, neuterStem, supineStem, 2);
       
         const passiveSuffix = this.getUnpersonalizedSuffix(FormTypes.PTCP_FUT_PASS);
         if (passiveSuffix != null) {
           const stem = presentStem + passiveSuffix;
-          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.MASCULINE, stem + "us", stem, 2);
-          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.FEMININE, stem + "a", stem, 1);
-          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.NEUTER, stem + "um", stem, 2);
+          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.MASCULINE, masculineStem, stem, 2);
+          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.FEMININE, feminineStem, stem, 1);
+          Declinator.decline(result, FormTypes.PTCP_FUT_PASS, Gender.NEUTER, neuterStem, stem, 2);
         }
       }
     }
