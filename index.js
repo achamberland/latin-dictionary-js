@@ -44,11 +44,7 @@ cli.on('line', line => {
         console.log("Building dictionary...");
         translator = new Translator(rawText);
       }
-      if (line.match(/\w\[\w+\]/)) {
-        translator.translatePreferred(line);
-      } else {
-        translator.translate(line);
-      }
+      translator.translate(line);
       cli.prompt();
       break;
   }

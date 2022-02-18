@@ -13,7 +13,9 @@ import Latin from "./latin/Latin.js";
 
 /*
  * TODO:
- * - Accept preferred forms array to prioritize which forms make it to the top
+ * - Add preferred capability to lists of words
+ * - Fix filio declination
+ * - Filter by age!=A,G,H
  */
 export default class Translator {
 	static lettersOnly(str) {
@@ -120,44 +122,26 @@ export default class Translator {
 
 	translate(input) {
 		const words = input.split(" ");
-		for (let s of words) {
-			debugger;
-			s = Translator.lettersOnly(s.toLowerCase());
-			if (!s.trim()) {
+		for (let wordText of words) {
+			wordText ||= "";
+			let [text, wordType] = wordText.split(/\[|\]/, 2);
+
+			text = Translator.lettersOnly(text.toLowerCase());
+			if (!text.trim()) {
 				continue;
 			}
-			const wordOptions = this.latin.find(s);
+			const wordOptions = this.latin.find(text);
 			if (wordOptions == null) {
-				console.log("\n" + fill(s, 15) + ": (not found)\n");
-			} else if (words.length === 1) {
+				console.log("\n" + fill(text, 15) + ": (not found)\n");
+			} else if (words.length === 1 && !wordType) {
 				Translator.listAllForms(wordOptions);
 			} else {
-				const list = Word.toString(wordOptions);
-				console.log("\n" + fill(s, 15) + ": " + list.shift() + "\n");
+				const list = Word.toString(wordOptions, wordType);
+				console.log("\n" + fill(text, 15) + ": " + list.shift() + "\n");
 				list.forEach((line, i) => {
 					console.log("\n" + fill("", 17) + line + "\n");
 				});
 			}
 		}
 	}
-
-	translatePreferred(input) {
-		const words = input.split(" ");
-		for (let wordText of words) {
-			const [text, wordType] = wordText.split(/\[|\]/, 2);
-			wordText = Translator.lettersOnly(text.toLowerCase());
-
-			const wordOptions = this.latin.find(wordText);
-			if (wordOptions == null) {
-				console.log("\n" + fill(wordText, 15) + ": (not found)\n");
-			} else {
-		  	const result = Word.toPreferredString(wordOptions, wordType);
-				console.log(`\n${fill(wordText, 15)}: ${result}\n`);
-			}
-		}
-
-		// Filter by age!=A,G,H
-
-	}
-
 }

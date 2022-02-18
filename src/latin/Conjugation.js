@@ -75,6 +75,9 @@ export default class Conjugation {
   }
 
   buildSupineStem(stem, suffix) {
+    if (!stem) {
+      return suffix;
+    }
     for (let suffixStart of ["ur", "a", "um"]) {
       if (stem.endsWith(suffixStart) && suffix.startsWith(suffixStart)) {
         return stem.replace(new RegExp(`${suffixStart}$`), suffix);

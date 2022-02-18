@@ -110,8 +110,6 @@ export default class Declinator {
     const nominativeMasculine = words[0];
     let result = new Map();
 
-    debugger;
-
     // Index of the comparative within words.
     let comparativeIndex = -1;
     

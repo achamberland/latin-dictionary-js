@@ -24,24 +24,16 @@ export default class Word {
 		return defs;
 	}
 
-	static toPreferredString(words, wordType) {
-		wordType = wordType.toUpperCase();
-		const defs = Word.formsByDefinition(words);
-		if (!defs.size) {
-			return "";
-		}
-		for (let [def] of defs) {
-			if (def.type === wordType) {
-				return def.toString();
-			}
-		}
-		return Object.keys(defs)[0].toString();
-	}
-
-	static toString(words) {
+	static toString(words, preferredWordType) {
 		const defs = Word.formsByDefinition(words);
 		const result = [];
-		for (let [key, forms] of defs) {
+		if (preferredWordType) {
+			preferredWordType = preferredWordType.toUpperCase();
+		}
+		for (let [def, forms] of defs) {
+			if (preferredWordType && def.type !== preferredWordType) {
+				continue;
+			}
 			let sb = "";
 			if (forms.length === 1) {
 				const form = forms[0];
@@ -51,7 +43,7 @@ export default class Word {
 			} else {
 				sb += forms.join(",") + " of ";
 			}
-			sb += key;
+			sb += def;
 			result.push(sb);
 		}
 		return result;
