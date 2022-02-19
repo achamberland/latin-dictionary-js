@@ -24,16 +24,10 @@ export default class Word {
 		return defs;
 	}
 
-	static toString(words, preferredWordType) {
+	static allFormsToString(words) {
 		const defs = Word.formsByDefinition(words);
 		const result = [];
-		if (preferredWordType) {
-			preferredWordType = preferredWordType.toUpperCase();
-		}
 		for (let [def, forms] of defs) {
-			if (preferredWordType && def.type !== preferredWordType) {
-				continue;
-			}
 			let sb = "";
 			if (forms.length === 1) {
 				const form = forms[0];

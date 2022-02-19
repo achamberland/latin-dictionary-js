@@ -10,6 +10,7 @@ import Voice from "./api/Voice.js";
 import Word from "./api/Word.js";
 import WordType from "./api/WordType.js";
 import Latin from "./latin/Latin.js";
+import chooseWord from "./utils/chooseWord.js";
 
 /*
  * TODO:
@@ -120,11 +121,12 @@ export default class Translator {
 		this.latin = new Latin(rawText);
 	}
 
-	translate(input) {
+	translate(input, shouldTranslateAll = false) {
 		const words = input.split(" ");
 		for (let wordText of words) {
 			wordText ||= "";
-			let [text, wordType] = wordText.split(/\[|\]/, 2);
+			let [text, manualType, after] = wordText.split(/\[|\]/, 3);
+			let [_before, manualCase] = after ? after.split(/\(|\)/, 3) : [];
 
 			text = Translator.lettersOnly(text.toLowerCase());
 			if (!text.trim()) {
@@ -135,12 +137,20 @@ export default class Translator {
 				console.log("\n" + fill(text, 15) + ": (not found)\n");
 			} else if (words.length === 1 && !wordType) {
 				Translator.listAllForms(wordOptions);
-			} else {
-				const list = Word.toString(wordOptions, wordType);
+			} else if (shouldTranslateAll) {
+				const list = Word.allFormsToString(wordOptions);
 				console.log("\n" + fill(text, 15) + ": " + list.shift() + "\n");
 				list.forEach((line, i) => {
 					console.log("\n" + fill("", 17) + line + "\n");
 				});
+			} else {
+				const chosen = chooseWord(wordOptions, input, { manualType, manualCase });
+				if (chosen) {
+					const {def, form} = chosen;
+					console.log(`\n${fill(text, 15)}: ${form.casus ? `(${form.casus}) ` : ""}${def}\n`);
+				} else {
+					console.log("(no translation found)");
+				}
 			}
 		}
 	}
