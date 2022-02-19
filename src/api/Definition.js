@@ -3,12 +3,13 @@ import FormBuilder from "./FormBuilder.js";
 import Word from "./Word.js";
 
 export default class Definition {
-	constructor(type, description) {
+	constructor(type, description, codes) {
 		this.type = type;
 		this.description = description;
 		this.translations = new Map();
 		this.forms = new Map();
 		this.genus = undefined;
+		this.codes = codes;
 	}
 
 	// Acts like how this.forms.get(identicalOtherFormInstance) would've worked

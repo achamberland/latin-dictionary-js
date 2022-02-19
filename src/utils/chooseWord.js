@@ -13,10 +13,16 @@ export default function chooseWordEntry(words, sentence, { manualWordType, manua
   manualWordType &&= manualWordType.toUpperCase();
   manualCase &&= manualCase.toUpperCase();
   
+  const candidates = [];
+
   // Selects the first def that meets criteria for now
-  for (let [def, forms] of defs) {
+  for (let [definition, forms] of defs) {
     let form = forms[0];
-    if (manualWordType && def.type !== manualWordType) {
+    // Archaic or Modern
+    if (definition.codes.ageRank === 1 || definition.codes.ageRank > 6) {
+      continue;
+    }
+    if (manualWordType && definition.type !== manualWordType) {
       continue;
     }
     if (manualCase) {
@@ -25,7 +31,17 @@ export default function chooseWordEntry(words, sentence, { manualWordType, manua
         continue;
       }
     }
-    return { def, form };
+    
+    candidates.push({ definition, form });
+  }
+  if (candidates.length) {
+    return candidates.sort((c1, c2) => (
+      compareFrequency(c1, c2)
+    ))[0];
   }
   return null;
 }
+
+const compareFrequency = (e1, e2) => (
+  e2.definition.codes.frequency - e1.definition.codes.frequency
+);

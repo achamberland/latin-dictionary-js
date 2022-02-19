@@ -135,7 +135,7 @@ export default class Translator {
 			const wordOptions = this.latin.find(text);
 			if (wordOptions == null) {
 				console.log("\n" + fill(text, 15) + ": (not found)\n");
-			} else if (words.length === 1 && !wordType) {
+			} else if (words.length === 1 && !manualType && !manualCase) {
 				Translator.listAllForms(wordOptions);
 			} else if (shouldTranslateAll) {
 				const list = Word.allFormsToString(wordOptions);
@@ -146,8 +146,8 @@ export default class Translator {
 			} else {
 				const chosen = chooseWord(wordOptions, input, { manualType, manualCase });
 				if (chosen) {
-					const {def, form} = chosen;
-					console.log(`\n${fill(text, 15)}: ${form.casus ? `(${form.casus}) ` : ""}${def}\n`);
+					const { definition, form } = chosen;
+					console.log(`\n${fill(text, 15)}: ${form.casus ? `(${form.casus}) ` : ""}${definition}\n`);
 				} else {
 					console.log("(no translation found)");
 				}

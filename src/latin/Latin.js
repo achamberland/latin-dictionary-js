@@ -1,9 +1,9 @@
 import Case from "../api/Case.js";
+import Codes from "../api/Codes.js";
 import Definition from "../api/Definition.js";
 import Gender from "../api/Gender.js";
 import Plurality from "../api/Plurality.js";
 import WordType from "../api/WordType.js";
-import Conjugation from "./Conjugation.js";
 import conjugate from "./Conjugator.js";
 import Declinator from "./Declinator.js";
 
@@ -107,6 +107,7 @@ export default class Latin {
     const leftParts = def.substring(0, colon).split(";");
     const wordParts = leftParts[0].trim().split(", ");
     const typeParts = leftParts[1].trim().split(" ");
+    const codeParts = leftParts[2].trim().split(", ");
     /*    
       TODO: (Looks like something unfinished from Java project)
 
@@ -141,7 +142,13 @@ export default class Latin {
       throw new Error("Unrecognized word type: " + wordTypeName);
     }
 
-    const definition = new Definition(type, def.substring(colon + 2).trim());
+    codeParts.push(codeParts.pop().replace(";", ""));
+    const age = this.parseCode(codeParts, Codes.CODE_AGE);
+    const frequency = this.parseFrequency(codeParts);
+    const source = this.parseCode(codeParts, Codes.CODE_SOURCE);
+    const codes = new Codes(age, frequency, source);
+
+    const definition = new Definition(type, def.substring(colon + 2).trim(), codes);
     switch (type) {
       case WordType.NOUN:
         return this.processNoun(definition, wordParts, typeParts);
@@ -194,6 +201,27 @@ export default class Latin {
     ) 
     const conjugation = hasConjugation ? parseInt(conjugationDescription) : 0;
     return definition.addForms(conjugate(words[0], words[1], words[2], words[3], conjugation));
+  }
+
+  parseCode(codes, codeKey) {
+    const rawCode = codes.find(code => code.startsWith(codeKey));
+    if (rawCode) {
+      return rawCode.substring(codeKey.length);
+    }
+    return null;
+  }
+
+  parseFrequency(codes) {
+    const frequencyValue = this.parseCode(codes, Codes.CODE_FREQUENCY);
+    if (frequencyValue) {
+      let middle = 4;
+      const pluses = frequencyValue.split("+");
+      if (pluses.length) {
+        return middle + pluses.length - 1;
+      }
+      return middle - frequencyValue.split("-").length; 
+    }
+    return null;
   }
 
   find(word) {
