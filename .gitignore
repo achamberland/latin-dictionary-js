@@ -29,6 +29,8 @@ bin/
 .settings/
 .settings
 
+# Assets to hide for now
+assets/texts/
 
 # npm
 node_modules/
