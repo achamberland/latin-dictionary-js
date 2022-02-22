@@ -10,7 +10,7 @@ import Voice from "./api/Voice.js";
 import Word from "./api/Word.js";
 import WordType from "./api/WordType.js";
 import Latin from "./latin/Latin.js";
-import chooseWord from "./utils/chooseWord.js";
+import { chooseWord } from "./utils/chooseWord.js";
 
 /*
  * TODO:
@@ -117,8 +117,11 @@ export default class Translator {
 	   });
 	}
 
-	constructor(rawText) {
-		this.latin = new Latin(rawText);
+	constructor(rawText = null, latin = null) {
+		this.latin = latin || new Latin(rawText);
+		if (!this.latin) {
+			throw new Error("Must pass either raw dictionary text or a Latin dictionary instance")
+		}
 	}
 
 	translate(input, shouldTranslateAll = false) {

@@ -31,6 +31,7 @@ bin/
 
 # Assets to hide for now
 assets/texts/
+bin/src/texts/
 
 # npm
 node_modules/

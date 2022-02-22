@@ -1,8 +1,29 @@
-import WordType from "../api/WordType";
-import { ENGLISH_ARTICLES } from "./Translation";
+import WordType from "../api/WordType.js";
+import { chooseWord } from "../utils/chooseWord.js";
+import Translation, { ENGLISH_ARTICLES } from "./Translation.js";
+import TranslationChunk from "./TranslationChunk.js";
 
-export default function parseTranslation(rawText) {
-  rawText.replace(/[^A-Za-z]/g, "").split(" ")
+export default function parseTranslation(name, rawText, dictionary) {
+  let json = null;
+  try {
+    json = JSON.parse(rawText);
+  } catch(e) {
+    throw new Error("Invalid JSON for translation: " + name, e);
+  }
+
+  const allLatins = json.chunks.map(chunk => chunk.latin);
+  const fullText = allLatins.join(" ") + ".";
+
+  const fullWords = json.chunks.map(chunk => {
+    const wordText = chunk.latin.replace(/[^A-Za-z\s]/, "").toLowerCase();
+    const wordOptions = dictionary.find(wordText);
+    if (!wordOptions) {
+      throw new Error("Couldn't find word in dictionary: " + wordText);
+    }
+    const word = chooseWord(wordOptions, fullText, chunk);
+    return new TranslationChunk(word, wordText, wordOptions);
+  });
+  console.log(JSON.stringify(fullWords))
 }
 
 function defaultArticle(word) {

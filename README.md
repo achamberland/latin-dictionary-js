@@ -4,6 +4,8 @@ From a raw text Latin dictionary, this parses each definition and its conjugatio
 
 This is a work-in-progress, and for now only searches for latin words passed on the npm start command, logging information for each to the console.
 
+JavaScript classes are used only to port the original Java more quickly.
+
 # Getting Started
 
 ## Running with node 
