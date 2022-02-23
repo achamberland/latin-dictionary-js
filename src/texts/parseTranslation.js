@@ -15,15 +15,36 @@ export default function parseTranslation(name, rawText, dictionary) {
   const fullText = allLatins.join(" ") + ".";
 
   const fullWords = json.chunks.map(chunk => {
-    const wordText = chunk.latin.replace(/[^A-Za-z\s]/, "").toLowerCase();
-    const wordOptions = dictionary.find(wordText);
+    const latinText = chunk.latin.replace(/[^A-Za-z\s]/, "").toLowerCase();
+    const wordOptions = dictionary.find(latinText);
     if (!wordOptions) {
-      throw new Error("Couldn't find word in dictionary: " + wordText);
+      throw new Error("Couldn't find word in dictionary: " + latinText);
     }
     const word = chooseWord(wordOptions, fullText, chunk);
-    return new TranslationChunk(word, wordText, wordOptions);
+    if (!word) {
+      throw new Error("Couldn't choose best word for word: " + latinText);
+    }
+
+    let englishText = "";
+    // Todo: Make this a class maybe
+    let wordTypeData = {};
+
+    if (word.definition.type === WordType.NOUN) {
+      const article = chunk.article || defaultArticle(word);
+      const hasLatinCase = chunk.hasLatinCase || defaultHasLatinCase(word, rawText);
+      const preposition = hasLatinCase ? (chunk.preposition || defaultPreposition) : "";
+      englishText = buildEnglishNoun(word, chunk, article, preposition);
+      wordTypeData = { article, hasLatinCase, preposition };
+    } else {
+      englishText = chunk.english || word.definition;
+    }
+
+    return new TranslationChunk(word, latinText, englishText, wordTypeData, wordOptions);
   });
-  console.log(JSON.stringify(fullWords))
+
+  console.log(fullWords.map(w => JSON.stringify(w.word)));
+
+  return fullWords;
 }
 
 function defaultArticle(word) {
@@ -48,4 +69,15 @@ function defaultHasLatinCase(word, sentence) {
   const lastPrepositionIndex = prevTypes.length - prevTypes.reverse().indexOf(WordType.PREPOSITION);
   const betweenWords = prevTypes.slice(lastPrepositionIndex);
   return betweenWords.every(wordType => casedTypes.includes(wordType));
+}
+
+function buildEnglishNoun(word, chunk, article, preposition) {
+  let out = "";
+  out += article ? article + " " : "";
+  out += preposition ? preposition + " " : "";
+
+  // Todo: Definitions are not synonyms... data isn't in WW... this is bad
+  out += chunk.english || word.definition;
+
+  return out;
 }

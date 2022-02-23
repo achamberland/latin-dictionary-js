@@ -91,6 +91,7 @@ export function chooseWord(words, sentence, translationChunk = {}) {
     if (!chosen) {
       throw new Error("Couldn't match word after form and definition were chosen?", { form, definition })
     }
+    return chosen;
   }
   return null;
 }

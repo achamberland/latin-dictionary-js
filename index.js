@@ -46,7 +46,12 @@ cli.on('line', line => {
         console.log("Building dictionary...");
         translator = new Translator(rawText);
       }
-      parseTranslation("Test Name", fileText, translator.latin);
+      try {
+        parseTranslation("Test Name", fileText, translator.latin);
+      } catch(e) {
+        console.error(e);
+      }
+      cli.prompt();
       break;
     case '':
       cli.prompt();
@@ -56,7 +61,11 @@ cli.on('line', line => {
         console.log("Building dictionary...");
         translator = new Translator(rawText);
       }
-      translator.translate(line);
+      try {
+        translator.translate(line);
+      } catch(e) {
+        console.error(e);
+      }
       cli.prompt();
       break;
   }
