@@ -40,6 +40,9 @@ export default class Form {
     if (this.gender != null) {
       sb += this.gender + ' ';
     }
+    if (this.partitive != null) {
+      sb += this.partitive + ' ';
+    }
     sb = sb.slice(0, sb.length - 1);
     return sb;
   }

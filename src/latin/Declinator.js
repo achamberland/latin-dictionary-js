@@ -3,6 +3,7 @@
 import Degree from "../api/Degree.js";
 import FormBuilder from "../api/FormBuilder.js";
 import Gender from "../api/Gender.js";
+import Plurality from "../api/Plurality.js";
 import Latin from "./Latin.js";
 
 /**
@@ -70,7 +71,36 @@ export default class Declinator {
     ["1",  "ei",   "ei",   "em", "e",    "1"],
     ["es", "erum", "ebus", "es", "ebus", "es"]
   ];
+ 
+// Todo: Implement:
+// - 7th possessive
+// - Pronoun declension override
+// - Reflexive third
 
+  // ______________
+  // Irregulars
+  // Pronouns (Hacks)
+  static PRONOUN_FIRST_PERSON = [
+    ["ego", "mei", "mihi", "me", "me",  "ego", "meus"],
+    ["nos", "nostrum", "nobis", "nos", "nobis",  "nos", "noster"],
+  ];
+  static PRONOUN_SECOND_PERSON = [
+    ["tu", "tui", "tibi", "te", "te", "tu", "tuus"],
+    ["vos", "vostrum", "vobis", "vos", "vobis",  "vos", "voster", "vester"],
+  ];
+  static PRONOUN_THIRD_PERSON = [
+    ["is/id/ea", "eius", "ei", "eum/id/eam", "eo/eo/ea",  "eius"],
+    ["ei/eae/ea", "eorum/eorum/earum", "eis", "eos/ea/eas", "eis",  "eorum/eorum/earum"],
+  ];
+  static PRONOUN_REFLEXIVE_THIRD_PERSON = [
+    ["-", "sui", "sibi", "se", "se",  "-"],
+    ["-", "sui", "sibi", "se", "se",  "-"],
+  ];
+
+  static PRONOUN_IRREGULARS = [
+    this.PRONOUN_FIRST_PERSON, this.PRONOUN_SECOND_PERSON,
+    this.PRONOUN_THIRD_PERSON, this.PRONOUN_REFLEXIVE_THIRD_PERSON
+  ];
 
   /**
    * Returns the declensions of the given word as a map. Words is expected to
@@ -92,7 +122,7 @@ export default class Declinator {
       } else {
         const cutCount = genitive.endsWith("i") && !genitive.endsWith("ei") ? 1 : 2;
         genitiveSuffix = genitive.substring(genitive.length - cutCount);
-      }        
+      }
       stem = genitive.substring(0, genitive.length - genitiveSuffix.length);
       switch (genitiveSuffix) {
         case "ae": declension = 1; break;
@@ -107,6 +137,8 @@ export default class Declinator {
     return this.decline(result, null, genus, nominative, stem, declension);
   }
   
+  // TODO: Handle POSS SG/PL modifier
+
   /**
    * Declines an adjective. The variable words contains the Latin words of
    * defining the dictionary entry.
@@ -160,7 +192,11 @@ export default class Declinator {
       } else {
         const nominativeFeminine = words[1];
         const nominativeNeuter = words[2];
-        const stem = Latin.findStem(nominativeMasculine);
+        // aleruter/alerutrum, noster/nostrum, etc
+        const stemSource = nominativeMasculine.endsWith("er") && nominativeNeuter.match(/[^e]rum$/) ?
+          nominativeNeuter :
+          nominativeMasculine;
+        const stem = Latin.findStem(stemSource);
         if (words[2].endsWith("e")) {
           // adfectualis, adfectualis, adfectuale
           result = this.decline(result, null, Gender.MASCULINE, nominativeMasculine, stem, 3);
@@ -216,10 +252,25 @@ export default class Declinator {
     return result;
   }
 
+  static declinePronoun(genus, nominative, genitive) {
+    const irregularMatch = this.PRONOUN_IRREGULARS.find(irregular =>
+      irregular.find(irregularRow =>
+        irregularRow[0].split("/").includes(nominative) || 
+        irregularRow[1].split("/").includes(genitive)
+      )
+    );
+    if (!irregularMatch || !irregularMatch[0]) {
+      // Not irregular (nos & vos)
+      return this.declineNoun(genus, nominative, genitive);
+    }
+    return this.decline(new Map(), null, genus, nominative, "", irregularMatch);
+  }
+
   
   /**
    * The actual declension routine, called from noun and adjective declension.
    * @param result map to add the results to
+   * @param form optional base form to use
    * @param genus the genus of the noun or adjective
    * @param degree the degree of the adjective
    * @param nominative the nominative case of the word
@@ -233,51 +284,55 @@ export default class Declinator {
     }
 
     let suffixes;
-    switch (declension) {
-      case 0:
-        suffixes = this.UNDECLINED;
-        break;
-      case 1:
-        suffixes = this.FIRST_DECLENSION;
-        break;
-      case 2:
-        if (nominative.endsWith("ius")) {
-          suffixes = this.SECOND_DECLENSION_IUS;
-        } else if (nominative.endsWith("us")) {
-          suffixes = this.SECOND_DECLENSION_US;
-        } else {
-          suffixes = this.SECOND_DECLENSION
-        }
-        break;
-      case 3:
-        const nomintativeEnding = nominative.endsWith("e") ? "e" : nominative.substring(nominative.length - 2);
-        const isLongConsonantEnding = (
-          stem.length > 2 &&
-          Latin.consonantsOnly(stem.substring(stem.length - 2))
-        );
-        const isOtherMixedEnding = (
-          ["is", "es"].includes(nomintativeEnding) &&
-          Latin.syllableCount(stem + "is") === Latin.syllableCount(nominative)
-        );
-        if (isLongConsonantEnding || isOtherMixedEnding) {
-          suffixes = this.THIRD_DECLENSION_MIXED;
-        } else if (
-          ["is", "e", "al", "ar"].includes(nomintativeEnding) &&
-          nominative.substring(0, nominative.length - nomintativeEnding.length) === stem
-        ) {
-          suffixes = this.THIRD_DECLENSION_I;
-        } else {
-          suffixes = this.THIRD_DECLENSION_CONSONANT;
-        }
-        break;
-      case 4:
-        suffixes = this.FOURTH_DECLENSION;
-        break;
-      case 5:
-        suffixes = this.FIFTH_DECLENSION;
-        break;
-      default:
-        throw new Error("Invalid declension: " + declension);
+    if (typeof declension === "object") {
+      suffixes = declension;
+    } else {
+      switch (declension) {
+        case 0:
+          suffixes = this.UNDECLINED;
+          break;
+        case 1:
+          suffixes = this.FIRST_DECLENSION;
+          break;
+        case 2:
+          if (nominative.endsWith("ius")) {
+            suffixes = this.SECOND_DECLENSION_IUS;
+          } else if (nominative.endsWith("us")) {
+            suffixes = this.SECOND_DECLENSION_US;
+          } else {
+            suffixes = this.SECOND_DECLENSION
+          }
+          break;
+        case 3:
+          const nomintativeEnding = nominative.endsWith("e") ? "e" : nominative.substring(nominative.length - 2);
+          const isLongConsonantEnding = (
+            stem.length > 2 &&
+            Latin.consonantsOnly(stem.substring(stem.length - 2))
+          );
+          const isOtherMixedEnding = (
+            ["is", "es"].includes(nomintativeEnding) &&
+            Latin.syllableCount(stem + "is") === Latin.syllableCount(nominative)
+          );
+          if (isLongConsonantEnding || isOtherMixedEnding) {
+            suffixes = this.THIRD_DECLENSION_MIXED;
+          } else if (
+            ["is", "e", "al", "ar"].includes(nomintativeEnding) &&
+            nominative.substring(0, nominative.length - nomintativeEnding.length) === stem
+          ) {
+            suffixes = this.THIRD_DECLENSION_I;
+          } else {
+            suffixes = this.THIRD_DECLENSION_CONSONANT;
+          }
+          break;
+        case 4:
+          suffixes = this.FOURTH_DECLENSION;
+          break;
+        case 5:
+          suffixes = this.FIFTH_DECLENSION;
+          break;
+        default:
+          throw new Error("Invalid declension: " + declension);
+      }
     }
 
     const builder = new FormBuilder(form);
@@ -285,18 +340,47 @@ export default class Declinator {
     for (let n = 0; n < Latin.PLURALITY.length; n++) {
       builder.plurality = Latin.PLURALITY[n];
       const suffixesN = suffixes[n];
+      if (!suffixesN) {
+        // Skip plurality
+        continue;
+      }
       for (let i = 0; i < Latin.CASES.length; i++) {
         builder.casus = Latin.CASES[i];
         let suffix = suffixesN[i];
 
-        // Different masculine and neuter endings
-        const cut = suffix.indexOf('/');
-        if (cut === -1) {
+        // Differently gendered endings: M/N/F
+        const neuterCut = suffix.indexOf('/');
+        if (neuterCut === -1) {
           suffix = stem + suffix;
-        } else if (builder.gender === Gender.NEUTER) {
-          suffix = stem + suffix.substring(cut + 1);
         } else {
-          suffix = stem + suffix.substring(0, cut);
+          if (builder.gender === Gender.NEUTER) {
+            suffix = stem + suffix.substring(neuterCut + 1);
+          } else {
+            suffix = stem + suffix.substring(0, neuterCut);
+          }
+
+          const feminineCut = suffix.indexOf('/');
+          if (feminineCut >= 0) {
+            if ([1,2].includes(declension)) {
+              throw new Error(
+                "Declension does not include both masculine and feminine words: " + declension
+              );
+            }
+            if (builder.gender === Gender.FEMININE) {
+              suffix = stem + suffix.substring(feminineCut + 1);
+            } else {
+              suffix = stem + suffix.substring(0, feminineCut);
+            }
+          }
+        }
+
+        const partitiveCut = suffix.indexOf('~');
+        if (partitiveCut >= 0) {
+          if (builder.partitive) {
+            suffix = suffix.substring(0, partitiveCut);
+          } else {
+            suffix = suffix.substring(partitiveCut + 1);
+          }
         }
 
         // Use Nominative if '1' at this point
@@ -328,5 +412,16 @@ export default class Declinator {
       stem = Latin.findStem(nominative);
     }
     return stem + genitiveSuffix;
+  }
+
+  // Todo: Do this, only if needed (it will be a lot of work) 
+  // /**
+  //  * Attempts to construct a noun from any declension and form.
+  //  * Needed for Proper Nouns
+  //  * 
+  //  * @param {string} word - Valid Latin noun in any declension
+  //  */
+  static constructProperNounForms(word) {
+    
   }
 }

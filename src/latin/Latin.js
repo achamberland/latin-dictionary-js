@@ -2,6 +2,7 @@ import Case from "../api/Case.js";
 import Codes from "../api/Codes.js";
 import Definition from "../api/Definition.js";
 import Gender from "../api/Gender.js";
+import Person from "../api/Person.js";
 import Plurality from "../api/Plurality.js";
 import WordType from "../api/WordType.js";
 import conjugate from "./Conjugator.js";
@@ -81,6 +82,12 @@ export default class Latin {
         for (let entry of definition.forms) {
           const word = entry[1];
           const string = word.word;
+          // let words = null;
+          // if (definition.type === WordType.PRONOUN) {
+          //   this.dictionary.get(string);
+          // } else {
+          //   words = this.dictionary.get(string);
+          // }
           let words = this.dictionary.get(string);
           if (words == null) {
             words = new Set();
@@ -151,11 +158,14 @@ export default class Latin {
     const definition = new Definition(type, def.substring(colon + 2).trim(), codes);
     switch (type) {
       case WordType.NOUN:
+      case WordType.PRONOUN:
         return this.processNoun(definition, wordParts, typeParts);
       case WordType.VERB:
         return this.processVerb(definition, wordParts, typeParts);
       case WordType.ADJECTIVE:
         return definition.addForms(Declinator.declineAdjective(wordParts));
+      // case WordType.PRONOUN:
+        // return definition.addForms(this.processPronoun(definition, wordParts, typeParts));
       default:
         return definition.addFormless(wordParts[0]);
     }
@@ -176,14 +186,22 @@ export default class Latin {
       case "N":
         definition.genus = Gender.NEUTER;
         break;
+      case "PERS":
+      case "PRON":
+        break;
       default:
         throw new Error("Unrecognized genus '" + kinds[kinds.length - 1] + "'");
     }
     if (words.length !== 2) {
       throw new Error("Nominative and genitive expected for noun entries. Got: " + words.join(", "));
     }
-    const declinedNoun = Declinator.declineNoun(definition.genus, words[0], words[1]);
-    return definition.addForms(declinedNoun);
+    let declined = null;
+    if (definition.type === WordType.PRONOUN) {
+      declined = Declinator.declinePronoun(definition.genus, words[0], words[1]);
+    } else {
+      declined = Declinator.declineNoun(definition.genus, words[0], words[1]);
+    }
+    return definition.addForms(declined);
   }
 
   /**
@@ -202,6 +220,32 @@ export default class Latin {
     const conjugation = hasConjugation ? parseInt(conjugationDescription) : 0;
     return definition.addForms(conjugate(words[0], words[1], words[2], words[3], conjugation));
   }
+
+  // processPronoun(definition, words, kinds) {
+  //   if () {
+  //     return this.processNoun(definition, words, kinds);
+  //   }
+  //   const pronoun = this.parsePronoun(words[0]);
+  //   switch (kinds[kinds.length - 1].toUpperCase().trim()) {
+  //     case "F":
+  //       definition.genus = Gender.FEMININE;
+  //       break;
+  //     case "C":
+  //     case "M":
+  //       definition.genus = Gender.MASCULINE;
+  //       break;
+  //     case "N":
+  //       definition.genus = Gender.NEUTER;
+  //       break;
+  //     default:
+  //       throw new Error("Unrecognized genus '" + kinds[kinds.length - 1] + "'");
+  //   }
+  //   if (words.length !== 2) {
+  //     throw new Error("Nominative and genitive expected for noun entries. Got: " + words.join(", "));
+  //   }
+  //   const declinedNoun = Declinator.declineNoun(definition.genus, words[0], words[1]);
+  //   return definition.addForms(declinedNoun);
+  // }
 
   parseCode(codes, codeKey) {
     const rawCode = codes.find(code => code.startsWith(codeKey));
@@ -223,6 +267,21 @@ export default class Latin {
     }
     return null;
   }
+
+  // Todo: Do this only if needed (it will be a lot of work) 
+  // createProperNounDefinition(word) {
+  //   const definition = new Definition("N", word);
+  //   const lastTwoLetters = word.slice(word.length - 2).includes("u");
+  //   let inferredType = "N"
+  //   // Todo: Handle Neuter, and pick up other edge cases 
+  //   if (lastTwoLetters.includes("u")) {
+  //     inferredType = "M"
+  //   } else if (lastTwoLetters.includes("a")) {
+  //     inferredType = "F"
+  //   }
+  //   const [nominative, genitive] = Declinator.constructProperNounForms(word);
+  //   // this.processNoun(definition, [word, inferredGenitive], [inferredType])
+  // }
 
   find(word) {
     return this.dictionary.get(word);

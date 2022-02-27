@@ -9,10 +9,16 @@ export const ENGLISH_ARTICLES = {
 
 export default class Translation {
 
-  constructor(name, text, json) {
+  constructor(name, chunks, json) {
     this.name = name;
-    this.text = text;
+    this.chunks = chunks;
     this.json = json;
+  }
+
+  toEnglish() {
+    const ordered = this.chunks;
+    const prefixedSuffixed = ordered
+    return prefixedSuffixed.map((chunk) => chunk.english).join(" ");
   }
 
 }

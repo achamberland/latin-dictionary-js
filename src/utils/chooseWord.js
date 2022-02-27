@@ -49,7 +49,7 @@ export function chooseWordEntry(words, sentence, { manualWordType, manualCase } 
  * - Naive guess of noun declension based on surrounding words (TODO)
  */
 export function chooseWord(words, sentence, translationChunk = {}) {
-  const { wordType, wordCase } = translationChunk;
+  let { wordType, wordCase } = translationChunk;
 
   // Todo: move this into a util as well
   const defs = Word.formsByDefinition(words);  

@@ -62,6 +62,17 @@ const schema = {
       excludePreposition:
         true,                 // Unnecessary here, (ex. "I go" in this case if false, w/"go" treated future tense) 
       notes: "",
+    },
+    // Subjunctive
+    {
+      wordType: "verb",       // Automatically defined unless override needed
+      latin: "sit",
+      english: "let him be",  // Unnecessary here, unless alternate english tense like "be going" is used
+      excludePronoun: false,  // Unnecessary here, (ex. "let be" if false)
+      excludePreposition:
+        true,                 // Unnecessary here, (ex. )
+      voice: undefined,       // Unnecessary here (ex. "him be" if "" or null)
+      notes: "",
     }
   ]
 }
