@@ -1,12 +1,27 @@
-#filius, filii  N (2nd) M                                                                            [XXXAX] :: son;
-#filum, filii  N (2nd) N                                                                             [XXXBX] :: thread, string, filament, fiber; texture, style, nature;
-#mecum  ADV                                                                                          [XXXAX] :: with me;
-#tecum  ADV                                                                                          [XXXAX] :: with you;
-#secum  ADV                                                                                          [XXXAX] :: with him|it|her;
-#nobiscum  ADV                                                                                       [XXXAX] :: with us;
-#vobiscum  ADV                                                                                       [XXXAX] :: with you (all);
-#quocum  ADV                                                                                         [XXXAX] :: with whom;
-#quacum  ADV                                                                                         [XXXAX] :: with whom;
-#quicum  ADV                                                                                         [XXXAX] :: with whom;
-#quibuscum  ADV                                                                                      [XXXAX] :: with whom;
-#quibuscum  ADV                                                                                      [XXXAX] :: with whom;
+#sum, esse, fui, futurus  V                                       [XXXAX] :: to be, exist; also used to form verb perfect passive tenses with nom.  perf. part.;
+#filius, filii  N (2nd) M                                         [XXXAX] :: son;
+
+#nos, nostrum  PRON PERS  F                                       [XXXBX] :: we, us;
+#nos, nostri  PRON PERS  N                                        [XXXCX] :: we, us;
+#vos, vestrum  PRON PERS  F                                       [XXXCX] :: you (plural), ye;
+#vos, vestri  PRON PERS  N                                        [XXXCX] :: you (plural), ye;
+#is  PRON M                                                       [XXXAX] :: he;
+#ea  PRON F                                                       [XXXAX] :: she;
+#id  PRON N                                                       [XXXAX] :: it;
+
+#meus, mea, meum  ADJ  POSS SG                                    [XXXAX] :: my, mine;
+#tuus, tua, tuum  ADJ  POSS SG                                    [XXXAX] :: your, yours;
+#suus, sua, suum  ADJ  POSS SG                                    [XXXAX] :: his, her, its;
+#noster, nostra, nostrum  ADJ  POSS PL                            [XXXAX] :: our;
+#voster, vostra, vostrum  ADJ  POSS PL                            [XXXAX] :: your, yours (plural);
+#suus, sua, suum  ADJ  POSS PL                                    [XXXAX] :: their;
+
+#mecum  ADV                                                       [XXXAX] :: with me;
+#tecum  ADV                                                       [XXXAX] :: with you;
+#secum  ADV  M                                                    [XXXAX] :: with him;
+#secum  ADV  N                                                    [XXXAX] :: with it;
+#secum  ADV  F                                                    [XXXAX] :: with her;
+#nobiscum  ADV                                                    [XXXAX] :: with us;
+#vobiscum  ADV                                                    [XXXAX] :: with you (all);
+
+#Deus, Dei  N                                                     [XXXAX] :: God;
