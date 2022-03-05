@@ -32,7 +32,7 @@ hs_err_pid*
 src/texts/constants/
 src/text/schema.js
 bin/src/texts/
-bin/dest/texts
+bin/dest/texts/
 
 # npm
 node_modules/

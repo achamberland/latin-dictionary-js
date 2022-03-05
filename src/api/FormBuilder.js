@@ -12,6 +12,11 @@ export default class FormBuilder {
   static of = (...parts) => {
     return new FormBuilder(...parts).build();
   }
+
+  // Creates Form from result of Form.hashCode
+  static fromHashCode = hash => {
+    return new Form(hash.split("__"));
+  }
   
   static EMPTY = new FormBuilder().build();
 

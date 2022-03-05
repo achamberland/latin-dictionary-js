@@ -1,10 +1,55 @@
+import Case from "./Case.js";
 import FormBuilder from "./FormBuilder.js";
+import Mood from "./Mood.js";
+import Person from "./Person.js";
+import Tense from "./Tense.js";
+import Voice from "./Voice.js";
+import WordType from "./WordType.js";
 
 export default class Word {
 	constructor(word, form, definition) {
 		this.word = word;
 		this.form = form;
 		this.definition = definition;
+	}
+
+	get rootForm() {
+		switch(this.definition.type) {
+			// Return Nominative form
+			// (Todo: probably should be genitive)
+			case WordType.NOUN:
+			case WordType.PRONOUN:
+			case WordType.ADJECTIVE:
+				return new FormBuilder(
+          Case.NOMINATIVE,
+          this.form.plurality,
+          this.form.gender
+        ).build();
+			// Return First-Person Present form
+			case WordType.VERB:
+        return new FormBuilder(
+          Mood.INDICATIVE,
+          Person.FIRST,
+          Tense.PRESENT,
+          Voice.ACTIVE,
+          // Verb shouldn't be like this, but it do
+          // Todo: Remove plurality from all non-ptcp translations.
+					//   Conjugation ends up being "[verb] sumus" etc with plural
+          this.form.plurality
+        ).build();
+			// Todo: confirm each should have no special form
+			case WordType.PREPOSITION:
+			case WordType.CONJUNCTION:
+			case WordType.NUMERAL:
+				return this.form;
+			default:
+				throw new Error("Unsupported word type", this.definition.type)
+		}
+	}
+
+	get rootWord() {
+		const form = this.rootForm;
+		return this.definition.getWord(form);
 	}
 	
 	toString() {
