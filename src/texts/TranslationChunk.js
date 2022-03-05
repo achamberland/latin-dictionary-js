@@ -10,15 +10,15 @@ export default class TranslationChunk {
    * @param {*Word} word 
    * @param {*string} text 
    * @param {*string} english
-   * @param {*Object} wordTypeData - Data specific to word's wordType
    * @param {*Word[]} alternates - Other wordOptions for latin text
    * @param {*bool} isIgnored - Do not use if true
    */
-  constructor(word, chunk, latin, english, wordTypeData, alternates, isIgnored = false) {
+  constructor(word, chunk, latin, english, englishTransforms, alternates, isIgnored = false) {
     this.word = word;
+    this.chunk = chunk;
     this.latin = latin;
     this.english = english;
-    this.wordTypeData = wordTypeData;
+    this.englishTransforms = englishTransforms;
     this.alternates = alternates;
     this.isIgnored = isIgnored;
   }
@@ -29,5 +29,15 @@ export default class TranslationChunk {
 
   get definition() {
     return this.word.definition;
+  }
+
+  toEnglish(surroundingChunks, translation) {
+    return this.englishTransforms.reduce((accumulator, transformer) =>
+      transformer(accumulator, this, surroundingChunks, translation)
+    , this.english);
+  }
+
+  toString() {
+    return `Latin: ${this.latin} | English: ${this.toEnglish()} | Word: ${this.word}`;
   }
 }

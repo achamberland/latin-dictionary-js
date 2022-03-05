@@ -20032,7 +20032,7 @@ bovatim; ADV; cat=agr, frq=---, src=OLD:
 bovicidium, bovicidii; N 2 N; age=late, cat=agr, frq=--, src=L+S:
   slaughtering of cattle;
 bovida, bovidae; N 1 F; age=scholar, frq=--, src=Cal:
-  bovidé;
+  bovidï¿½;
 bovile, bovilis; N 3 N; cat=agr, frq=--, src=OLD:
   cattle-shed, stall for cattle/oxen;
 bovilis, bovilis, bovile; ADJ; cat=agr, frq=---, src=OLD:
@@ -57658,7 +57658,7 @@ egestas, egestatis; N 3 F; frq=++:
 egloga, eglogae; N 1 F; frq=-:
   short poem (esp. pastoral);
   short passage selected from longer work, excerpt;
-ego, mei PRON PERS; ; frq=+++:
+ego, mei; PRON PERS; frq=+++:
   I, me;
 egoismus, egoismi; N 2 M; age=scholar, frq=--, src=Cal:
   selfishness;
@@ -75611,9 +75611,6 @@ irruo, irruere, irrui, irrutus; V 3 TRANS; frq=++, src=OLD:
 irruptio, irruptionis; N 3 F; frq=-:
   attack, sally, assault;
   violent/forcible entry;
-is, ea, id; PRON; frq=+++:
-  he/she/it/they (by GENDER/NUMBER);
-  DEMONST: that, he/she/it, they/them;
 Isai., abb.; N M; age=later, cat=ecc, frq=-:
   Isaiah  (abb.), Book of the Bible;
 ischiacus, ischiaca, ischiacum; ADJ; cat=bio, frq=---, src=L+S:
@@ -85262,7 +85259,7 @@ norma, normae; N 1 F; frq=-:
   standard, pattern;
 normativus, normativa, normativum; ADJ; age=scholar, frq=--, src=Cal:
   normal;
-nos, nostrum/nostri PRON PERS; ; frq=+++:
+nos, nostri; PRON PERS M; frq=+++:
   we (pl.), us;
 noscito, noscitare, noscitavi, noscitatus; V 1; frq=-:
   recognize;
@@ -112506,7 +112503,7 @@ trabs, trabis; N 3 F; frq=++:
   ship, vessel;
   roof, house;
 trabucus, trabuci; N 2 M; age=scholar, cat=war, frq=--, src=Cal:
-  trébuchet (machine of war);
+  trï¿½buchet (machine of war);
 tractabilis, tractabilis, tractabile; ADJ; frq=-:
   manageable;
   tractable;
@@ -113642,7 +113639,7 @@ trychnos, trychni; N M; age=late, cat=agr, frq=Pliny, src=L+S:
   nightshade plant (Pliny);
 trygonus, trygoni; N 2 M; age=late, cat=agr, frq=--, src=L+S:
   stingray;
-tu, tui PRON PERS; ; frq=+++:
+tu, tui; PRON PERS; frq=+++:
   you, thee;
 tuba, tubae; N 1 F; cat=drm, frq=++:
   trumpet (straight tube);
@@ -117408,9 +117405,7 @@ vortex, vorticis; N 3 M; frq=-:
   crown of the head;
   peak, top, summit;
   the pole;
-vos, vetrum/vetri PRON PERS; ; frq=+:
-  you (pl.), ye;
-vos, votrum/votri PRON PERS; ; frq=+:
+vos, votrum/votri; PRON PERS; frq=+:
   you (pl.), ye;
 voster, vostra, vostrum; ADJ; age=archaic, frq=++, src=OLD:
   your (pl.), of/belonging to/associated with you;
@@ -117746,27 +117741,46 @@ zythum, zythi; N 2 N; age=late, cat=agr, frq=Pliny, src=L+S:
   malt-liquor (Pliny);
 sum, esse, fui, futurus; V; frq=+++:
   to be, exist;
-  also used to form verb perfect passive tenses with nom.  perf. part.#filius, filii  N (2nd) M                                                                            [XXXAX] ;
+  also used to form verb perfect passive tenses with nom.  perf. part.;
+filius, filii; N 2 M; frq=+++:
   son;
-filum, filii; N 2 N; frq=++:
-  thread, string, filament, fiber;
-  texture, style, nature;
+nos, nostrum; PRON PERS F; frq=++:
+  we, us;
+nos, nostri; PRON PERS N; frq=+:
+  we, us;
+vos, vestrum; PRON PERS F; frq=+:
+  you (plural), ye;
+vos, vestri; PRON PERS N; frq=+:
+  you (plural), ye;
+is; PRON M; frq=+++:
+  he;
+ea; PRON F; frq=+++:
+  she;
+id; PRON N; frq=+++:
+  it;
+meus, mea, meum; ADJ POSS SG; frq=+++:
+  my, mine;
+tuus, tua, tuum; ADJ POSS SG; frq=+++:
+  your, yours;
+suus, sua, suum; ADJ POSS SG; frq=+++:
+  his, her, its;
+noster, nostra, nostrum; ADJ POSS PL; frq=+++:
+  our;
+voster, vostra, vostrum; ADJ POSS PL; frq=+++:
+  your, yours (plural);
+suus, sua, suum; ADJ POSS PL; frq=+++:
+  their;
 mecum; ADV; frq=+++:
   with me;
 tecum; ADV; frq=+++:
   with you;
-  it|her;
+secum; ADV M; frq=+++:
+  with him;
+secum; ADV N; frq=+++:
+  with it;
+secum; ADV F; frq=+++:
+  with her;
 nobiscum; ADV; frq=+++:
   with us;
 vobiscum; ADV; frq=+++:
   with you (all);
-quocum; ADV; frq=+++:
-  with whom;
-quacum; ADV; frq=+++:
-  with whom;
-quicum; ADV; frq=+++:
-  with whom;
-quibuscum; ADV; frq=+++:
-  with whom;
-quibuscum; ADV; frq=+++:
-  with whom;

@@ -21,7 +21,9 @@ export default class Translation {
   toEnglish() {
     const ordered = this.orderChunksForEnglish();
     const prefixedSuffixed = ordered
-    return prefixedSuffixed.map((chunk) => chunk.english).join(" ");
+    return prefixedSuffixed.map(chunk => (
+      chunk.toEnglish(this.chunks, this)
+    )).join(" ");
   }
 
   // Remember to transfer punctuation to swapped words!

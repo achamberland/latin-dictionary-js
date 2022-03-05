@@ -29,9 +29,10 @@ hs_err_pid*
 .settings
 
 # Assets to hide for now
-bin/src/texts/
-bin/dest/texts/
 src/texts/constants/
+src/text/schema.js
+bin/src/texts/
+bin/dest/texts
 
 # npm
 node_modules/
