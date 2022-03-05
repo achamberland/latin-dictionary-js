@@ -47,7 +47,7 @@ cli.on('line', line => {
         translator = new Translator(rawText);
       }
       try {
-        parseTranslation("Test Name", fileText, translator.latin);
+        parseTranslation(fileText, translator.latin);
       } catch(e) {
         console.error(e);
       }

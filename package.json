@@ -4,7 +4,8 @@
   "description": "Parses Latin conjugation, inflection, etc. from raw text of Whitaker's WORDS dictionary file",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "debug": "node --inspect index.js"
   },
   "type": "module",
   "repository": {

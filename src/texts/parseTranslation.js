@@ -1,7 +1,12 @@
 import Case from "../api/Case.js";
 import FormBuilder from "../api/FormBuilder.js";
+import Latin from "../latin/Latin.js";
 import Mood from "../api/Mood.js";
+import Person from "../api/Person.js";
 import Plurality from "../api/Plurality.js";
+import { capitalize } from "../api/Strings.js";
+import Tense from "../api/Tense.js";
+import Voice from "../api/Voice.js";
 import Word from "../api/Word.js";
 import WordType from "../api/WordType.js";
 import { chooseWord } from "../utils/chooseWord.js";
@@ -12,13 +17,14 @@ import TranslationChunk from "./TranslationChunk.js";
 
 let declinatorInstance = null;
 
-export default function parseTranslationList(name, rawText, dictionary) {
+export default function parseTranslationList(rawText, dictionary) {
   let translationList = null;
+  let name = null;
   try {
     const json = JSON.parse(rawText);
     translationList = json.translations;
   } catch(e) {
-    throw new Error("Invalid JSON for translation: " + name, e);
+    throw new Error("Invalid JSON");
   }
   return translationList.map(translationJson => (
     parseTranslation(name, translationJson, dictionary)
@@ -27,14 +33,15 @@ export default function parseTranslationList(name, rawText, dictionary) {
 
 function parseTranslation(name, translationJson, dictionary) {
   const allLatins = translationJson.chunks.map(chunk => chunk.latin);
-  const fullText = allLatins.join(" ") + ".";
+  const fullText = allLatins.join(" ");
   
   const translationChunks = [];
 
-  translationJson.chunks.forEach((chunk, index)  => {
+  translationJson.chunks.forEach((chunk, index, allChunks)  => {
     const capitalized = !!chunk.latin.match(/^[A-Z]/);
     const latinText = chunk.latin.replace(/[^A-Za-z\s]/, "");
     const latinTextLowercase = latinText.toLowerCase();
+    const latinSurroundingChars = chunk.latin.match(/([^A-Za-z0-9]*)[\w\s]+([^A-Za-z0-9]*)/);
     const isProperNoun = chunk.isProperNoun || properNouns.includes(latinText);
 
     let wordOptions = isProperNoun ? null : dictionary.find(latinTextLowercase);
@@ -42,10 +49,12 @@ function parseTranslation(name, translationJson, dictionary) {
       // Todo: Check that word isn't first of a sentence too
       if (isProperNoun || (index !== 0 && capitalized)) {
         // Assume it's a proper noun
-        const properWord = new Word(latinText, FormBuilder.EMPTY, latinText);
-        const english = genericEnglishTranslation(properWord, chunk);
+        const genericNoun = new FormBuilder(WordType.NOUN).build();
+        const properWord = new Word(latinText, genericNoun, latinText);
+        let english = genericEnglishTranslation(properWord, chunk);
+        english = applyPunctuation(english, chunk, latinSurroundingChars);
         translationChunks.push(
-          new TranslationChunk(properWord, chunk, latinText, chunk.english, null, null)
+          new TranslationChunk(properWord, chunk, latinText, english, null, null)
         );
         return;
       } else {
@@ -61,27 +70,60 @@ function parseTranslation(name, translationJson, dictionary) {
     let englishText = "";
     // Todo: Make this a class maybe
     let wordTypeData = {};
+    switch(wordWithGrammar.definition.type) {
+      case WordType.PRONOUN:
+        if (englishText === "i") {
+          englishText = "I";
+          // The only word like this, kind of interesting that it's of yourself
+          // Does this accidentally contribute to egotism to native English speakers?
+          break;
+        }
+      case WordType.NOUN:
+      case WordType.ADJECTIVE:
+        const nominativeForm = new FormBuilder(
+          Case.NOMINATIVE,
+          wordWithGrammar.form.plurality,
+          wordWithGrammar.form.gender
+        ).build();
+        const nominative = wordWithGrammar.definition.getWord(nominativeForm);
 
-    if (wordWithGrammar.definition.type === WordType.NOUN) {
-      const nominativeForm = new FormBuilder(
-        Case.NOMINATIVE,
-        wordWithGrammar.form.plurality,
-        wordWithGrammar.form.gender
-      ).build();
-      const nominative = wordWithGrammar.definition.getWord(nominativeForm);
-
-      const article = chunk.article ?? defaultArticle(wordWithGrammar, nominative, capitalized);
-      const hasLatinCase = chunk.hasLatinCase ?? defaultHasLatinCase(wordWithGrammar, translationChunks);
-      const preposition = hasLatinCase ? (chunk.preposition || defaultPreposition(wordWithGrammar)) : "";
-      englishText = buildEnglishNoun(wordWithGrammar, chunk, nominative, article, preposition);
-      wordTypeData = { article, hasLatinCase, preposition };
-    } else if (wordWithGrammar.definition.type === WordType.VERB) {
-      // Remove pronoun in imperative verb
-      englishText = buildEnglishVerb(wordWithGrammar, chunk);
-    } else {
-      englishText = buildEnglishMiscType(wordWithGrammar, chunk);
+        let article = chunk.article;
+        if (!article) {
+          const prevChunk = translationChunks[index - 1];
+          const isPreviousAdjective = prevChunk?.definition &&
+            prevChunk.definition.type === WordType.ADJECTIVE;
+          if (!isPreviousAdjective) {
+            article = defaultArticle(wordWithGrammar, nominative, allChunks, capitalized);
+          }
+        }
+        const hasLatinCase = chunk.hasLatinCase ?? defaultHasLatinCase(wordWithGrammar, translationChunks);
+        const preposition = hasLatinCase ? (chunk.preposition || defaultPreposition(wordWithGrammar)) : "";
+        
+        englishText = buildEnglishNoun(wordWithGrammar, chunk, nominative, article, preposition, capitalized);
+        wordTypeData = { article, hasLatinCase, preposition };
+        break;
+      case WordType.VERB:
+        const firstPersonPresentForm = new FormBuilder(
+          Mood.INDICATIVE,
+          Person.FIRST,
+          Tense.PRESENT,
+          Voice.ACTIVE,
+          // Verb shouldn't be like this, but it do
+          // Todo: Remove plurality from all non-ptcp translations. Conjugation ends up being "[verb] sumus" etc with plural
+          wordWithGrammar.form.plurality
+        ).build();
+        const firstPersonPresent = wordWithGrammar.definition.getWord(firstPersonPresentForm);
+        // Todo: Remove pronoun in imperative verb
+        englishText = buildEnglishVerb(wordWithGrammar, chunk, firstPersonPresent, capitalized);
+        break;
+        // Todo: Adverbs
+      default:
+        englishText = buildEnglishMiscType(wordWithGrammar, chunk, capitalized);
     }
-    englishText = englishText || chunk.english || wordWithGrammar.definition.description;
+    englishText = applyPunctuation(englishText, chunk, latinSurroundingChars);
+
+    const { pre = "", post = "" } = chunk;
+    englishText = `${pre}${englishText}${post}`;
 
     translationChunks.push(
       new TranslationChunk(wordWithGrammar, chunk, latinText, englishText, wordTypeData, wordOptions)
@@ -101,6 +143,7 @@ function parseTranslation(name, translationJson, dictionary) {
 
   const translation = new Translation(name, translationChunks, translationJson);
 
+  console.log(`\n\n${fullText}\n\n`)
   console.log(translation.toEnglish());
 
   return translationChunks;
@@ -112,13 +155,22 @@ function defaultArticle(word, dictionaryMatch = null, capitalized = false) {
   // If no match it's likely a proper noun, don't add article
   if (!dictionaryMatch) return ENGLISH_ARTICLES[0];
 
-  // Is it the right Case?
-  if (![Case.NOMINATIVE, Case.ACCUSATIVE].includes(word.form.casus)) return ENGLISH_ARTICLES[0];
-
-  if (capitalized) {
-    return ENGLISH_ARTICLES[2];
+  // Ignore certain Cases
+  if (![Case.NOMINATIVE, Case.ACCUSATIVE, Case.ABLATIVE, Case.DATIVE].includes(word.form.casus)) {
+    return ENGLISH_ARTICLES[0];
   }
-  return ENGLISH_ARTICLES[1];
+  // The
+  if (capitalized) {
+    return ENGLISH_ARTICLES[1];
+  }
+  // A and An
+  if (word.form.plurality === Plurality.PLURAL) {
+    return ENGLISH_ARTICLES[0];
+  }
+  if (Latin.VOCALS.includes(word.word.charAt(0))) {
+    return ENGLISH_ARTICLES[3];
+  }
+  return ENGLISH_ARTICLES[2];
 }
 
 // Roughly detect if word already has case preposition in Latin
@@ -150,14 +202,15 @@ function defaultPreposition(word) {
 
 function defaultTranslation(word, rootWord = null, capitalized = false) {
   const latinWordKey = rootWord || word;
-  const casedWord = capitalized ?
-    latinWordKey.word.charAt(0).toUpperCase() + latinWordKey.word.slice(1) :
-    latinWordKey.word;
-
-  return defaultTranslations[casedWord] || defaultTranslations[word];
+  const casedWord = capitalized ? capitalize(latinWordKey.word) : latinWordKey.word;
+  const match = defaultTranslations[casedWord] || defaultTranslations[word];
+  if (Array.isArray(match)) {
+    return match[word.form.plurality === Plurality.PLURAL ? 1 : 0];
+  }
+  return match;
 }
 
-function buildEnglishNoun(word, chunk, nominative, article, preposition) {
+function buildEnglishNoun(word, chunk, nominative, article, preposition, capitalized) {
   let out = "";
   out += preposition ? preposition + " " : "";
   out += article ? article + " " : "";
@@ -166,9 +219,12 @@ function buildEnglishNoun(word, chunk, nominative, article, preposition) {
   let translation = chunk.english;
   if (!translation) {
     translation = genericEnglishTranslation(word, chunk, nominative);
-  }
-  if (!translation) {
-    translation = guessTranslation(word);
+    if (!translation) {
+      translation = guessTranslation(word);
+    }
+    if (capitalized && translation) {
+      translation = capitalize(translation);
+    }
   }
   
   out += translation;
@@ -176,24 +232,44 @@ function buildEnglishNoun(word, chunk, nominative, article, preposition) {
   return out;
 }
 
-function buildEnglishVerb(word, chunk) {
-  let translation = genericEnglishTranslation(word, chunk);
+function buildEnglishVerb(word, chunk, firstPersonPresent, capitalized) {
+  let translation = genericEnglishTranslation(word, chunk, firstPersonPresent);
   if (translation) {
     return translation;
   }
   if (!translation) {
     translation = guessTranslation(word);
   }
+  if (capitalized && translation) {
+    translation = capitalize(translation);
+  }
 
   // Participle: A verb used as an adjective
+  const { post = "", suffix = "" } = chunk;
   if (word.form.mood === Mood.PARTICIPLE) {
-    translation += "ed";
+    if (suffix) {
+      translation += suffix;
+    } else {
+      translation += "ed";
+    }
+    // Todo: Maybe this is overzealous
+    if (post == null) {
+      if (word.form.plurality === Plurality.SINGULAR) {
+        translation += " is";
+      } else {
+        translation += " are";
+      }
+    }
   }
   return translation;
 }
 
-function buildEnglishMiscType(word, chunk) {
-  return genericEnglishTranslation(word, chunk) || guessTranslation(word);
+function buildEnglishMiscType(word, chunk, capitalized) {
+  const english = genericEnglishTranslation(word, chunk) || guessTranslation(word);
+  if (capitalized && english) {
+    return capitalize(english);
+  }
+  return english;
 }
 
 function genericEnglishTranslation(word, chunk, rootWord = null) {
@@ -202,5 +278,18 @@ function genericEnglishTranslation(word, chunk, rootWord = null) {
 
 function guessTranslation(word) {
   const firstWordMatch = word.definition.description.match(/(^\w+)([,;\n]|\s\s)/);
-  return (firstWordMatch && firstWordMatch[1]) || word.definition.description;
+  return (firstWordMatch && firstWordMatch[1]) ||
+    word.definition.description.substring(0, word.definition.description.indexOf(";"));
+}
+
+function applyPunctuation(word, chunk, latinSurroundingChars) {
+  if (!chunk.english) {
+    if (latinSurroundingChars[1]) {
+      return latinSurroundingChars[1] + word;
+    }
+    if (latinSurroundingChars[2]) {
+      return word + latinSurroundingChars[2];
+    }
+  }
+  return word;
 }

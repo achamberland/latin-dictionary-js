@@ -1,5 +1,9 @@
 #sum, esse, fui, futurus  V                                       [XXXAX] :: to be, exist; also used to form verb perfect passive tenses with nom.  perf. part.;
 #filius, filii  N (2nd) M                                         [XXXAX] :: son;
+#sancio, sancire, sanxi, sanctus  V (4th) TRANS                   [XXXCO] :: confirm, ratify; sanction; fulfill (prophesy); enact (law); ordain; dedicate;
+#oro, orare, oravi, oratus  V (1st)                               [XXXAX] :: pray;
+#fructus, fructus  N (4th) M                                      [XXXAX] :: fruit;
+#Deus, Dei  N                                                     [XXXAX] :: God;
 
 #nos, nostrum  PRON PERS  F                                       [XXXBX] :: we, us;
 #nos, nostri  PRON PERS  N                                        [XXXCX] :: we, us;
@@ -23,5 +27,3 @@
 #secum  ADV  F                                                    [XXXAX] :: with her;
 #nobiscum  ADV                                                    [XXXAX] :: with us;
 #vobiscum  ADV                                                    [XXXAX] :: with you (all);
-
-#Deus, Dei  N                                                     [XXXAX] :: God;
