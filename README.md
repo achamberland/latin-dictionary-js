@@ -1,8 +1,9 @@
+# _GitLab Notice_
+This project has been moved to GitLab and is no longer maintained on GitHub.
+
 # Processing Whitaker's Words with JavaScript
 
 From a raw text Latin dictionary, this parses each definition and its conjugations, declinations, etc. from it. With this, Latin words in any form can be searched and converted from one form to another.
-
-This is a work-in-progress, and for now only searches for latin words passed on the npm start command, logging information for each to the console.
 
 JavaScript classes are used only to port the original Java more quickly.
 
