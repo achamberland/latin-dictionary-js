@@ -1,5 +1,5 @@
-# _GitLab Notice_
-This project has been moved to GitLab and is no longer maintained on GitHub.
+# _Note_
+This project is no longer maintained. It might be picked up again in the (very) distant future.
 
 # Processing Whitaker's Words with JavaScript
 
