@@ -1,0 +1,139 @@
+{
+	"translations": [{
+		"text": "In nomine Patris, et Filii, et Spiritu Sancti ",
+		"chunks": [
+			{
+				"latin": "In"
+			},
+			{
+				"latin": "Nomine"
+			},
+			{
+				"latin": "Patris,",
+				"article": "The"
+			},
+			{
+				"latin": "et"
+			},
+			{
+				"latin": "Filii,",
+				"article": "The"
+			},
+			{
+				"latin": "et"
+			},
+			{
+				"latin": "Spiritu",
+				"english": "Spirit"
+			},
+			{
+				"latin": "Sancti",
+				"english": "Holy",
+				"article": "The",
+				"wordType": "ADJ"
+			}
+		]
+	},
+	{
+		"text": "Ave Maria, gratia plena, Dominus tecum. Benedicta tu in mulieribus, et benedictus fructus ventris tui, Iesus. Sancta Maria, Mater Dei, ora pro nobis peccatoribus, nunc, et in hora mortis nostrae.",
+		"chunks": [
+			{
+				"latin": "Ave",
+				"english": "Hail"
+			},
+			{
+				"latin": "Maria,",
+				"english": "Mary,",
+				"article": ""
+			},
+			{
+				"latin": "gratia",
+				"english": "grace",
+				"case": "ABL"
+			},
+			{
+				"latin": "plena,",
+				"english": "full,"
+			},
+			{
+				"latin": "Dominus",
+				"article": "The"
+			},
+			{
+				"latin": "tecum."
+			},
+			{
+				"latin": "Benedicta"
+			},
+			{
+				"latin": "tu"
+			},
+			{
+				"latin": "in"
+			},
+			{
+				"latin": "mulieribus,"
+			},
+			{
+				"latin": "et"
+			},
+			{
+				"latin": "benedictus"
+			},
+			{
+				"latin": "fructus"
+			},
+			{
+				"latin": "ventris"
+			},
+			{
+				"latin": "tui,"
+			},
+			{
+				"latin": "Iesus."
+			},
+			{
+				"latin": "Sancta"
+			},
+			{
+				"latin": "Maria,"
+			},
+			{
+				"latin": "Mater"
+			},
+			{
+				"latin": "Dei,"
+			},
+			{
+				"latin": "ora"
+			},
+			{
+				"latin": "pro"
+			},
+			{
+				"latin": "nobis"
+			},
+			{
+				"latin": "peccatoribus,"
+			},
+			{
+				"latin": "nunc,"
+			},
+			{
+				"latin": "et"
+			},
+			{
+				"latin": "in"
+			},
+			{
+				"latin": "hora"
+			},
+			{
+				"latin": "mortis"
+			},
+			{
+				"latin": "nostrae."
+			}
+		]
+	}]
+}

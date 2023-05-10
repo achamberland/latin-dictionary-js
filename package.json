@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "debug": "node --inspect index.js"
+    "start-verbose": "node index.js debug",
+    "debug": "node --inspect index.js",
+    "convert-dictionary": "node bin/dictionary/convertDictionary.js",
+    "create-translation-template": "node bin/translations/createTemplate.js"
   },
   "type": "module",
   "repository": {

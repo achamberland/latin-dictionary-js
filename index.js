@@ -2,21 +2,22 @@ import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import readline from "readline";
-import Translator from "./src/translator.js";
-import { compileWord } from './src/debugHelpers.js';
-import parseTranslation from './src/texts/parseTranslation.js';
-import compareTranslations from './src/texts/comparison/compareTranslations.js';
+import DefinitionLogger from "./src/cli/DefinitionPrinter.js";
+import { compileWord } from './src/cli/debugHelpers.js';
+import parseTranslation from './src/translations/parseTranslation.js';
+import compareTranslations from './src/cli/compareTranslations.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const rawText = fs.readFileSync(path.join(__dirname, "/bin", "/dest", "dictionary.txt"), 'utf8')
+const rawText = fs.readFileSync(path.join(__dirname, "/assets", "/dictionary", "dictionary.txt"), 'utf8')
 
-let translator;
+let definer;
 
-const ensureTranslator = () => {
-  if (!translator) {
+const ensureDictionary = () => {
+  if (!definer) {
     console.log("Building dictionary...");
-    translator = new Translator(rawText);
+    console.log("(This only needs to be done once, but it will take a minute)");
+    definer = new DefinitionLogger(rawText);
   }
 }
 
@@ -30,13 +31,13 @@ const readFileByParam = line => {
     param += ".json";
   }
   console.log(param);
-  return fs.readFileSync(path.join(__dirname, "/bin", "/dest/texts", param), 'utf8');
+  return fs.readFileSync(path.join(__dirname, "/assets", "/translations", param), 'utf8');
 }
 
 const cli = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
-  prompt: 'Enter a word or sentence, or "help" for more options: '
+  prompt: 'Enter "help" for all commands: '
 });
 
 cli.prompt();
@@ -50,9 +51,22 @@ cli.on('line', line => {
       break;
     case 'help':
       console.log(
-        "\nAdditional commands:\n" +
-        "compile [word] - Compile a single word as done when the dictionary is built.\n"
+        "\Commands:\n" +
+        "chunks [file] - Build and print TranslationChunks for the passed json file.\n" +
+        "compile [word] - Compile a single word as done when the dictionary is built.\n" +
+        "compare [file] - Build comparisons for all chunks within the passed file.\n" +
+        "definition [word] - Lookup dictionary definition for passed word or words." 
       );
+      cli.prompt();
+      break;
+    case 'chunks':
+      fileText = readFileByParam(line);
+      ensureDictionary();
+      try {
+        parseTranslation(fileText, definer.latin);
+      } catch(e) {
+        console.error(e);
+      }
       cli.prompt();
       break;
     case 'compile':
@@ -60,36 +74,27 @@ cli.on('line', line => {
       compileWord(param, rawText);
       cli.prompt();
       break;
-    case 'chunks':
-      fileText = readFileByParam(line);
-      ensureTranslator();
-      try {
-        parseTranslation(fileText, translator.latin);
-      } catch(e) {
-        console.error(e);
-      }
-      cli.prompt();
-      break;
     case 'compare':
       fileText = readFileByParam(line);
-      ensureTranslator();
+      ensureDictionary();
       try {
-        compareTranslations(fileText, translator.latin);
+        compareTranslations(fileText, definer.latin);
       } catch(e) {
         console.error(e);
       }
       cli.prompt();
       break;
-    case '':
+    case "definition":
+      param = line.replace("definition ", "");
+      ensureDictionary();
+      try {
+        definer.define(line);
+      } catch(e) {
+        console.error(e);
+      }
       cli.prompt();
       break;
     default:
-      ensureTranslator();
-      try {
-        translator.translate(line);
-      } catch(e) {
-        console.error(e);
-      }
       cli.prompt();
       break;
   }

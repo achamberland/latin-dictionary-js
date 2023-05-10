@@ -1,4 +1,4 @@
-import Word from "../api/Word.js";
+import Word from "../dictionary/models/Word.js";
 
 /*
  * Picks the best [Definition, Form] entry to use out of many, based on a few criteria:
